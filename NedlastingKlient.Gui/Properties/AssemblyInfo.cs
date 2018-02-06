@@ -10,7 +10,7 @@ using System.Windows;
 [assembly: AssemblyTitle("NedlastingKlient.Gui")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Geonorge")]
 [assembly: AssemblyProduct("NedlastingKlient.Gui")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
