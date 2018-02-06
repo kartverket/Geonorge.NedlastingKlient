@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace NedlastingKlient.Gui
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for DatasetDetails.xaml
     /// </summary>
-    public partial class MainWindow : NavigationWindow
+    public partial class DatasetDetails : Page
     {
-        public MainWindow()
+        public DatasetDetails()
         {
             InitializeComponent();
         }
