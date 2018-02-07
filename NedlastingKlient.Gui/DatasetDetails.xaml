@@ -9,6 +9,15 @@
       Title="Geonorge Nedlasting - Vis datasett">
 
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+    
+        <StackPanel Grid.Row="0">
+            <Label>Datasett:</Label>
+            <Label Content="{Binding Dataset.Title}"/>
+        </StackPanel>
     </Grid>
 </Page>

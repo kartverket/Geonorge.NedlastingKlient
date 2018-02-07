@@ -5,6 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NedlastingKlient.Gui"
         mc:Ignorable="d"
-        Title="Geonorge Nedlasting" Height="350" Width="500" Source="ListAllDatasets.xaml">
+        Title="Geonorge Nedlasting" Height="500" Width="700" Source="ListAllDatasets.xaml">
    
 </NavigationWindow>

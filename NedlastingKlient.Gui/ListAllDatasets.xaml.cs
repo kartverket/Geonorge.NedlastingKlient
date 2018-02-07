@@ -1,28 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace NedlastingKlient.Gui
 {
     /// <summary>
-    /// Interaction logic for ListAllDatasets.xaml
+    ///     Interaction logic for ListAllDatasets.xaml
     /// </summary>
     public partial class ListAllDatasets : Page
     {
         public ListAllDatasets()
         {
             InitializeComponent();
+            DgDatasets.ItemsSource = new DatasetService().GetDatasets();
+        }
+
+        private void ShowDatasetClick(object sender, RoutedEventArgs e)
+        {
+            Dataset selectedDataset = DgDatasets.SelectedItem as Dataset;
+
+            DatasetDetails detailsPage = new DatasetDetails();
+
+            NavigationService.Navigate(detailsPage);
         }
     }
 }
