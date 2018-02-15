@@ -9,9 +9,10 @@
       Title="Geonorge Nedlasting - Vis datasett"
       Background="White">
 
-    <Grid HorizontalAlignment="Center">
+    <Grid HorizontalAlignment="Center" Margin="20,0,0,20">
         <!--Rader-->
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -20,11 +21,19 @@
         <!--Tittle-->
         <StackPanel Grid.Row="0">
             <Label FontWeight="Bold" FontSize="16px" HorizontalAlignment="Center">Detaljer</Label>
-            <Label Name="LblDatasetName"></Label>
+        </StackPanel>
+        
+        <!-- Datasett -->
+        <StackPanel Grid.Row="1">
+            <Label Name="LblDatasetName" FontWeight="Bold" FontSize="14px"></Label>
+            <Label Name="LblDatasetUUid"></Label>
+            <Label Name="LblDatasetOwner"></Label>
+            <Label Name="LblDatasetLastUpdated"></Label>
+            <Label Name="LblDatasetDescription"></Label>
         </StackPanel>
 
         <!--Liste-->
-        <Grid Grid.Row="1" Width="700" Height="300">
+        <Grid Grid.Row="2" Width="700" Height="300">
             
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -38,9 +47,8 @@
             </Grid.RowDefinitions>
 
             <!--Filer-->
-            <TextBlock Grid.Row="0" Grid.Column="0" 
-                       FontWeight="Bold" 
-                       Text="Datasett"/>
+            <Label Grid.Row="0" Grid.Column="0" 
+                       FontWeight="Bold">Datasett</Label>
             <ListBox Grid.Row="1" Grid.Column="0" x:Name="LbFiles" 
                      BorderThickness="0"  ItemsSource="{Binding LbFiles}" 
                      Margin="0,0,0,0"
@@ -66,9 +74,8 @@
 
             
             <!--Valgte filer-->
-            <TextBlock Grid.Row="0" Grid.Column="2" 
-                       FontWeight="Bold" 
-                       Text="Valgt for nedlasting"/>
+            <Label Grid.Row="0" Grid.Column="2" 
+                       FontWeight="Bold">Valgt for nedlasting</Label>
             <ListBox Grid.Row="1" Grid.Column="2" x:Name="LbSelectedFiles" 
                      BorderThickness="0" ItemsSource="{Binding LbSelectedFiles}"
                      Margin="0,0,0,0"
@@ -86,7 +93,7 @@
             
         </Grid>
 
-        <Button Grid.Row="2" HorizontalAlignment="Right"
+        <Button Grid.Row="3" HorizontalAlignment="Right"
                 Width="50"
                 Margin="0,20,20,10"
                 Click="BtnSave_Click"  Name="BtnSave">Lagre</Button>

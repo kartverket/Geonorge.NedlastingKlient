@@ -13,7 +13,9 @@ namespace NedlastingKlient.Gui
     /// </summary>
     public partial class DatasetDetails : Page
     {
-        private readonly List<Dataset> _myList;
+        private readonly List<Dataset> _files;
+        private readonly List<Dataset> _selectedFiles;
+
         private Dataset _currentItem;
         private int _index = 0;
 
@@ -22,9 +24,28 @@ namespace NedlastingKlient.Gui
             InitializeComponent();
             if (selectedDataset != null)
             {
-                _myList = new DatasetService().GetDatasetFiles(selectedDataset.Url);
-                LbFiles.ItemsSource = _myList;
+                _files = new DatasetService().GetDatasetFiles(selectedDataset.Url);
+                _selectedFiles = new DatasetService().GetSelectedFiles();
+                RemoveSelectedFilesFromFiles();
+                LbFiles.ItemsSource = _files;
+                LbSelectedFiles.ItemsSource = _selectedFiles;
+                
                 LblDatasetName.Content = selectedDataset.Title;
+                LblDatasetDescription.Content = selectedDataset.Description;
+                LblDatasetOwner.Content = selectedDataset.Organization;
+                LblDatasetUUid.Content = selectedDataset.Uuid;
+                LblDatasetLastUpdated.Content = selectedDataset.LastUpdated;
+            }
+        }
+
+        private void RemoveSelectedFilesFromFiles()
+        {
+            // TODO Her må vi bruke id.. eller url.. Kan være flere med samme navn..
+            var remove = new List<Dataset>();
+            foreach (var selectedFile in _selectedFiles)
+            {
+                var item = _files.FirstOrDefault(f => f.Title == selectedFile.Title);
+                if (item != null) _files.Remove(item);
             }
         }
 
@@ -34,8 +55,9 @@ namespace NedlastingKlient.Gui
             {
                 _currentItem = (Dataset)LbSelectedFiles.SelectedValue;
                 _index = LbSelectedFiles.SelectedIndex;
-                _myList.Add(_currentItem);
-                LbSelectedFiles.Items.RemoveAt(_index);
+                _files.Add(_currentItem);
+                _selectedFiles?.RemoveAt(_index);
+
                 BindNewList();
             }
         }
@@ -47,8 +69,8 @@ namespace NedlastingKlient.Gui
                 _currentItem = (Dataset)LbFiles.SelectedValue;
                 _index = LbFiles.SelectedIndex;
 
-                LbSelectedFiles.Items.Add(_currentItem);
-                _myList?.RemoveAt(_index);
+                _selectedFiles.Add(_currentItem);
+                _files?.RemoveAt(_index);
                 BindNewList();
             }
         }
@@ -56,7 +78,9 @@ namespace NedlastingKlient.Gui
         private void BindNewList()
         {
             LbFiles.ItemsSource = null;
-            LbFiles.ItemsSource = _myList.OrderBy(o => o.Title);
+            LbSelectedFiles.ItemsSource = null;
+            LbFiles.ItemsSource = _files.OrderBy(o => o.Title);
+            LbSelectedFiles.ItemsSource = _selectedFiles;
         }
 
         private void BtnSave_Click(object sender, RoutedEventArgs e)

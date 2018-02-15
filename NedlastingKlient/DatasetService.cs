@@ -32,10 +32,28 @@ namespace NedlastingKlient
             serializer.NullValueHandling = NullValueHandling.Ignore;
             string mydocpath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
-            using (StreamWriter outputFile = new StreamWriter(mydocpath + @"\downloadfiles.txt", true))
+            using (StreamWriter outputFile = new StreamWriter(mydocpath + @"\downloadfiles.txt", false))
             using (JsonWriter writer = new JsonTextWriter(outputFile))
             {
                 serializer.Serialize(writer, SelectedFiles);
+            }
+        }
+
+        public List<Dataset> GetSelectedFiles()
+        {
+            string mydocpath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            try
+            {
+                using (StreamReader r = new StreamReader(mydocpath + @"\downloadfiles.txt"))
+                {
+                    string json = r.ReadToEnd();
+                    List<Dataset> selecedFiles = JsonConvert.DeserializeObject<List<Dataset>>(json);
+                    return selecedFiles;
+                }
+            }
+            catch (Exception e)
+            {
+                return new List<Dataset>();
             }
         }
     }
