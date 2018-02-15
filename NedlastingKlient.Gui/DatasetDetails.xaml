@@ -46,7 +46,7 @@
                      Margin="0,0,0,0"
                      ScrollViewer.CanContentScroll="True" 
                      ScrollViewer.VerticalScrollBarVisibility="Auto"
-                     MaxWidth="300">
+                     Width="300">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Title}"/>
@@ -74,7 +74,7 @@
                      Margin="0,0,0,0"
                      ScrollViewer.CanContentScroll="True" 
                      ScrollViewer.VerticalScrollBarVisibility="Auto"
-                     MaxWidth="300">
+                     Width="300">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Title}"/>
