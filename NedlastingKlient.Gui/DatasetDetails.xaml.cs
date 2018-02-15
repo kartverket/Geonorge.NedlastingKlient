@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 
 namespace NedlastingKlient.Gui
 {
@@ -56,6 +57,16 @@ namespace NedlastingKlient.Gui
         {
             LbFiles.ItemsSource = null;
             LbFiles.ItemsSource = _myList.OrderBy(o => o.Title);
+        }
+
+        private void BtnSave_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedFiles = new List<Dataset>();
+            foreach (Dataset item in LbSelectedFiles.Items)
+            {
+                selectedFiles.Add(item);
+            }
+            new DatasetService().WriteToJason(selectedFiles);
         }
     }
 }

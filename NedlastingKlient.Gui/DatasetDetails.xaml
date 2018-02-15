@@ -86,9 +86,10 @@
             
         </Grid>
 
-        <Button Grid.Row="2" HorizontalAlignment="Right" 
+        <Button Grid.Row="2" HorizontalAlignment="Right"
                 Width="50"
-                Click="AddButton_Click"  Name="Save">Lagre</Button>
+                Margin="0,20,20,10"
+                Click="BtnSave_Click"  Name="BtnSave">Lagre</Button>
     </Grid>
 
 
