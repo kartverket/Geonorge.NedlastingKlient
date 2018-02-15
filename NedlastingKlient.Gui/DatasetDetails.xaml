@@ -5,19 +5,85 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:NedlastingKlient.Gui"
       mc:Ignorable="d" 
-      d:DesignHeight="300" d:DesignWidth="300"
-      Title="Geonorge Nedlasting - Vis datasett">
+      d:DesignHeight="500" d:DesignWidth="600"
+      Title="Geonorge Nedlasting - Vis datasett"
+      Background="White">
 
-    <Grid>
+    <Grid HorizontalAlignment="Center">
+        <!--Rader-->
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="400"/>
         </Grid.RowDefinitions>
-    
+
+        <!--Tittle-->
         <StackPanel Grid.Row="0">
-            <Label>Datasett:</Label>
-            <Label Content="{Binding Dataset.Title}"/>
+            <Label FontWeight="Bold" FontSize="16px" HorizontalAlignment="Center">Detaljer</Label>
+            <Label Name="LblDatasetName"></Label>
         </StackPanel>
+
+        <!--Liste-->
+        <Grid Grid.Row="1" Width="700" Height="300">
+            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <!--Filer-->
+            <TextBlock Grid.Row="0" Grid.Column="0" 
+                       FontWeight="Bold" 
+                       Text="Datasett"/>
+            <ListBox Grid.Row="1" Grid.Column="0" x:Name="LbFiles" 
+                     BorderThickness="0"  ItemsSource="{Binding LbFiles}" 
+                     Margin="0,0,0,0"
+                     ScrollViewer.CanContentScroll="True" 
+                     ScrollViewer.VerticalScrollBarVisibility="Auto"
+                     MaxWidth="300">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Title}"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            
+            <Button Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" 
+                    Margin="20,-50,20,0"  VerticalAlignment="Center" Width="50"
+                    Click="AddButton_Click"  Name="AddButton">Legg til</Button>
+
+            <Button Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" 
+                    Margin="20,50,20,0" VerticalAlignment="Center" Width="50"
+                    Click="RemoveButton_Click" 
+                    Name="RemoveButton">Fjern</Button>
+
+            
+            <!--Valgte filer-->
+            <TextBlock Grid.Row="0" Grid.Column="2" 
+                       FontWeight="Bold" 
+                       Text="Valgt for nedlasting"/>
+            <ListBox Grid.Row="1" Grid.Column="2" x:Name="LbSelectedFiles" 
+                     BorderThickness="0" ItemsSource="{Binding LbSelectedFiles}"
+                     Margin="0,0,0,0"
+                     ScrollViewer.CanContentScroll="True" 
+                     ScrollViewer.VerticalScrollBarVisibility="Auto"
+                     MaxWidth="300">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Title}"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+        </Grid>
     </Grid>
+
+
 </Page>

@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns:gml="http://www.opengis.net/gml" xmlns:georss="http://www.georss.org/georss" xmlns="http://www.w3.org/2005/Atom">
+	<generator version="2015.1.1.0" uri="https://nedlasting.geonorge.no/fmeserver"/>
+	<id>https://nedlasting.geonorge.no</id>
+	<link rel="self" href="https://nedlasting.geonorge.no" type="application/atom+xml"/>
+	<rights>Kartverket</rights>
+	<subtitle>GEOJSON-format</subtitle>
+	<title>Administrative enheter fylker</title>
+	<updated>2018-02-13T09:42Z</updated>
+	<entry>
+		<author>
+			<name>Kartverket</name>
+		</author>
+		<category term="EPSG:25833" scheme="http://www.opengis.net/def/crs/" label="EPSG/0/25833"/>
+		<content type="html">Trykk på linken for å laste ned landsdekkende data i koordinatsystemet EPSG:25833. &lt;br /&gt;  &lt;a href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_0000_Norge_25833_Fylker_GEOJSON.zip"&gt;GEOJSON-format, Landsdekkende&lt;\a&gt;</content>
+		<id>https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_0000_Norge_25833_Fylker_GEOJSON.zip_2018-01-10T13:13:27</id>
+		<link rel="alternate" href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_0000_Norge_25833_Fylker_GEOJSON.zip" type="application/gml+xml;version=3.2.1" title="Datasettet som GML-fil i EPSG:25833"/>
+		<published>2018-02-13T10:42:03+01:00</published>
+		<rights>Kartverket</rights>
+		<title>GEOJSON-format, Landsdekkende</title>
+		<updated>2018-01-10T13:13:27</updated>
+	</entry>
+	<entry>
+		<author>
+			<name>Kartverket</name>
+		</author>
+		<category term="EPSG:25832" scheme="http://www.opengis.net/def/crs/" label="EPSG/0/25832"/>
+		<category term="Fylke" label="Østfold"/>
+		<content type="html">Trykk på linken for å laste ned data for fylke 01, Østfold i koordinatsystemet EPSG:25832. &lt;br /&gt;  &lt;a href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_01_Ostfold_25832_Fylker_GEOJSON.zip"&gt;GEOJSON-format, 01 Østfold&lt;\a&gt;</content>
+		<id>https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_01_Ostfold_25832_Fylker_GEOJSON.zip_2018-01-10T11:33:54</id>
+		<link rel="alternate" href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_01_Ostfold_25832_Fylker_GEOJSON.zip" type="application/gml+xml;version=3.2.1" title="Datasettet som GML-fil i EPSG:25832"/>
+		<published>2018-02-13T10:42:03+01:00</published>
+		<rights>Kartverket</rights>
+		<title>GEOJSON-format, 01 Østfold</title>
+		<updated>2018-01-10T11:33:54</updated>
+	</entry>
+	<entry>
+		<author>
+			<name>Kartverket</name>
+		</author>
+		<category term="EPSG:25833" scheme="http://www.opengis.net/def/crs/" label="EPSG/0/25833"/>
+		<category term="Fylke" label="Østfold"/>
+		<content type="html">Trykk på linken for å laste ned data for fylke 01, Østfold i koordinatsystemet EPSG:25833. &lt;br /&gt;  &lt;a href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_01_Ostfold_25833_Fylker_GEOJSON.zip"&gt;GEOJSON-format, 01 Østfold&lt;\a&gt;</content>
+		<id>https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_01_Ostfold_25833_Fylker_GEOJSON.zip_2018-01-10T12:30:15</id>
+		<link rel="alternate" href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_01_Ostfold_25833_Fylker_GEOJSON.zip" type="application/gml+xml;version=3.2.1" title="Datasettet som GML-fil i EPSG:25833"/>
+		<published>2018-02-13T10:42:03+01:00</published>
+		<rights>Kartverket</rights>
+		<title>GEOJSON-format, 01 Østfold</title>
+		<updated>2018-01-10T12:30:15</updated>
+	</entry>
+	<entry>
+		<author>
+			<name>Kartverket</name>
+		</author>
+		<category term="EPSG:25832" scheme="http://www.opengis.net/def/crs/" label="EPSG/0/25832"/>
+		<category term="Fylke" label="Akershus"/>
+		<content type="html">Trykk på linken for å laste ned data for fylke 02, Akershus i koordinatsystemet EPSG:25832. &lt;br /&gt;  &lt;a href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_02_Akershus_25832_Fylker_GEOJSON.zip"&gt;GEOJSON-format, 02 Akershus&lt;\a&gt;</content>
+		<id>https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_02_Akershus_25832_Fylker_GEOJSON.zip_2018-01-10T12:54:13</id>
+		<link rel="alternate" href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_02_Akershus_25832_Fylker_GEOJSON.zip" type="application/gml+xml;version=3.2.1" title="Datasettet som GML-fil i EPSG:25832"/>
+		<published>2018-02-13T10:42:03+01:00</published>
+		<rights>Kartverket</rights>
+		<title>GEOJSON-format, 02 Akershus</title>
+		<updated>2018-01-10T12:54:13</updated>
+	</entry>
+	<entry>
+		<author>
+			<name>Kartverket</name>
+		</author>
+		<category term="EPSG:25833" scheme="http://www.opengis.net/def/crs/" label="EPSG/0/25833"/>
+		<category term="Fylke" label="Akershus"/>
+		<content type="html">Trykk på linken for å laste ned data for fylke 02, Akershus i koordinatsystemet EPSG:25833. &lt;br /&gt;  &lt;a href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_02_Akershus_25833_Fylker_GEOJSON.zip"&gt;GEOJSON-format, 02 Akershus&lt;\a&gt;</content>
+		<id>https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_02_Akershus_25833_Fylker_GEOJSON.zip_2018-01-10T13:47:55</id>
+		<link rel="alternate" href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_02_Akershus_25833_Fylker_GEOJSON.zip" type="application/gml+xml;version=3.2.1" title="Datasettet som GML-fil i EPSG:25833"/>
+		<published>2018-02-13T10:42:03+01:00</published>
+		<rights>Kartverket</rights>
+		<title>GEOJSON-format, 02 Akershus</title>
+		<updated>2018-01-10T13:47:55</updated>
+	</entry>
+	<entry>
+		<author>
+			<name>Kartverket</name>
+		</author>
+		<category term="EPSG:25832" scheme="http://www.opengis.net/def/crs/" label="EPSG/0/25832"/>
+		<category term="Fylke" label="Oslo"/>
+		<content type="html">Trykk på linken for å laste ned data for fylke 03, Oslo i koordinatsystemet EPSG:25832. &lt;br /&gt;  &lt;a href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_03_Oslo_25832_Fylker_GEOJSON.zip"&gt;GEOJSON-format, 03 Oslo&lt;\a&gt;</content>
+		<id>https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_03_Oslo_25832_Fylker_GEOJSON.zip_2018-01-10T11:23:20</id>
+		<link rel="alternate" href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_03_Oslo_25832_Fylker_GEOJSON.zip" type="application/gml+xml;version=3.2.1" title="Datasettet som GML-fil i EPSG:25832"/>
+		<published>2018-02-13T10:42:03+01:00</published>
+		<rights>Kartverket</rights>
+		<title>GEOJSON-format, 03 Oslo</title>
+		<updated>2018-01-10T11:23:20</updated>
+	</entry>
+	<entry>
+		<author>
+			<name>Kartverket</name>
+		</author>
+		<category term="EPSG:25833" scheme="http://www.opengis.net/def/crs/" label="EPSG/0/25833"/>
+		<category term="Fylke" label="Oslo"/>
+		<content type="html">Trykk på linken for å laste ned data for fylke 03, Oslo i koordinatsystemet EPSG:25833. &lt;br /&gt;  &lt;a href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_03_Oslo_25833_Fylker_GEOJSON.zip"&gt;GEOJSON-format, 03 Oslo&lt;\a&gt;</content>
+		<id>https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_03_Oslo_25833_Fylker_GEOJSON.zip_2018-01-10T12:21:21</id>
+		<link rel="alternate" href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_03_Oslo_25833_Fylker_GEOJSON.zip" type="application/gml+xml;version=3.2.1" title="Datasettet som GML-fil i EPSG:25833"/>
+		<published>2018-02-13T10:42:03+01:00</published>
+		<rights>Kartverket</rights>
+		<title>GEOJSON-format, 03 Oslo</title>
+		<updated>2018-01-10T12:21:21</updated>
+	</entry>
+	<entry>
+		<author>
+			<name>Kartverket</name>
+		</author>
+		<category term="EPSG:25832" scheme="http://www.opengis.net/def/crs/" label="EPSG/0/25832"/>
+		<category term="Fylke" label="Hedmark"/>
+		<content type="html">Trykk på linken for å laste ned data for fylke 04, Hedmark i koordinatsystemet EPSG:25832. &lt;br /&gt;  &lt;a href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_04_Hedmark_25832_Fylker_GEOJSON.zip"&gt;GEOJSON-format, 04 Hedmark&lt;\a&gt;</content>
+		<id>https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_04_Hedmark_25832_Fylker_GEOJSON.zip_2018-01-10T11:30:16</id>
+		<link rel="alternate" href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_04_Hedmark_25832_Fylker_GEOJSON.zip" type="application/gml+xml;version=3.2.1" title="Datasettet som GML-fil i EPSG:25832"/>
+		<published>2018-02-13T10:42:03+01:00</published>
+		<rights>Kartverket</rights>
+		<title>GEOJSON-format, 04 Hedmark</title>
+		<updated>2018-01-10T11:30:16</updated>
+	</entry>
+	<entry>
+		<author>
+			<name>Kartverket</name>
+		</author>
+		<category term="EPSG:25833" scheme="http://www.opengis.net/def/crs/" label="EPSG/0/25833"/>
+		<category term="Fylke" label="Hedmark"/>
+		<content type="html">Trykk på linken for å laste ned data for fylke 04, Hedmark i koordinatsystemet EPSG:25833. &lt;br /&gt;  &lt;a href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_04_Hedmark_25833_Fylker_GEOJSON.zip"&gt;GEOJSON-format, 04 Hedmark&lt;\a&gt;</content>
+		<id>https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_04_Hedmark_25833_Fylker_GEOJSON.zip_2018-01-10T12:28:08</id>
+		<link rel="alternate" href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_04_Hedmark_25833_Fylker_GEOJSON.zip" type="application/gml+xml;version=3.2.1" title="Datasettet som GML-fil i EPSG:25833"/>
+		<published>2018-02-13T10:42:03+01:00</published>
+		<rights>Kartverket</rights>
+		<title>GEOJSON-format, 04 Hedmark</title>
+		<updated>2018-01-10T12:28:08</updated>
+	</entry>
+	<entry>
+		<author>
+			<name>Kartverket</name>
+		</author>
+		<category term="EPSG:25832" scheme="http://www.opengis.net/def/crs/" label="EPSG/0/25832"/>
+		<category term="Fylke" label="Oppland"/>
+		<content type="html">Trykk på linken for å laste ned data for fylke 05, Oppland i koordinatsystemet EPSG:25832. &lt;br /&gt;  &lt;a href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_05_Oppland_25832_Fylker_GEOJSON.zip"&gt;GEOJSON-format, 05 Oppland&lt;\a&gt;</content>
+		<id>https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_05_Oppland_25832_Fylker_GEOJSON.zip_2018-01-10T12:05:06</id>
+		<link rel="alternate" href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_05_Oppland_25832_Fylker_GEOJSON.zip" type="application/gml+xml;version=3.2.1" title="Datasettet som GML-fil i EPSG:25832"/>
+		<published>2018-02-13T10:42:03+01:00</published>
+		<rights>Kartverket</rights>
+		<title>GEOJSON-format, 05 Oppland</title>
+		<updated>2018-01-10T12:05:06</updated>
+	</entry>
+	<entry>
+		<author>
+			<name>Kartverket</name>
+		</author>
+		<category term="EPSG:25833" scheme="http://www.opengis.net/def/crs/" label="EPSG/0/25833"/>
+		<category term="Fylke" label="Oppland"/>
+		<content type="html">Trykk på linken for å laste ned data for fylke 05, Oppland i koordinatsystemet EPSG:25833. &lt;br /&gt;  &lt;a href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_05_Oppland_25833_Fylker_GEOJSON.zip"&gt;GEOJSON-format, 05 Oppland&lt;\a&gt;</content>
+		<id>https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_05_Oppland_25833_Fylker_GEOJSON.zip_2018-01-10T13:02:45</id>
+		<link rel="alternate" href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_05_Oppland_25833_Fylker_GEOJSON.zip" type="application/gml+xml;version=3.2.1" title="Datasettet som GML-fil i EPSG:25833"/>
+		<published>2018-02-13T10:42:03+01:00</published>
+		<rights>Kartverket</rights>
+		<title>GEOJSON-format, 05 Oppland</title>
+		<updated>2018-01-10T13:02:45</updated>
+	</entry>
+	<entry>
+		<author>
+			<name>Kartverket</name>
+		</author>
+		<category term="EPSG:25832" scheme="http://www.opengis.net/def/crs/" label="EPSG/0/25832"/>
+		<category term="Fylke" label="Buskerud"/>
+		<content type="html">Trykk på linken for å laste ned data for fylke 06, Buskerud i koordinatsystemet EPSG:25832. &lt;br /&gt;  &lt;a href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_06_Buskerud_25832_Fylker_GEOJSON.zip"&gt;GEOJSON-format, 06 Buskerud&lt;\a&gt;</content>
+		<id>https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_06_Buskerud_25832_Fylker_GEOJSON.zip_2018-01-10T12:14:29</id>
+		<link rel="alternate" href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_06_Buskerud_25832_Fylker_GEOJSON.zip" type="application/gml+xml;version=3.2.1" title="Datasettet som GML-fil i EPSG:25832"/>
+		<published>2018-02-13T10:42:03+01:00</published>
+		<rights>Kartverket</rights>
+		<title>GEOJSON-format, 06 Buskerud</title>
+		<updated>2018-01-10T12:14:29</updated>
+	</entry>
+	<entry>
+		<author>
+			<name>Kartverket</name>
+		</author>
+		<category term="EPSG:25833" scheme="http://www.opengis.net/def/crs/" label="EPSG/0/25833"/>
+		<category term="Fylke" label="Buskerud"/>
+		<content type="html">Trykk på linken for å laste ned data for fylke 06, Buskerud i koordinatsystemet EPSG:25833. &lt;br /&gt;  &lt;a href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_06_Buskerud_25833_Fylker_GEOJSON.zip"&gt;GEOJSON-format, 06 Buskerud&lt;\a&gt;</content>
+		<id>https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_06_Buskerud_25833_Fylker_GEOJSON.zip_2018-01-10T13:11:40</id>
+		<link rel="alternate" href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_06_Buskerud_25833_Fylker_GEOJSON.zip" type="application/gml+xml;version=3.2.1" title="Datasettet som GML-fil i EPSG:25833"/>
+		<published>2018-02-13T10:42:03+01:00</published>
+		<rights>Kartverket</rights>
+		<title>GEOJSON-format, 06 Buskerud</title>
+		<updated>2018-01-10T13:11:40</updated>
+	</entry>
+	<entry>
+		<author>
+			<name>Kartverket</name>
+		</author>
+		<category term="EPSG:25832" scheme="http://www.opengis.net/def/crs/" label="EPSG/0/25832"/>
+		<category term="Fylke" label="Vestfold"/>
+		<content type="html">Trykk på linken for å laste ned data for fylke 07, Vestfold i koordinatsystemet EPSG:25832. &lt;br /&gt;  &lt;a href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_07_Vestfold_25832_Fylker_GEOJSON.zip"&gt;GEOJSON-format, 07 Vestfold&lt;\a&gt;</content>
+		<id>https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_07_Vestfold_25832_Fylker_GEOJSON.zip_2018-01-10T12:07:03</id>
+		<link rel="alternate" href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_07_Vestfold_25832_Fylker_GEOJSON.zip" type="application/gml+xml;version=3.2.1" title="Datasettet som GML-fil i EPSG:25832"/>
+		<published>2018-02-13T10:42:03+01:00</published>
+		<rights>Kartverket</rights>
+		<title>GEOJSON-format, 07 Vestfold</title>
+		<updated>2018-01-10T12:07:03</updated>
+	</entry>
+	<entry>
+		<author>
+			<name>Kartverket</name>
+		</author>
+		<category term="EPSG:25833" scheme="http://www.opengis.net/def/crs/" label="EPSG/0/25833"/>
+		<category term="Fylke" label="Vestfold"/>
+		<content type="html">Trykk på linken for å laste ned data for fylke 07, Vestfold i koordinatsystemet EPSG:25833. &lt;br /&gt;  &lt;a href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_07_Vestfold_25833_Fylker_GEOJSON.zip"&gt;GEOJSON-format, 07 Vestfold&lt;\a&gt;</content>
+		<id>https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_07_Vestfold_25833_Fylker_GEOJSON.zip_2018-01-10T12:56:18</id>
+		<link rel="alternate" href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_07_Vestfold_25833_Fylker_GEOJSON.zip" type="application/gml+xml;version=3.2.1" title="Datasettet som GML-fil i EPSG:25833"/>
+		<published>2018-02-13T10:42:03+01:00</published>
+		<rights>Kartverket</rights>
+		<title>GEOJSON-format, 07 Vestfold</title>
+		<updated>2018-01-10T12:56:18</updated>
+	</entry>
+	<entry>
+		<author>
+			<name>Kartverket</name>
+		</author>
+		<category term="EPSG:25832" scheme="http://www.opengis.net/def/crs/" label="EPSG/0/25832"/>
+		<category term="Fylke" label="Telemark"/>
+		<content type="html">Trykk på linken for å laste ned data for fylke 08, Telemark i koordinatsystemet EPSG:25832. &lt;br /&gt;  &lt;a href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_08_Telemark_25832_Fylker_GEOJSON.zip"&gt;GEOJSON-format, 08 Telemark&lt;\a&gt;</content>
+		<id>https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_08_Telemark_25832_Fylker_GEOJSON.zip_2018-01-10T12:09:35</id>
+		<link rel="alternate" href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_08_Telemark_25832_Fylker_GEOJSON.zip" type="application/gml+xml;version=3.2.1" title="Datasettet som GML-fil i EPSG:25832"/>
+		<published>2018-02-13T10:42:03+01:00</published>
+		<rights>Kartverket</rights>
+		<title>GEOJSON-format, 08 Telemark</title>
+		<updated>2018-01-10T12:09:35</updated>
+	</entry>
+	<entry>
+		<author>
+			<name>Kartverket</name>
+		</author>
+		<category term="EPSG:25833" scheme="http://www.opengis.net/def/crs/" label="EPSG/0/25833"/>
+		<category term="Fylke" label="Telemark"/>
+		<content type="html">Trykk på linken for å laste ned data for fylke 08, Telemark i koordinatsystemet EPSG:25833. &lt;br /&gt;  &lt;a href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_08_Telemark_25833_Fylker_GEOJSON.zip"&gt;GEOJSON-format, 08 Telemark&lt;\a&gt;</content>
+		<id>https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_08_Telemark_25833_Fylker_GEOJSON.zip_2018-01-10T13:00:56</id>
+		<link rel="alternate" href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_08_Telemark_25833_Fylker_GEOJSON.zip" type="application/gml+xml;version=3.2.1" title="Datasettet som GML-fil i EPSG:25833"/>
+		<published>2018-02-13T10:42:03+01:00</published>
+		<rights>Kartverket</rights>
+		<title>GEOJSON-format, 08 Telemark</title>
+		<updated>2018-01-10T13:00:56</updated>
+	</entry>
+	<entry>
+		<author>
+			<name>Kartverket</name>
+		</author>
+		<category term="EPSG:25832" scheme="http://www.opengis.net/def/crs/" label="EPSG/0/25832"/>
+		<category term="Fylke" label="Aust-Agder"/>
+		<content type="html">Trykk på linken for å laste ned data for fylke 09, Aust-Agder i koordinatsystemet EPSG:25832. &lt;br /&gt;  &lt;a href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_09_Aust-Agder_25832_Fylker_GEOJSON.zip"&gt;GEOJSON-format, 09 Aust-Agder&lt;\a&gt;</content>
+		<id>https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_09_Aust-Agder_25832_Fylker_GEOJSON.zip_2018-01-10T12:13:29</id>
+		<link rel="alternate" href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_09_Aust-Agder_25832_Fylker_GEOJSON.zip" type="application/gml+xml;version=3.2.1" title="Datasettet som GML-fil i EPSG:25832"/>
+		<published>2018-02-13T10:42:03+01:00</published>
+		<rights>Kartverket</rights>
+		<title>GEOJSON-format, 09 Aust-Agder</title>
+		<updated>2018-01-10T12:13:29</updated>
+	</entry>
+	<entry>
+		<author>
+			<name>Kartverket</name>
+		</author>
+		<category term="EPSG:25833" scheme="http://www.opengis.net/def/crs/" label="EPSG/0/25833"/>
+		<category term="Fylke" label="Aust-Agder"/>
+		<content type="html">Trykk på linken for å laste ned data for fylke 09, Aust-Agder i koordinatsystemet EPSG:25833. &lt;br /&gt;  &lt;a href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_09_Aust-Agder_25833_Fylker_GEOJSON.zip"&gt;GEOJSON-format, 09 Aust-Agder&lt;\a&gt;</content>
+		<id>https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_09_Aust-Agder_25833_Fylker_GEOJSON.zip_2018-01-10T13:07:32</id>
+		<link rel="alternate" href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_09_Aust-Agder_25833_Fylker_GEOJSON.zip" type="application/gml+xml;version=3.2.1" title="Datasettet som GML-fil i EPSG:25833"/>
+		<published>2018-02-13T10:42:03+01:00</published>
+		<rights>Kartverket</rights>
+		<title>GEOJSON-format, 09 Aust-Agder</title>
+		<updated>2018-01-10T13:07:32</updated>
+	</entry>
+	<entry>
+		<author>
+			<name>Kartverket</name>
+		</author>
+		<category term="EPSG:25832" scheme="http://www.opengis.net/def/crs/" label="EPSG/0/25832"/>
+		<category term="Fylke" label="Vest-Agder"/>
+		<content type="html">Trykk på linken for å laste ned data for fylke 10, Vest-Agder i koordinatsystemet EPSG:25832. &lt;br /&gt;  &lt;a href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_10_Vest-Agder_25832_Fylker_GEOJSON.zip"&gt;GEOJSON-format, 10 Vest-Agder&lt;\a&gt;</content>
+		<id>https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_10_Vest-Agder_25832_Fylker_GEOJSON.zip_2018-01-10T12:12:50</id>
+		<link rel="alternate" href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_10_Vest-Agder_25832_Fylker_GEOJSON.zip" type="application/gml+xml;version=3.2.1" title="Datasettet som GML-fil i EPSG:25832"/>
+		<published>2018-02-13T10:42:03+01:00</published>
+		<rights>Kartverket</rights>
+		<title>GEOJSON-format, 10 Vest-Agder</title>
+		<updated>2018-01-10T12:12:50</updated>
+	</entry>
+	<entry>
+		<author>
+			<name>Kartverket</name>
+		</author>
+		<category term="EPSG:25833" scheme="http://www.opengis.net/def/crs/" label="EPSG/0/25833"/>
+		<category term="Fylke" label="Vest-Agder"/>
+		<content type="html">Trykk på linken for å laste ned data for fylke 10, Vest-Agder i koordinatsystemet EPSG:25833. &lt;br /&gt;  &lt;a href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_10_Vest-Agder_25833_Fylker_GEOJSON.zip"&gt;GEOJSON-format, 10 Vest-Agder&lt;\a&gt;</content>
+		<id>https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_10_Vest-Agder_25833_Fylker_GEOJSON.zip_2018-01-10T13:06:04</id>
+		<link rel="alternate" href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_10_Vest-Agder_25833_Fylker_GEOJSON.zip" type="application/gml+xml;version=3.2.1" title="Datasettet som GML-fil i EPSG:25833"/>
+		<published>2018-02-13T10:42:03+01:00</published>
+		<rights>Kartverket</rights>
+		<title>GEOJSON-format, 10 Vest-Agder</title>
+		<updated>2018-01-10T13:06:04</updated>
+	</entry>
+	<entry>
+		<author>
+			<name>Kartverket</name>
+		</author>
+		<category term="EPSG:25832" scheme="http://www.opengis.net/def/crs/" label="EPSG/0/25832"/>
+		<category term="Fylke" label="Rogaland"/>
+		<content type="html">Trykk på linken for å laste ned data for fylke 11, Rogaland i koordinatsystemet EPSG:25832. &lt;br /&gt;  &lt;a href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_11_Rogaland_25832_Fylker_GEOJSON.zip"&gt;GEOJSON-format, 11 Rogaland&lt;\a&gt;</content>
+		<id>https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_11_Rogaland_25832_Fylker_GEOJSON.zip_2018-01-10T12:14:23</id>
+		<link rel="alternate" href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_11_Rogaland_25832_Fylker_GEOJSON.zip" type="application/gml+xml;version=3.2.1" title="Datasettet som GML-fil i EPSG:25832"/>
+		<published>2018-02-13T10:42:03+01:00</published>
+		<rights>Kartverket</rights>
+		<title>GEOJSON-format, 11 Rogaland</title>
+		<updated>2018-01-10T12:14:23</updated>
+	</entry>
+	<entry>
+		<author>
+			<name>Kartverket</name>
+		</author>
+		<category term="EPSG:25833" scheme="http://www.opengis.net/def/crs/" label="EPSG/0/25833"/>
+		<category term="Fylke" label="Rogaland"/>
+		<content type="html">Trykk på linken for å laste ned data for fylke 11, Rogaland i koordinatsystemet EPSG:25833. &lt;br /&gt;  &lt;a href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_11_Rogaland_25833_Fylker_GEOJSON.zip"&gt;GEOJSON-format, 11 Rogaland&lt;\a&gt;</content>
+		<id>https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_11_Rogaland_25833_Fylker_GEOJSON.zip_2018-01-10T13:07:36</id>
+		<link rel="alternate" href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_11_Rogaland_25833_Fylker_GEOJSON.zip" type="application/gml+xml;version=3.2.1" title="Datasettet som GML-fil i EPSG:25833"/>
+		<published>2018-02-13T10:42:03+01:00</published>
+		<rights>Kartverket</rights>
+		<title>GEOJSON-format, 11 Rogaland</title>
+		<updated>2018-01-10T13:07:36</updated>
+	</entry>
+	<entry>
+		<author>
+			<name>Kartverket</name>
+		</author>
+		<category term="EPSG:25832" scheme="http://www.opengis.net/def/crs/" label="EPSG/0/25832"/>
+		<category term="Fylke" label="Hordaland"/>
+		<content type="html">Trykk på linken for å laste ned data for fylke 12, Hordaland i koordinatsystemet EPSG:25832. &lt;br /&gt;  &lt;a href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_12_Hordaland_25832_Fylker_GEOJSON.zip"&gt;GEOJSON-format, 12 Hordaland&lt;\a&gt;</content>
+		<id>https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_12_Hordaland_25832_Fylker_GEOJSON.zip_2018-01-10T12:14:34</id>
+		<link rel="alternate" href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_12_Hordaland_25832_Fylker_GEOJSON.zip" type="application/gml+xml;version=3.2.1" title="Datasettet som GML-fil i EPSG:25832"/>
+		<published>2018-02-13T10:42:03+01:00</published>
+		<rights>Kartverket</rights>
+		<title>GEOJSON-format, 12 Hordaland</title>
+		<updated>2018-01-10T12:14:34</updated>
+	</entry>
+	<entry>
+		<author>
+			<name>Kartverket</name>
+		</author>
+		<category term="EPSG:25833" scheme="http://www.opengis.net/def/crs/" label="EPSG/0/25833"/>
+		<category term="Fylke" label="Hordaland"/>
+		<content type="html">Trykk på linken for å laste ned data for fylke 12, Hordaland i koordinatsystemet EPSG:25833. &lt;br /&gt;  &lt;a href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_12_Hordaland_25833_Fylker_GEOJSON.zip"&gt;GEOJSON-format, 12 Hordaland&lt;\a&gt;</content>
+		<id>https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_12_Hordaland_25833_Fylker_GEOJSON.zip_2018-01-10T13:08:39</id>
+		<link rel="alternate" href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_12_Hordaland_25833_Fylker_GEOJSON.zip" type="application/gml+xml;version=3.2.1" title="Datasettet som GML-fil i EPSG:25833"/>
+		<published>2018-02-13T10:42:03+01:00</published>
+		<rights>Kartverket</rights>
+		<title>GEOJSON-format, 12 Hordaland</title>
+		<updated>2018-01-10T13:08:39</updated>
+	</entry>
+	<entry>
+		<author>
+			<name>Kartverket</name>
+		</author>
+		<category term="EPSG:25832" scheme="http://www.opengis.net/def/crs/" label="EPSG/0/25832"/>
+		<category term="Fylke" label="Sogn og Fjordane"/>
+		<content type="html">Trykk på linken for å laste ned data for fylke 14, Sogn og Fjordane i koordinatsystemet EPSG:25832. &lt;br /&gt;  &lt;a href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_14_Sogn_og_Fjordane_25832_Fylker_GEOJSON.zip"&gt;GEOJSON-format, 14 Sogn og Fjordane&lt;\a&gt;</content>
+		<id>https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_14_Sogn_og_Fjordane_25832_Fylker_GEOJSON.zip_2018-01-10T12:15:16</id>
+		<link rel="alternate" href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_14_Sogn_og_Fjordane_25832_Fylker_GEOJSON.zip" type="application/gml+xml;version=3.2.1" title="Datasettet som GML-fil i EPSG:25832"/>
+		<published>2018-02-13T10:42:03+01:00</published>
+		<rights>Kartverket</rights>
+		<title>GEOJSON-format, 14 Sogn og Fjordane</title>
+		<updated>2018-01-10T12:15:16</updated>
+	</entry>
+	<entry>
+		<author>
+			<name>Kartverket</name>
+		</author>
+		<category term="EPSG:25833" scheme="http://www.opengis.net/def/crs/" label="EPSG/0/25833"/>
+		<category term="Fylke" label="Sogn og Fjordane"/>
+		<content type="html">Trykk på linken for å laste ned data for fylke 14, Sogn og Fjordane i koordinatsystemet EPSG:25833. &lt;br /&gt;  &lt;a href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_14_Sogn_og_Fjordane_25833_Fylker_GEOJSON.zip"&gt;GEOJSON-format, 14 Sogn og Fjordane&lt;\a&gt;</content>
+		<id>https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_14_Sogn_og_Fjordane_25833_Fylker_GEOJSON.zip_2018-01-10T13:08:29</id>
+		<link rel="alternate" href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_14_Sogn_og_Fjordane_25833_Fylker_GEOJSON.zip" type="application/gml+xml;version=3.2.1" title="Datasettet som GML-fil i EPSG:25833"/>
+		<published>2018-02-13T10:42:03+01:00</published>
+		<rights>Kartverket</rights>
+		<title>GEOJSON-format, 14 Sogn og Fjordane</title>
+		<updated>2018-01-10T13:08:29</updated>
+	</entry>
+	<entry>
+		<author>
+			<name>Kartverket</name>
+		</author>
+		<category term="EPSG:25832" scheme="http://www.opengis.net/def/crs/" label="EPSG/0/25832"/>
+		<category term="Fylke" label="Møre og Romsdal"/>
+		<content type="html">Trykk på linken for å laste ned data for fylke 15, Møre og Romsdal i koordinatsystemet EPSG:25832. &lt;br /&gt;  &lt;a href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_15_More_og_Romsdal_25832_Fylker_GEOJSON.zip"&gt;GEOJSON-format, 15 Møre og Romsdal&lt;\a&gt;</content>
+		<id>https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_15_More_og_Romsdal_25832_Fylker_GEOJSON.zip_2018-01-10T12:16:12</id>
+		<link rel="alternate" href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_15_More_og_Romsdal_25832_Fylker_GEOJSON.zip" type="application/gml+xml;version=3.2.1" title="Datasettet som GML-fil i EPSG:25832"/>
+		<published>2018-02-13T10:42:03+01:00</published>
+		<rights>Kartverket</rights>
+		<title>GEOJSON-format, 15 Møre og Romsdal</title>
+		<updated>2018-01-10T12:16:12</updated>
+	</entry>
+	<entry>
+		<author>
+			<name>Kartverket</name>
+		</author>
+		<category term="EPSG:25833" scheme="http://www.opengis.net/def/crs/" label="EPSG/0/25833"/>
+		<category term="Fylke" label="Møre og Romsdal"/>
+		<content type="html">Trykk på linken for å laste ned data for fylke 15, Møre og Romsdal i koordinatsystemet EPSG:25833. &lt;br /&gt;  &lt;a href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_15_More_og_Romsdal_25833_Fylker_GEOJSON.zip"&gt;GEOJSON-format, 15 Møre og Romsdal&lt;\a&gt;</content>
+		<id>https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_15_More_og_Romsdal_25833_Fylker_GEOJSON.zip_2018-01-10T13:10:08</id>
+		<link rel="alternate" href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_15_More_og_Romsdal_25833_Fylker_GEOJSON.zip" type="application/gml+xml;version=3.2.1" title="Datasettet som GML-fil i EPSG:25833"/>
+		<published>2018-02-13T10:42:03+01:00</published>
+		<rights>Kartverket</rights>
+		<title>GEOJSON-format, 15 Møre og Romsdal</title>
+		<updated>2018-01-10T13:10:08</updated>
+	</entry>
+	<entry>
+		<author>
+			<name>Kartverket</name>
+		</author>
+		<category term="EPSG:25833" scheme="http://www.opengis.net/def/crs/" label="EPSG/0/25833"/>
+		<category term="Fylke" label="Nordland"/>
+		<content type="html">Trykk på linken for å laste ned data for fylke 18, Nordland i koordinatsystemet EPSG:25833. &lt;br /&gt;  &lt;a href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_18_Nordland_25833_Fylker_GEOJSON.zip"&gt;GEOJSON-format, 18 Nordland&lt;\a&gt;</content>
+		<id>https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_18_Nordland_25833_Fylker_GEOJSON.zip_2018-01-10T13:09:47</id>
+		<link rel="alternate" href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_18_Nordland_25833_Fylker_GEOJSON.zip" type="application/gml+xml;version=3.2.1" title="Datasettet som GML-fil i EPSG:25833"/>
+		<published>2018-02-13T10:42:03+01:00</published>
+		<rights>Kartverket</rights>
+		<title>GEOJSON-format, 18 Nordland</title>
+		<updated>2018-01-10T13:09:47</updated>
+	</entry>
+	<entry>
+		<author>
+			<name>Kartverket</name>
+		</author>
+		<category term="EPSG:25833" scheme="http://www.opengis.net/def/crs/" label="EPSG/0/25833"/>
+		<category term="Fylke" label="Troms"/>
+		<content type="html">Trykk på linken for å laste ned data for fylke 19, Troms i koordinatsystemet EPSG:25833. &lt;br /&gt;  &lt;a href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_19_Troms_25833_Fylker_GEOJSON.zip"&gt;GEOJSON-format, 19 Troms&lt;\a&gt;</content>
+		<id>https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_19_Troms_25833_Fylker_GEOJSON.zip_2018-01-10T13:10:46</id>
+		<link rel="alternate" href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_19_Troms_25833_Fylker_GEOJSON.zip" type="application/gml+xml;version=3.2.1" title="Datasettet som GML-fil i EPSG:25833"/>
+		<published>2018-02-13T10:42:03+01:00</published>
+		<rights>Kartverket</rights>
+		<title>GEOJSON-format, 19 Troms</title>
+		<updated>2018-01-10T13:10:46</updated>
+	</entry>
+	<entry>
+		<author>
+			<name>Kartverket</name>
+		</author>
+		<category term="EPSG:25833" scheme="http://www.opengis.net/def/crs/" label="EPSG/0/25833"/>
+		<category term="Fylke" label="Finnmark"/>
+		<content type="html">Trykk på linken for å laste ned data for fylke 20, Finnmark i koordinatsystemet EPSG:25833. &lt;br /&gt;  &lt;a href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_20_Finnmark_25833_Fylker_GEOJSON.zip"&gt;GEOJSON-format, 20 Finnmark&lt;\a&gt;</content>
+		<id>https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_20_Finnmark_25833_Fylker_GEOJSON.zip_2018-01-10T13:10:30</id>
+		<link rel="alternate" href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_20_Finnmark_25833_Fylker_GEOJSON.zip" type="application/gml+xml;version=3.2.1" title="Datasettet som GML-fil i EPSG:25833"/>
+		<published>2018-02-13T10:42:03+01:00</published>
+		<rights>Kartverket</rights>
+		<title>GEOJSON-format, 20 Finnmark</title>
+		<updated>2018-01-10T13:10:30</updated>
+	</entry>
+	<entry>
+		<author>
+			<name>Kartverket</name>
+		</author>
+		<category term="EPSG:25835" scheme="http://www.opengis.net/def/crs/" label="EPSG/0/25835"/>
+		<category term="Fylke" label="Finnmark"/>
+		<content type="html">Trykk på linken for å laste ned data for fylke 20, Finnmark i koordinatsystemet EPSG:25835. &lt;br /&gt;  &lt;a href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_20_Finnmark_25835_Fylker_GEOJSON.zip"&gt;GEOJSON-format, 20 Finnmark&lt;\a&gt;</content>
+		<id>https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_20_Finnmark_25835_Fylker_GEOJSON.zip_2018-01-10T13:11:09</id>
+		<link rel="alternate" href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_20_Finnmark_25835_Fylker_GEOJSON.zip" type="application/gml+xml;version=3.2.1" title="Datasettet som GML-fil i EPSG:25835"/>
+		<published>2018-02-13T10:42:03+01:00</published>
+		<rights>Kartverket</rights>
+		<title>GEOJSON-format, 20 Finnmark</title>
+		<updated>2018-01-10T13:11:09</updated>
+	</entry>
+	<entry>
+		<author>
+			<name>Kartverket</name>
+		</author>
+		<category term="EPSG:25832" scheme="http://www.opengis.net/def/crs/" label="EPSG/0/25832"/>
+		<category term="Fylke" label="Trøndelag"/>
+		<content type="html">Trykk på linken for å laste ned data for fylke 50, Trøndelag i koordinatsystemet EPSG:25832. &lt;br /&gt;  &lt;a href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_50_Trondelag_25832_Fylker_GEOJSON.zip"&gt;GEOJSON-format, 50 Trøndelag&lt;\a&gt;</content>
+		<id>https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_50_Trondelag_25832_Fylker_GEOJSON.zip_2018-01-10T12:18:24</id>
+		<link rel="alternate" href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_50_Trondelag_25832_Fylker_GEOJSON.zip" type="application/gml+xml;version=3.2.1" title="Datasettet som GML-fil i EPSG:25832"/>
+		<published>2018-02-13T10:42:03+01:00</published>
+		<rights>Kartverket</rights>
+		<title>GEOJSON-format, 50 Trøndelag</title>
+		<updated>2018-01-10T12:18:24</updated>
+	</entry>
+	<entry>
+		<author>
+			<name>Kartverket</name>
+		</author>
+		<category term="EPSG:25833" scheme="http://www.opengis.net/def/crs/" label="EPSG/0/25833"/>
+		<category term="Fylke" label="Trøndelag"/>
+		<content type="html">Trykk på linken for å laste ned data for fylke 50, Trøndelag i koordinatsystemet EPSG:25833. &lt;br /&gt;  &lt;a href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_50_Trondelag_25833_Fylker_GEOJSON.zip"&gt;GEOJSON-format, 50 Trøndelag&lt;\a&gt;</content>
+		<id>https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_50_Trondelag_25833_Fylker_GEOJSON.zip_2018-01-10T13:14:13</id>
+		<link rel="alternate" href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_50_Trondelag_25833_Fylker_GEOJSON.zip" type="application/gml+xml;version=3.2.1" title="Datasettet som GML-fil i EPSG:25833"/>
+		<published>2018-02-13T10:42:03+01:00</published>
+		<rights>Kartverket</rights>
+		<title>GEOJSON-format, 50 Trøndelag</title>
+		<updated>2018-01-10T13:14:13</updated>
+	</entry>
+</feed>

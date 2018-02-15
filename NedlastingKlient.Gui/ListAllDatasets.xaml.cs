@@ -19,9 +19,9 @@ namespace NedlastingKlient.Gui
         {
             Dataset selectedDataset = DgDatasets.SelectedItem as Dataset;
 
-            DatasetDetails detailsPage = new DatasetDetails();
+            DatasetDetails detailsPage = new DatasetDetails(selectedDataset);
 
-            NavigationService.Navigate(detailsPage);
+            NavigationService.Navigate(detailsPage, selectedDataset);
         }
     }
 }

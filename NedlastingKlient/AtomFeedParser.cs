@@ -24,15 +24,20 @@ namespace NedlastingKlient
             {
                 var dataset = new Dataset();
                 dataset.Title = childrenNode.SelectSingleNode("a:title", nsmgr).InnerXml;
-                dataset.Description = childrenNode.SelectSingleNode("a:summary", nsmgr).InnerXml;
-                dataset.FeedUrl = childrenNode.SelectSingleNode("a:link", nsmgr).InnerXml;
+                dataset.Description = childrenNode.SelectSingleNode("a:category", nsmgr).InnerXml;
+                dataset.Url = childrenNode.SelectSingleNode("a:link", nsmgr).InnerXml;
                 dataset.LastUpdated = childrenNode.SelectSingleNode("a:updated", nsmgr).InnerXml;
                 dataset.Organization = childrenNode.SelectSingleNode("a:author/a:name", nsmgr).InnerXml;
-                dataset.Uuid = childrenNode.SelectSingleNode("inspire_dls:spatial_dataset_identifier_code", nsmgr).InnerXml;
+                dataset.Uuid = childrenNode.SelectSingleNode("inspire_dls:spatial_dataset_identifier_code", nsmgr)?.InnerXml;
 
                 datasets.Add(dataset);
             }
             return datasets;
+        }
+
+        public List<Dataset> ParseDataset(string xml)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

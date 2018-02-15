@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:NedlastingKlient.Gui"
       mc:Ignorable="d" 
-      d:DesignHeight="500" d:DesignWidth="700"
+      d:DesignHeight="500" d:DesignWidth="600"
       Title="Geonorge Nedlasting - Alle datasett"
       KeepAlive="True">
 
@@ -23,7 +23,7 @@
                   ScrollViewer.CanContentScroll="True" 
                   ScrollViewer.VerticalScrollBarVisibility="Auto"
                   ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                  MaxHeight="500">
+                  MaxHeight="300">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Navn" Binding="{Binding Title}" />
                 <DataGridTextColumn Header="Organisasjon" Binding="{Binding Organization}"  />
