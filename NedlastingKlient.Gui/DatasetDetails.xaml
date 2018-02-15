@@ -14,7 +14,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="400"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <!--Tittle-->
@@ -82,7 +82,13 @@
                 </ListBox.ItemTemplate>
             </ListBox>
 
+            
+            
         </Grid>
+
+        <Button Grid.Row="2" HorizontalAlignment="Right" 
+                Width="50"
+                Click="AddButton_Click"  Name="Save">Lagre</Button>
     </Grid>
 
 
