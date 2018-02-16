@@ -13,19 +13,13 @@ namespace NedlastingKlient
     {
         private static readonly HttpClient HttpClient = new HttpClient();
 
-        public List<Dataset> GetDatasets()
+        public List<Dataset> GetDatasets(string url = "https://nedlasting.geonorge.no/geonorge/Tjenestefeed.xml")
         {
-            var getFeedTask = HttpClient.GetStringAsync("https://nedlasting.geonorge.no/geonorge/Tjenestefeed.xml");
+            var getFeedTask = HttpClient.GetStringAsync(url);
             return new AtomFeedParser().Parse(getFeedTask.Result);
         }
 
-        public List<Dataset> GetDatasetFiles(string selectedDatasetUrl)
-        {
-            var getFeedTask = HttpClient.GetStringAsync(selectedDatasetUrl);
-            return new AtomFeedParser().Parse(getFeedTask.Result);
-        }
-
-        public void WriteToJason(List<Dataset> SelectedFiles)
+        public void WriteToJason(List<Dataset> selectedFiles)
         {
             var serializer = new JsonSerializer();
             serializer.Converters.Add(new JavaScriptDateTimeConverter());
@@ -35,7 +29,7 @@ namespace NedlastingKlient
             using (StreamWriter outputFile = new StreamWriter(mydocpath + @"\downloadfiles.txt", false))
             using (JsonWriter writer = new JsonTextWriter(outputFile))
             {
-                serializer.Serialize(writer, SelectedFiles);
+                serializer.Serialize(writer, selectedFiles);
             }
         }
 

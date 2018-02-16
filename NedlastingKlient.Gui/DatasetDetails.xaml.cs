@@ -24,7 +24,7 @@ namespace NedlastingKlient.Gui
             InitializeComponent();
             if (selectedDataset != null)
             {
-                _files = new DatasetService().GetDatasetFiles(selectedDataset.Url);
+                _files = new DatasetService().GetDatasets(selectedDataset.Url);
                 _selectedFiles = new DatasetService().GetSelectedFiles();
                 RemoveSelectedFilesFromFiles();
                 LbFiles.ItemsSource = _files;
