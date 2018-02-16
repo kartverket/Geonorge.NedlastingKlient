@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
+using System.Runtime.Serialization.Json;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Formatting = System.Xml.Formatting;
@@ -13,13 +15,19 @@ namespace NedlastingKlient
     {
         private static readonly HttpClient HttpClient = new HttpClient();
 
-        public List<Dataset> GetDatasets(string url = "https://nedlasting.geonorge.no/geonorge/Tjenestefeed.xml")
+        public List<Dataset> GetDatasets()
         {
-            var getFeedTask = HttpClient.GetStringAsync(url);
-            return new AtomFeedParser().Parse(getFeedTask.Result);
+            var getFeedTask = HttpClient.GetStringAsync("https://nedlasting.geonorge.no/geonorge/Tjenestefeed.xml");
+            return new AtomFeedParser().ParseDatasets(getFeedTask.Result);
         }
 
-        public void WriteToJason(List<Dataset> selectedFiles)
+        public List<DatasetFile> GetDatasetFiles(Dataset dataset)
+        {
+            var getFeedTask = HttpClient.GetStringAsync(dataset.Url);
+            return new AtomFeedParser().ParseDatasetFile(getFeedTask.Result, dataset).OrderBy(d => d.Title).ToList();
+        }
+
+        public void WriteToJason(List<DatasetFile> selectedFiles)
         {
             var serializer = new JsonSerializer();
             serializer.Converters.Add(new JavaScriptDateTimeConverter());
@@ -30,10 +38,11 @@ namespace NedlastingKlient
             using (JsonWriter writer = new JsonTextWriter(outputFile))
             {
                 serializer.Serialize(writer, selectedFiles);
+                writer.Close();
             }
         }
 
-        public List<Dataset> GetSelectedFiles()
+        public List<DatasetFile> GetSelectedFiles(string datasetId = null)
         {
             string mydocpath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             try
@@ -41,13 +50,14 @@ namespace NedlastingKlient
                 using (StreamReader r = new StreamReader(mydocpath + @"\downloadfiles.txt"))
                 {
                     string json = r.ReadToEnd();
-                    List<Dataset> selecedFiles = JsonConvert.DeserializeObject<List<Dataset>>(json);
-                    return selecedFiles;
+                    List<DatasetFile> selecedFiles = JsonConvert.DeserializeObject<List<DatasetFile>>(json);
+
+                    return datasetId != null ? selecedFiles.Where(f => f.DatasetId == datasetId).ToList() : selecedFiles;
                 }
             }
             catch (Exception e)
             {
-                return new List<Dataset>();
+                return new List<DatasetFile>();
             }
         }
     }

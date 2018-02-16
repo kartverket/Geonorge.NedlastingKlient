@@ -13,6 +13,7 @@ namespace NedlastingKlient.Gui
         {
             InitializeComponent();
             DgDatasets.ItemsSource = new DatasetService().GetDatasets();
+            LbSelectedFiles.ItemsSource = new DatasetService().GetSelectedFiles();
         }
 
         private void ShowDatasetClick(object sender, RoutedEventArgs e)

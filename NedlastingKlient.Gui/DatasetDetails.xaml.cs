@@ -13,10 +13,10 @@ namespace NedlastingKlient.Gui
     /// </summary>
     public partial class DatasetDetails : Page
     {
-        private readonly List<Dataset> _files;
-        private readonly List<Dataset> _selectedFiles;
+        private readonly List<DatasetFile> _files;
+        private readonly List<DatasetFile> _selectedFiles;
 
-        private Dataset _currentItem;
+        private DatasetFile _currentItem;
         private int _index = 0;
 
         public DatasetDetails(Dataset selectedDataset)
@@ -24,12 +24,12 @@ namespace NedlastingKlient.Gui
             InitializeComponent();
             if (selectedDataset != null)
             {
-                _files = new DatasetService().GetDatasets(selectedDataset.Url);
-                _selectedFiles = new DatasetService().GetSelectedFiles();
+                _files = new DatasetService().GetDatasetFiles(selectedDataset);
+                _selectedFiles = new DatasetService().GetSelectedFiles(selectedDataset.Uuid);
                 RemoveSelectedFilesFromFiles();
                 LbFiles.ItemsSource = _files;
                 LbSelectedFiles.ItemsSource = _selectedFiles;
-                
+
                 LblDatasetName.Content = selectedDataset.Title;
                 LblDatasetDescription.Content = selectedDataset.Description;
                 LblDatasetOwner.Content = selectedDataset.Organization;
@@ -41,7 +41,6 @@ namespace NedlastingKlient.Gui
         private void RemoveSelectedFilesFromFiles()
         {
             // TODO Her må vi bruke id.. eller url.. Kan være flere med samme navn..
-            var remove = new List<Dataset>();
             foreach (var selectedFile in _selectedFiles)
             {
                 var item = _files.FirstOrDefault(f => f.Title == selectedFile.Title);
@@ -53,7 +52,7 @@ namespace NedlastingKlient.Gui
         {
             if (LbSelectedFiles.SelectedValue != null)
             {
-                _currentItem = (Dataset)LbSelectedFiles.SelectedValue;
+                _currentItem = (DatasetFile)LbSelectedFiles.SelectedValue;
                 _index = LbSelectedFiles.SelectedIndex;
                 _files.Add(_currentItem);
                 _selectedFiles?.RemoveAt(_index);
@@ -66,7 +65,7 @@ namespace NedlastingKlient.Gui
         {
             if (LbFiles.SelectedValue != null)
             {
-                _currentItem = (Dataset)LbFiles.SelectedValue;
+                _currentItem = (DatasetFile)LbFiles.SelectedValue;
                 _index = LbFiles.SelectedIndex;
 
                 _selectedFiles.Add(_currentItem);
@@ -85,12 +84,35 @@ namespace NedlastingKlient.Gui
 
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
-            var selectedFiles = new List<Dataset>();
-            foreach (Dataset item in LbSelectedFiles.Items)
+            var originalDownloadedFiles = new DatasetService().GetSelectedFiles();
+            var downloadedFilesByDataset = new DatasetService().GetSelectedFiles(LblDatasetUUid.Content.ToString());
+            var updatedDownloadedFilesList = originalDownloadedFiles;
+            var selectedFiles = new List<DatasetFile>();
+
+            foreach (DatasetFile item in LbSelectedFiles.Items)
             {
                 selectedFiles.Add(item);
             }
-            new DatasetService().WriteToJason(selectedFiles);
+
+            // Fjern filer for aktuelt datasett
+            foreach (DatasetFile datasetFile in downloadedFilesByDataset)
+            {
+                foreach (var downloadedFile in originalDownloadedFiles)
+                {
+                    if (datasetFile.GetId() == downloadedFile.GetId())
+                    {
+                        updatedDownloadedFilesList.Remove(downloadedFile);
+                    }
+                }
+            }
+
+            // Legg til valgte filer for datasett
+            foreach (DatasetFile selectedFile in selectedFiles)
+            {
+                updatedDownloadedFilesList.Add(selectedFile);
+            }
+
+            new DatasetService().WriteToJason(updatedDownloadedFilesList);
         }
     }
 }

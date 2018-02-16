@@ -8,21 +8,23 @@
       Title="Geonorge Nedlasting - Alle datasett"
       KeepAlive="True">
 
-    <Grid>
+    <Grid HorizontalAlignment="Center" Margin="20,20,20,20">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="400"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="500"/>
         </Grid.RowDefinitions>
     
         <StackPanel Grid.Row="0">
-            <Label>Alle datasett</Label>
+            <Label FontWeight="Bold" FontSize="14">Datasett</Label>
         </StackPanel>
+        
         <DataGrid Name="DgDatasets" Grid.Row="1" AutoGenerateColumns="False" RowHeaderWidth="0"
                   ScrollViewer.CanContentScroll="True" 
                   ScrollViewer.VerticalScrollBarVisibility="Auto"
                   ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                  MaxHeight="300">
+                  MaxHeight="400">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Navn" Binding="{Binding Title}" />
                 <DataGridTextColumn Header="Organisasjon" Binding="{Binding Organization}"  />
@@ -33,5 +35,41 @@
         <StackPanel Grid.Row="2">
             <Button Click="ShowDatasetClick" Width="100">Vis detaljer</Button>
         </StackPanel>
+
+        <!--Valgte filer-->
+        <Grid Grid.Row="3" Width="1000" Height="500">
+            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <Label Grid.Column="0" Grid.Row="0" FontWeight="Bold" FontSize="14">Valgt for nedlasting</Label>
+            <ListBox Grid.Column="0" Grid.Row="1" x:Name="LbSelectedFiles" 
+                     BorderThickness="0" ItemsSource="{Binding LbSelectedFiles}"
+                     Margin="0,0,0,0"
+                     ScrollViewer.CanContentScroll="True" 
+                     ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="200"/>
+                                <ColumnDefinition Width="100"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{Binding Title}"/>
+                            <TextBlock Grid.Column="1" Text="{Binding Category}"/>
+                            <TextBlock Grid.Column="2" Text="{Binding LastUpdated}"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+        
     </Grid>
 </Page>

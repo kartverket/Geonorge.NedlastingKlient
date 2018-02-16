@@ -11,7 +11,7 @@ namespace NedlastingKlient.Test
         [Fact]
         public void ShouldParseAtomFeed()
         {
-            List<Dataset> result = new AtomFeedParser().Parse(File.ReadAllText("Tjenestefeed.xml"));
+            List<Dataset> result = new AtomFeedParser().ParseDatasets(File.ReadAllText("Tjenestefeed.xml"));
             result.Count.Should().Be(3);
         }
 
