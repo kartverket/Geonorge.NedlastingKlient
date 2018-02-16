@@ -26,6 +26,10 @@ namespace NedlastingKlient
                 dataset.Title = childrenNode.SelectSingleNode("a:title", nsmgr).InnerXml;
                 dataset.Description = childrenNode.SelectSingleNode("a:category", nsmgr).InnerXml;
                 dataset.Url = childrenNode.SelectSingleNode("a:link", nsmgr).InnerXml;
+                if (string.IsNullOrWhiteSpace(dataset.Url))
+                {
+                    dataset.Url = childrenNode.SelectSingleNode("a:link", nsmgr).Attributes[1].Value;
+                }
                 dataset.LastUpdated = childrenNode.SelectSingleNode("a:updated", nsmgr).InnerXml;
                 dataset.Organization = childrenNode.SelectSingleNode("a:author/a:name", nsmgr).InnerXml;
                 dataset.Uuid = childrenNode.SelectSingleNode("inspire_dls:spatial_dataset_identifier_code", nsmgr)?.InnerXml;
