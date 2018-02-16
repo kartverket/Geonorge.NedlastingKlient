@@ -25,7 +25,7 @@ namespace NedlastingKlient.Gui
             if (selectedDataset != null)
             {
                 _files = new DatasetService().GetDatasetFiles(selectedDataset);
-                _selectedFiles = new DatasetService().GetSelectedFiles(selectedDataset.Uuid);
+                _selectedFiles = new DatasetService().GetSelectedFiles(selectedDataset.Title);
                 RemoveSelectedFilesFromFiles();
                 LbFiles.ItemsSource = _files;
                 LbSelectedFiles.ItemsSource = _selectedFiles;
@@ -40,10 +40,9 @@ namespace NedlastingKlient.Gui
 
         private void RemoveSelectedFilesFromFiles()
         {
-            // TODO Her må vi bruke id.. eller url.. Kan være flere med samme navn..
             foreach (var selectedFile in _selectedFiles)
             {
-                var item = _files.FirstOrDefault(f => f.Title == selectedFile.Title);
+                var item = _files.FirstOrDefault(f => f.GetId() == selectedFile.GetId());
                 if (item != null) _files.Remove(item);
             }
         }
@@ -85,8 +84,8 @@ namespace NedlastingKlient.Gui
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
             var originalDownloadedFiles = new DatasetService().GetSelectedFiles();
-            var downloadedFilesByDataset = new DatasetService().GetSelectedFiles(LblDatasetUUid.Content.ToString());
-            var updatedDownloadedFilesList = originalDownloadedFiles;
+            var downloadedFilesByDataset = new DatasetService().GetSelectedFiles(LblDatasetName.ToString());
+            var updatedDownloadedFilesList = originalDownloadedFiles.ToList();
             var selectedFiles = new List<DatasetFile>();
 
             foreach (DatasetFile item in LbSelectedFiles.Items)

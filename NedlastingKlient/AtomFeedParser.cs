@@ -62,7 +62,7 @@ namespace NedlastingKlient
                 datasetFile.LastUpdated = childrenNode.SelectSingleNode("a:updated", nsmgr).InnerXml;
                 datasetFile.Organization = childrenNode.SelectSingleNode("a:author/a:name", nsmgr).InnerXml;
                 datasetFile.Category = childrenNode.SelectSingleNode("a:category", nsmgr).Attributes[0].Value;
-                datasetFile.DatasetId = dataset.Uuid;
+                datasetFile.DatasetId = dataset.Title;
 
                 datasetFiles.Add(datasetFile);
             }

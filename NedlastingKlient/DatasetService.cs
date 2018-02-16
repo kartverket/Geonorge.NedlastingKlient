@@ -42,7 +42,7 @@ namespace NedlastingKlient
             }
         }
 
-        public List<DatasetFile> GetSelectedFiles(string datasetId = null)
+        public List<DatasetFile> GetSelectedFiles(string datasetTitle = null)
         {
             string mydocpath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             try
@@ -51,8 +51,8 @@ namespace NedlastingKlient
                 {
                     string json = r.ReadToEnd();
                     List<DatasetFile> selecedFiles = JsonConvert.DeserializeObject<List<DatasetFile>>(json);
-
-                    return datasetId != null ? selecedFiles.Where(f => f.DatasetId == datasetId).ToList() : selecedFiles;
+                    r.Close();
+                    return datasetTitle != null ? selecedFiles.Where(f => f.DatasetId == datasetTitle).ToList() : selecedFiles;
                 }
             }
             catch (Exception e)
