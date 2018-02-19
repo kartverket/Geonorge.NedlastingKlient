@@ -19,7 +19,7 @@
 
         <!--Tittle-->
         <StackPanel Grid.Row="0">
-            <Label FontWeight="Bold" FontSize="16px" HorizontalAlignment="Center">Detaljer</Label>
+            <Label FontWeight="Bold" FontSize="16px" >Detaljer</Label>
         </StackPanel>
         
         <!-- Datasett -->
