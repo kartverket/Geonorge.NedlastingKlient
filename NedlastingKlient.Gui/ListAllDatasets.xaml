@@ -30,13 +30,12 @@
                 <GridView>
                     <GridViewColumn Header="Navn" Width="350" DisplayMemberBinding="{Binding Title}" />
                     <GridViewColumn Header="Organisasjon" Width="250" DisplayMemberBinding="{Binding Organization}" />
-                    <GridViewColumn Header="Order Type" Width="150" DisplayMemberBinding="{Binding LastUpdated}" />
                 </GridView>
             </ListView.View>
         </ListView>
 
         <!--Valgte filer-->
-        <Grid Grid.Row="3" Width="1000" Height="500">
+        <Grid Grid.Row="3" Width="1000" MaxHeight="500">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
@@ -56,13 +55,15 @@
                     <DataTemplate>
                         <Grid>
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="350"/>
+                                <ColumnDefinition Width="250"/>
                                 <ColumnDefinition Width="200"/>
-                                <ColumnDefinition Width="100"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock ToolTip="{Binding DatasetId}" Grid.Column="0" Text="{Binding Title}"/>
-                            <TextBlock Grid.Column="1" Text="{Binding Category}"/>
-                            <TextBlock Grid.Column="2" Text="{Binding LastUpdated}"/>
+                            <TextBlock Grid.Column="0" Text="{Binding DatasetId}"/>
+                            <TextBlock Grid.Column="1" Text="{Binding Title}"/>
+                            <TextBlock Grid.Column="2" Text="{Binding Category}"/>
+                            <TextBlock Grid.Column="3" Text="Slett"/>
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
