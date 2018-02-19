@@ -84,7 +84,7 @@ namespace NedlastingKlient.Gui
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
             var originalDownloadedFiles = new DatasetService().GetSelectedFiles();
-            var downloadedFilesByDataset = new DatasetService().GetSelectedFiles(LblDatasetName.ToString());
+            var downloadedFilesByDataset = new DatasetService().GetSelectedFiles(LblDatasetName.Content.ToString());
             var updatedDownloadedFilesList = originalDownloadedFiles.ToList();
             var selectedFiles = new List<DatasetFile>();
 
