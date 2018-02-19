@@ -62,7 +62,7 @@
                                 <ColumnDefinition Width="100"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="{Binding Title}"/>
+                            <TextBlock ToolTip="{Binding DatasetId}" Grid.Column="0" Text="{Binding Title}"/>
                             <TextBlock Grid.Column="1" Text="{Binding Category}"/>
                             <TextBlock Grid.Column="2" Text="{Binding LastUpdated}"/>
                         </Grid>
