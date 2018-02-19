@@ -48,7 +48,7 @@
                 <RowDefinition />
             </Grid.RowDefinitions>
 
-            <Label Grid.Column="0" Grid.Row="0" FontWeight="Bold" FontSize="14">Valgt for nedlasting</Label>
+            <Label Grid.Column="0" Grid.Row="0" FontWeight="Bold" FontSize="14">Filer valgt for nedlasting</Label>
             <ListBox Grid.Column="0" Grid.Row="1" x:Name="LbSelectedFiles" 
                      BorderThickness="0" ItemsSource="{Binding LbSelectedFiles}"
                      Margin="0,0,0,0"
