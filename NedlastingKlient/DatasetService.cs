@@ -24,7 +24,13 @@ namespace NedlastingKlient
         public List<DatasetFile> GetDatasetFiles(Dataset dataset)
         {
             var getFeedTask = HttpClient.GetStringAsync(dataset.Url);
-            return new AtomFeedParser().ParseDatasetFile(getFeedTask.Result, dataset).OrderBy(d => d.Title).ToList();
+            return new AtomFeedParser().ParseDatasetFiles(getFeedTask.Result, dataset).OrderBy(d => d.Title).ToList();
+        }
+
+        public DatasetFile GetDatasetFile(DatasetFile originalDatasetFile)
+        {
+            var getFeedTask = HttpClient.GetStringAsync(originalDatasetFile.DatasetUrl);
+            return new AtomFeedParser().ParseDatasetFile(getFeedTask.Result, originalDatasetFile);
         }
 
         public void WriteToJason(List<DatasetFile> selectedFiles)

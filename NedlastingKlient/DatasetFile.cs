@@ -12,6 +12,7 @@ namespace NedlastingKlient
         public string Organization { get; set; }
         public string Category { get; set; }
         public string DatasetId { get; set; }
+        public string DatasetUrl { get; set; }
 
         public string GetId()
         {

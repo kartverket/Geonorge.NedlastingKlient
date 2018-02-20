@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 
@@ -37,7 +38,42 @@ namespace NedlastingKlient
             return datasets;
         }
 
-        public List<DatasetFile> ParseDatasetFile(string xml, Dataset dataset)
+        internal DatasetFile ParseDatasetFile(string xml, DatasetFile originalDatasetFile)
+        {
+            var datasetFileFromFeed = new DatasetFile();
+
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml(xml);
+
+            string xpath = "//a:feed/a:entry";
+
+            XmlNamespaceManager nsmgr = new XmlNamespaceManager(xmlDoc.NameTable);
+            nsmgr.AddNamespace("a", "http://www.w3.org/2005/Atom");
+            nsmgr.AddNamespace("inspire_dls", "http://inspire.ec.europa.eu/schemas/inspire_dls/1.0");
+
+            var nodes = xmlDoc.SelectNodes(xpath, nsmgr);
+
+            foreach (XmlNode childrenNode in nodes)
+            {
+                string title = childrenNode.SelectSingleNode("a:title", nsmgr).InnerXml;
+                string category = childrenNode.SelectSingleNode("a:category", nsmgr).Attributes[0].Value;
+
+                if (originalDatasetFile.Title == title && originalDatasetFile.Category == category)
+                {
+                    datasetFileFromFeed.Title = childrenNode.SelectSingleNode("a:title", nsmgr).InnerXml;
+                    datasetFileFromFeed.Description = childrenNode.SelectSingleNode("a:category", nsmgr).InnerXml;
+                    datasetFileFromFeed.Url = childrenNode.SelectSingleNode("a:link", nsmgr).Attributes[1].Value;
+                    datasetFileFromFeed.LastUpdated = childrenNode.SelectSingleNode("a:updated", nsmgr).InnerXml;
+                    datasetFileFromFeed.Organization = childrenNode.SelectSingleNode("a:author/a:name", nsmgr).InnerXml;
+                    datasetFileFromFeed.Category = childrenNode.SelectSingleNode("a:category", nsmgr).Attributes[0].Value;
+                    datasetFileFromFeed.DatasetId = originalDatasetFile.DatasetId;
+                    datasetFileFromFeed.DatasetUrl = originalDatasetFile.DatasetUrl;
+                }
+            }
+            return datasetFileFromFeed;
+        }
+
+        public List<DatasetFile> ParseDatasetFiles(string xml, Dataset dataset)
         {
             var datasetFiles = new List<DatasetFile>();
 
@@ -57,12 +93,12 @@ namespace NedlastingKlient
                 var datasetFile = new DatasetFile();
                 datasetFile.Title = childrenNode.SelectSingleNode("a:title", nsmgr).InnerXml;
                 datasetFile.Description = childrenNode.SelectSingleNode("a:category", nsmgr).InnerXml;
-                datasetFile.Url = childrenNode.SelectSingleNode("a:link", nsmgr).InnerXml;
                 datasetFile.Url = childrenNode.SelectSingleNode("a:link", nsmgr).Attributes[1].Value;
                 datasetFile.LastUpdated = childrenNode.SelectSingleNode("a:updated", nsmgr).InnerXml;
                 datasetFile.Organization = childrenNode.SelectSingleNode("a:author/a:name", nsmgr).InnerXml;
                 datasetFile.Category = childrenNode.SelectSingleNode("a:category", nsmgr).Attributes[0].Value;
                 datasetFile.DatasetId = dataset.Title;
+                datasetFile.DatasetUrl = dataset.Url;
 
                 datasetFiles.Add(datasetFile);
             }

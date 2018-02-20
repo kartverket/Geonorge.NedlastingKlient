@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 
 namespace NedlastingKlient.Konsoll
@@ -42,10 +43,15 @@ namespace NedlastingKlient.Konsoll
             }
         }
 
-        private static bool ShouldDownload(DatasetFile dataset)
+        private static bool ShouldDownload(DatasetFile originalDataset)
         {
-            // TODO: implement check of LastUpdated both in JSON-file and in Atom feed
-            return true;
+            var datasetService = new DatasetService();
+            DatasetFile datasetFromFeed = datasetService.GetDatasetFile(originalDataset);
+            DateTime originalDatasetLastUpdated = DateTime.ParseExact(originalDataset.LastUpdated, "yy/MM/dd h:mm:ss tt", CultureInfo.InvariantCulture);
+            DateTime datasetFromFeedLastUpdated = DateTime.ParseExact(datasetFromFeed.LastUpdated, "yy/MM/dd h:mm:ss tt", CultureInfo.InvariantCulture);
+
+
+            return originalDatasetLastUpdated < datasetFromFeedLastUpdated;
         }
     }
 }
