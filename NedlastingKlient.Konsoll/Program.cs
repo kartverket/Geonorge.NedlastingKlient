@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.IO;
 
 namespace NedlastingKlient.Konsoll
@@ -13,22 +12,14 @@ namespace NedlastingKlient.Konsoll
             var datasetService = new DatasetService();
             var datasetToDownload = datasetService.GetSelectedFiles();
 
-            AppSettings appSettings = ApplicationService.GetAppSettings();
+            var appSettings = ApplicationService.GetAppSettings();
 
             var downloader = new FileDownloader();
             foreach (var dataset in datasetToDownload)
             {
+                var downloadFilePath = GetDownloadFilePath(appSettings, dataset);
 
-                var outputDirectory = new DirectoryInfo(Path.Combine(appSettings.DownloadDirectory, dataset.DatasetId));
-                if (!outputDirectory.Exists)
-                {
-                    Console.WriteLine($"Download directory [{outputDirectory}] does not exist, creating it now.");
-                    outputDirectory.Create();
-                }
-
-                var outputFile = new FileInfo(Path.Combine(outputDirectory.FullName, Path.GetFileName(new Uri(dataset.Url).LocalPath)));
-
-                if (outputFile.Exists && !ShouldDownload(dataset))
+                if (downloadFilePath.Exists && !ShouldDownload(dataset))
                     continue;
 
                 Console.WriteLine("-------------");
@@ -40,18 +31,33 @@ namespace NedlastingKlient.Konsoll
                     Console.Write($"{progressPercentage}% ({totalBytesDownloaded}/{totalFileSize})");
                 };
 
-                downloader.StartDownload(dataset.Url, outputFile.FullName).Wait();
+                downloader.StartDownload(dataset.Url, downloadFilePath.FullName).Wait();
 
                 Console.WriteLine();
             }
         }
 
+        private static FileInfo GetDownloadFilePath(AppSettings appSettings, DatasetFile dataset)
+        {
+            var downloadDirectory = new DirectoryInfo(Path.Combine(appSettings.DownloadDirectory, dataset.DatasetId));
+            if (!downloadDirectory.Exists)
+            {
+                Console.WriteLine($"Download directory [{downloadDirectory}] does not exist, creating it now.");
+                downloadDirectory.Create();
+            }
+
+            var filenameFromUrl = new Uri(dataset.Url).LocalPath;
+            var downloadFilePath =
+                new FileInfo(Path.Combine(downloadDirectory.FullName, Path.GetFileName(filenameFromUrl)));
+            return downloadFilePath;
+        }
+
         private static bool ShouldDownload(DatasetFile originalDataset)
         {
             var datasetService = new DatasetService();
-            DatasetFile datasetFromFeed = datasetService.GetDatasetFile(originalDataset);
-            DateTime originalDatasetLastUpdated = DateTime.Parse(originalDataset.LastUpdated);
-            DateTime datasetFromFeedLastUpdated = DateTime.Parse(datasetFromFeed.LastUpdated);
+            var datasetFromFeed = datasetService.GetDatasetFile(originalDataset);
+            var originalDatasetLastUpdated = DateTime.Parse(originalDataset.LastUpdated);
+            var datasetFromFeedLastUpdated = DateTime.Parse(datasetFromFeed.LastUpdated);
 
             return originalDatasetLastUpdated < datasetFromFeedLastUpdated;
         }
