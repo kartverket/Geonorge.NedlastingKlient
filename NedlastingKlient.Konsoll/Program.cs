@@ -13,11 +13,22 @@ namespace NedlastingKlient.Konsoll
             var datasetService = new DatasetService();
             var datasetToDownload = datasetService.GetSelectedFiles();
 
+            AppSettings appSettings = ApplicationService.GetAppSettings();
+
             var downloader = new FileDownloader();
             foreach (var dataset in datasetToDownload)
             {
 
-                if (!ShouldDownload(dataset))
+                var outputDirectory = new DirectoryInfo(Path.Combine(appSettings.DownloadDirectory, dataset.DatasetId));
+                if (!outputDirectory.Exists)
+                {
+                    Console.WriteLine($"Download directory [{outputDirectory}] does not exist, creating it now.");
+                    outputDirectory.Create();
+                }
+
+                var outputFile = new FileInfo(Path.Combine(outputDirectory.FullName, Path.GetFileName(new Uri(dataset.Url).LocalPath)));
+
+                if (outputFile.Exists && !ShouldDownload(dataset))
                     continue;
 
                 Console.WriteLine("-------------");
@@ -29,15 +40,7 @@ namespace NedlastingKlient.Konsoll
                     Console.Write($"{progressPercentage}% ({totalBytesDownloaded}/{totalFileSize})");
                 };
 
-                var outputDirectory = new DirectoryInfo(@"c:\dev\tmp\geonorge\" + dataset.DatasetId);
-                if (!outputDirectory.Exists)
-                    outputDirectory.Create();
-
-                var uri = new Uri(dataset.Url);
-                var outputFile = outputDirectory.FullName + Path.DirectorySeparatorChar +
-                                 Path.GetFileName(uri.LocalPath);
-
-                downloader.StartDownload(dataset.Url, outputFile).Wait();
+                downloader.StartDownload(dataset.Url, outputFile.FullName).Wait();
 
                 Console.WriteLine();
             }

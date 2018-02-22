@@ -3,11 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Runtime.Serialization.Json;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Formatting = System.Xml.Formatting;
-
 
 namespace NedlastingKlient
 {
@@ -38,9 +35,8 @@ namespace NedlastingKlient
             var serializer = new JsonSerializer();
             serializer.Converters.Add(new JavaScriptDateTimeConverter());
             serializer.NullValueHandling = NullValueHandling.Ignore;
-            string mydocpath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
-            using (StreamWriter outputFile = new StreamWriter(mydocpath + @"\downloadfiles.txt", false))
+            using (var outputFile = new StreamWriter(ApplicationService.GetDownloadFilePath(), false))
             using (JsonWriter writer = new JsonTextWriter(outputFile))
             {
                 serializer.Serialize(writer, selectedFiles);
@@ -50,21 +46,24 @@ namespace NedlastingKlient
 
         public List<DatasetFile> GetSelectedFiles(string datasetTitle = null)
         {
-            string mydocpath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             try
             {
-                using (StreamReader r = new StreamReader(mydocpath + @"\downloadfiles.txt"))
+                using (var r = new StreamReader(ApplicationService.GetDownloadFilePath()))
                 {
-                    string json = r.ReadToEnd();
-                    List<DatasetFile> selecedFiles = JsonConvert.DeserializeObject<List<DatasetFile>>(json);
+                    var json = r.ReadToEnd();
+                    var selecedFiles = JsonConvert.DeserializeObject<List<DatasetFile>>(json);
                     r.Close();
-                    return datasetTitle != null ? selecedFiles.Where(f => f.DatasetId == datasetTitle).ToList() : selecedFiles;
+                    return datasetTitle != null
+                        ? selecedFiles.Where(f => f.DatasetId == datasetTitle).ToList()
+                        : selecedFiles;
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
+                // TODO error handling
                 return new List<DatasetFile>();
             }
         }
+
     }
 }
