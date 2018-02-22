@@ -4,6 +4,26 @@ This project provides a client software for downloading dataset's published thro
 
 It includes a desktop application for browsing and selecting files you want to download. A console application is provided to perform downloads. This console application can be scheduled to run through Scheduled tasks on windows, or cron on *nix platforms.
 
+# Introduction
+
+Use the graphical client to select which files you want to download. The selected files are saved to download.json. The file is saved at the following locations:
+
+Windows:
+C:\Users\{USERNAME}\AppData\Local\Geonorge\Nedlasting
+
+Linux/Mac:
+/home/{USERNAME}/.local/share/Geonorge/Nedlasting
+
+When you start the console application the download.json file is parsed together with the latest version of the Atom Feed. The application inspects the last updated date and compares it with the local copy of the file. If a new file has been published it will start the download. 
+
+The graphical client is only available on Windows. But the console application can be run on all platforms. This means that you can configure a list of files to download. Copy the download.json from your Windows machine on to your mac/linux machine and run the console application to perform download. 
+
+## How to change download location
+
+The default download location is **My Documents\Geonorge-Nedlasting** (windows) or **/home/{username}/Geonorge-Nedlasting** (linux/mac). 
+
+To change this location go into the application settings directory, se previous paragraph, and edit the settings.json file. Here you can change the DownloadDirectory setting. Save the file and it will be used next time you run the download application. 
+
 ## How to setup development environment
 
 Project depends on:
