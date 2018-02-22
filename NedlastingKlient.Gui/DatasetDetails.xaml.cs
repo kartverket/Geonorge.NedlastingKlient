@@ -111,7 +111,7 @@ namespace NedlastingKlient.Gui
                 updatedDownloadedFilesList.Add(selectedFile);
             }
 
-            new DatasetService().WriteToJason(updatedDownloadedFilesList);
+            new DatasetService().WriteToDownloadFile(updatedDownloadedFilesList);
 
             MessageBox.Show("Lagring, OK!");
         }

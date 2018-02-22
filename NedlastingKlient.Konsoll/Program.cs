@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace NedlastingKlient.Konsoll
@@ -10,31 +11,46 @@ namespace NedlastingKlient.Konsoll
             Console.WriteLine("Geonorge Nedlastingklient");
 
             var datasetService = new DatasetService();
-            var datasetToDownload = datasetService.GetSelectedFiles();
+            List<DatasetFile> datasetToDownload = datasetService.GetSelectedFiles();
+
+            List<DatasetFile> datasetSuccessfullyDownloaded = new List<DatasetFile>();
 
             var appSettings = ApplicationService.GetAppSettings();
 
             var downloader = new FileDownloader();
-            foreach (var dataset in datasetToDownload)
+            foreach (var localDataset in datasetToDownload)
             {
-                var downloadFilePath = GetDownloadFilePath(appSettings, dataset);
-
-                if (downloadFilePath.Exists && !ShouldDownload(dataset))
-                    continue;
-
-                Console.WriteLine("-------------");
-                Console.WriteLine(dataset.DatasetId + " - " + dataset.Title);
-
-                downloader.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) =>
+                try
                 {
-                    Console.CursorLeft = 0;
-                    Console.Write($"{progressPercentage}% ({totalBytesDownloaded}/{totalFileSize})");
-                };
+                    FileInfo downloadFilePath = GetDownloadFilePath(appSettings, localDataset);
 
-                downloader.StartDownload(dataset.Url, downloadFilePath.FullName).Wait();
+                    DatasetFile datasetFromFeed = datasetService.GetDatasetFile(localDataset);
 
-                Console.WriteLine();
+                    if (downloadFilePath.Exists && !ShouldDownload(localDataset, datasetFromFeed))
+                        continue;
+
+                    Console.WriteLine("-------------");
+                    Console.WriteLine(localDataset.DatasetId + " - " + localDataset.Title);
+
+                    downloader.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) =>
+                    {
+                        Console.CursorLeft = 0;
+                        Console.Write($"{progressPercentage}% ({totalBytesDownloaded}/{totalFileSize})");
+                    };
+
+                    downloader.StartDownload(localDataset.Url, downloadFilePath.FullName).Wait();
+
+                    datasetSuccessfullyDownloaded.Add(datasetFromFeed);
+
+                    Console.WriteLine();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Error while downloading dataset: " + e.Message);
+                }
             }
+
+            datasetService.WriteToDownloadFile(datasetSuccessfullyDownloaded);
         }
 
         private static FileInfo GetDownloadFilePath(AppSettings appSettings, DatasetFile dataset)
@@ -52,11 +68,9 @@ namespace NedlastingKlient.Konsoll
             return downloadFilePath;
         }
 
-        private static bool ShouldDownload(DatasetFile originalDataset)
+        private static bool ShouldDownload(DatasetFile localDataset, DatasetFile datasetFromFeed)
         {
-            var datasetService = new DatasetService();
-            var datasetFromFeed = datasetService.GetDatasetFile(originalDataset);
-            var originalDatasetLastUpdated = DateTime.Parse(originalDataset.LastUpdated);
+            var originalDatasetLastUpdated = DateTime.Parse(localDataset.LastUpdated);
             var datasetFromFeedLastUpdated = DateTime.Parse(datasetFromFeed.LastUpdated);
 
             return originalDatasetLastUpdated < datasetFromFeedLastUpdated;

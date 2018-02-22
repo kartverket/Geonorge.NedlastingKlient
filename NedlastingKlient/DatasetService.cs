@@ -30,7 +30,11 @@ namespace NedlastingKlient
             return new AtomFeedParser().ParseDatasetFile(getFeedTask.Result, originalDatasetFile);
         }
 
-        public void WriteToJason(List<DatasetFile> selectedFiles)
+        /// <summary>
+        /// Writes the information about the selected files to the local download list. 
+        /// </summary>
+        /// <param name="datasetFiles"></param>
+        public void WriteToDownloadFile(List<DatasetFile> datasetFiles)
         {
             var serializer = new JsonSerializer();
             serializer.Converters.Add(new JavaScriptDateTimeConverter());
@@ -39,11 +43,16 @@ namespace NedlastingKlient
             using (var outputFile = new StreamWriter(ApplicationService.GetDownloadFilePath(), false))
             using (JsonWriter writer = new JsonTextWriter(outputFile))
             {
-                serializer.Serialize(writer, selectedFiles);
+                serializer.Serialize(writer, datasetFiles);
                 writer.Close();
             }
         }
 
+        /// <summary>
+        /// Returns a list of dataset files to download. 
+        /// </summary>
+        /// <param name="datasetTitle">search for dataset with given title. List will only return dataset that matches.</param>
+        /// <returns></returns>
         public List<DatasetFile> GetSelectedFiles(string datasetTitle = null)
         {
             try
@@ -64,6 +73,5 @@ namespace NedlastingKlient
                 return new List<DatasetFile>();
             }
         }
-
     }
 }
