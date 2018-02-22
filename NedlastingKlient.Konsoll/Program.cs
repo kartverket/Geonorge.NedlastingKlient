@@ -47,9 +47,8 @@ namespace NedlastingKlient.Konsoll
         {
             var datasetService = new DatasetService();
             DatasetFile datasetFromFeed = datasetService.GetDatasetFile(originalDataset);
-            DateTime originalDatasetLastUpdated = DateTime.ParseExact(originalDataset.LastUpdated, "yy/MM/dd h:mm:ss tt", CultureInfo.InvariantCulture);
-            DateTime datasetFromFeedLastUpdated = DateTime.ParseExact(datasetFromFeed.LastUpdated, "yy/MM/dd h:mm:ss tt", CultureInfo.InvariantCulture);
-
+            DateTime originalDatasetLastUpdated = DateTime.Parse(originalDataset.LastUpdated);
+            DateTime datasetFromFeedLastUpdated = DateTime.Parse(datasetFromFeed.LastUpdated);
 
             return originalDatasetLastUpdated < datasetFromFeedLastUpdated;
         }
