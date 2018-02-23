@@ -5,40 +5,57 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NedlastingKlient.Gui"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:nedlastingKlient="clr-namespace:NedlastingKlient;assembly=NedlastingKlient"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
         TextOptions.TextFormattingMode="Ideal" 
-        TextOptions.TextRenderingMode="Auto"        
+        TextOptions.TextRenderingMode="Auto" 
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen" WindowState="Maximized"    
         Title="Geonorge Nedlasting"
         Closing="ClosingWindow" Loaded="LoadedWindow">
-    
-    <ScrollViewer HorizontalScrollBarVisibility="Auto">
-    <StackPanel Margin="20,20,20,20">
 
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
 
-            <!-- Datasett -->
-            <StackPanel Grid.Column="0" Margin="0 0 20 0">
+    <ScrollViewer x:Name="MainScrollbar" HorizontalScrollBarVisibility="Auto">
+        <StackPanel Margin="20,20,20,20">
 
-                <StackPanel Orientation="Horizontal" Margin="0 0 20 10">
-                    <!-- Ikon for datasett?<materialDesign:PackIcon Kind="" VerticalAlignment="Center" />-->
-                        <TextBlock FontWeight="Bold" FontSize="16"  Margin="0 0 0 0" VerticalAlignment="Center" Text="Datasett"></TextBlock>
+            <StackPanel Background="#f8f8f7">
+                <Image HorizontalAlignment="Left" Margin="10 0 0 20" Source="Content/geonorge_logo_225px.gif"/>
+            </StackPanel>
+            
+            <!-- Overskrifter -->
+            <Grid Margin="-20 0 -20 20" Background="#dfdcda">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Orientation="Horizontal" >
+                    <TextBlock FontWeight="Bold" ToolTip="Datasett" FontSize="16" Margin="25 0 0 0" VerticalAlignment="Center" Text="Datasett"></TextBlock>
                 </StackPanel>
 
-                <ListBox x:Name="DgDatasets" 
-                         BorderThickness="0.4"  MaxHeight="400"
-                         SelectionChanged="ShowFiles">
-                    <ListBox.ItemTemplate>
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <materialDesign:PackIcon Kind="File" Margin="10 0 0 0" VerticalAlignment="Center" />
+                    <TextBlock FontWeight="Bold" FontSize="16" ToolTip="Nedlastbare filer for valgt datasett" Padding="10" Margin="0 0 0 0" VerticalAlignment="Center">Filer</TextBlock>
+                </StackPanel>
+            </Grid>
 
+            <!-- Filer for valgt datasett-->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Datasett -->
+                <StackPanel Grid.Column="0" Margin="0 0 20 0">
+
+                    <ListBox BorderThickness="0.4" Name="DgDatasets" MaxHeight="400"
+                         SelectionChanged="ShowFiles">
+                        <ListBox.ItemTemplate>
                         <DataTemplate>
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -49,100 +66,97 @@
                                 <TextBlock VerticalAlignment="Center" Grid.Column="1" Text="{Binding Organization}"/>
                             </Grid>
                         </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
 
-            </StackPanel>
-
-            <!-- Datasett filer -->
-
-            <StackPanel Grid.Column="1">
-                <StackPanel Orientation="Horizontal" Margin="0 0 20 10">
-                    <materialDesign:PackIcon Kind="File" VerticalAlignment="Center" />
-                    <TextBlock FontWeight="Bold" FontSize="16" Margin="8 0 0 0" VerticalAlignment="Center">Filer</TextBlock>
                 </StackPanel>
 
-                <ListBox x:Name="LbSelectedDatasetFiles" 
-                         BorderThickness="0.4"  MaxHeight="400">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="200" SharedSizeGroup="Column1"/>
-                                    <ColumnDefinition Width="100" SharedSizeGroup="Column2"/>
-                                    <ColumnDefinition Width="Auto" SharedSizeGroup="Column3"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock VerticalAlignment="Center" Grid.Column="0" Text="{Binding Title}"/>
-                                <TextBlock VerticalAlignment="Center" Grid.Column="1" Text="{Binding Category}"/>
+                <!-- Datasett filer -->
+                <StackPanel Grid.Column="1">
+
+                    <ListBox x:Name="LbSelectedDatasetFiles" 
+                             BorderThickness="0.4"  MaxHeight="400">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="200" SharedSizeGroup="Column1"/>
+                                        <ColumnDefinition Width="100" SharedSizeGroup="Column2"/>
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="Column3"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock VerticalAlignment="Center" Grid.Column="0" Text="{Binding Title}"/>
+                                    <TextBlock VerticalAlignment="Center" Grid.Column="1" Text="{Binding Category}"/>
 
                                     <ToggleButton x:Name="BtnAddOrRemove" Grid.Column="2" BindingGroup="{Binding LbSelectedDatasetFiles}" IsChecked="{Binding SelectedForDownload}" Click="ToggleButton_OnChecked"
-                                    Style="{StaticResource MaterialDesignActionToggleButton}"
-                                    ToolTip="Legg til/Fjern">
-                                    <ToggleButton.Content>
-                                        <materialDesign:PackIcon
-                                            Kind="FileHidden" 
-                                            Height="22"
-                                            Width="22"/>
-                                    </ToggleButton.Content>
-                                    <materialDesign:ToggleButtonAssist.OnContent>
-                                        <materialDesign:PackIcon
-                                            Kind="FileCheck"
-                                            Height="22"
-                                            Width="22"/>
-                                    </materialDesign:ToggleButtonAssist.OnContent>
-                                </ToggleButton>
+                                        Style="{StaticResource MaterialDesignActionToggleButton}"
+                                        ToolTip="Legg til/Fjern">
+                                        <ToggleButton.Content>
+                                            <materialDesign:PackIcon
+                                                Kind="FileHidden" 
+                                                Height="22"
+                                                Width="22"/>
+                                        </ToggleButton.Content>
+                                        <materialDesign:ToggleButtonAssist.OnContent>
+                                            <materialDesign:PackIcon
+                                                Kind="FileCheck"
+                                                Height="22"
+                                                Width="22"/>
+                                        </materialDesign:ToggleButtonAssist.OnContent>
+                                    </ToggleButton>
 
-                            </Grid>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
 
+                </StackPanel>
+            </Grid>
+
+            <!-- Overskrift alle filer valgt for nedlasting -->
+            <StackPanel Orientation="Horizontal" Margin="-20 20 -20 0" Background="#dfdcda">
+                <materialDesign:PackIcon Kind="FileMultiple" Margin="30 0 0 0" VerticalAlignment="Center" />
+                <TextBlock FontWeight="Bold" FontSize="16" Padding="10" Margin="0 0 0 0" VerticalAlignment="Center">Alle filer valgt for nedlasting</TextBlock>
             </StackPanel>
 
-        </Grid>
-
-
-        <StackPanel Orientation="Horizontal" Margin="0 40 20 10">
-            <materialDesign:PackIcon Kind="FileMultiple" VerticalAlignment="Center" />
-            <TextBlock FontWeight="Bold" FontSize="16"  Margin="10 0 0 0" VerticalAlignment="Center">Alle filer valgt for nedlasting</TextBlock>
-        </StackPanel>
-
-        <ListBox x:Name="LbSelectedFiles" 
+            <!-- Liste over filer valgt for nedlasting-->
+            <ListBox x:Name="LbSelectedFiles" 
                     BorderThickness="0" ItemsSource="{Binding LbSelectedFiles}"
                     ScrollViewer.CanContentScroll="True" 
                     ScrollViewer.VerticalScrollBarVisibility="Auto"
-                    MaxHeight="400">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="350"/>
-                            <ColumnDefinition Width="250"/>
-                            <ColumnDefinition Width="250"/>
-                            <ColumnDefinition Width="200"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock VerticalAlignment="Center" Grid.Column="0" Text="{Binding DatasetId}"/>
-                        <TextBlock VerticalAlignment="Center" Grid.Column="1" Text="{Binding Title}"/>
-                        <TextBlock VerticalAlignment="Center" Grid.Column="2" Text="{Binding Category}"/>
-                        <TextBlock VerticalAlignment="Center" Grid.Column="3" Text="{Binding LastUpdated}"/>
-                        <Button x:Name="BtnAddOrRemove" Grid.Column="4" BindingGroup="{Binding LbSelectedFiles}" Click="RemoveFromDownloadList"
-                            Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
-                            ToolTip="Fjern"
-                                Height="32"
-                                Width="32">
-                            <materialDesign:PackIcon
-                                Kind="Delete"
-                                Height="22"
-                                Width="22" />
-                        </Button>
-                    </Grid>
+                    MaxHeight="400"
+                    Margin="0 20 0 40">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="350"/>
+                                <ColumnDefinition Width="250"/>
+                                <ColumnDefinition Width="250"/>
+                                <ColumnDefinition Width="200"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock VerticalAlignment="Center" Grid.Column="0" Text="{Binding DatasetId}"/>
+                            <TextBlock VerticalAlignment="Center" Grid.Column="1" Text="{Binding Title}"/>
+                            <TextBlock VerticalAlignment="Center" Grid.Column="2" Text="{Binding Category}"/>
+                            <TextBlock VerticalAlignment="Center" Grid.Column="3" Text="{Binding LastUpdated}"/>
+                            <Button x:Name="BtnAddOrRemove" Grid.Column="4" BindingGroup="{Binding LbSelectedFiles}" Click="RemoveFromDownloadList"
+                                Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
+                                ToolTip="Fjern"
+                                    Height="32"
+                                    Width="32">
+                                <materialDesign:PackIcon
+                                    Kind="Delete"
+                                    Height="22"
+                                    Width="22" />
+                            </Button>
+                        </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
 
-            <Button Width="100" Content="Lagre" x:Name="BtnSave" Click="SaveList"/>
+        <Button Width="100" Content="Lagre" x:Name="BtnSave" Click="SaveList"/>
         
     </StackPanel>
+        
     </ScrollViewer>
 </Window>

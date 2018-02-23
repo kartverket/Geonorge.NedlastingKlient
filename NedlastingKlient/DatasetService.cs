@@ -53,6 +53,24 @@ namespace NedlastingKlient
             }
         }
 
+        /// <summary>
+        /// Writes the information about the selected files to the local download list. 
+        /// </summary>
+        /// <param name="datasetFilesViewModel"></param>
+        public void WriteToDownloadFile(List<DatasetFile> datasetFiles)
+        {
+            var serializer = new JsonSerializer();
+            serializer.Converters.Add(new JavaScriptDateTimeConverter());
+            serializer.NullValueHandling = NullValueHandling.Ignore;
+
+            using (var outputFile = new StreamWriter(ApplicationService.GetDownloadFilePath(), false))
+            using (JsonWriter writer = new JsonTextWriter(outputFile))
+            {
+                serializer.Serialize(writer, datasetFiles);
+                writer.Close();
+            }
+        }
+
         private List<DatasetFile> ConvertToModel(List<DatasetFileViewModel> datasetFilesViewModel)
         {
             var datasetFiles = new List<DatasetFile>();
@@ -69,7 +87,7 @@ namespace NedlastingKlient
         /// </summary>
         /// <param name="datasetTitle">search for dataset with given title. List will only return dataset that matches.</param>
         /// <returns></returns>
-        public List<DatasetFileViewModel> GetSelectedFiles(string datasetTitle = null)
+        public List<DatasetFile> GetSelectedFiles(string datasetTitle = null)
         {
             try
             {
@@ -78,18 +96,22 @@ namespace NedlastingKlient
                     var json = r.ReadToEnd();
                     var selecedFiles = JsonConvert.DeserializeObject<List<DatasetFile>>(json);
                     r.Close();
-                    List<DatasetFile> selectedFiles = datasetTitle != null
+                    return datasetTitle != null
                         ? selecedFiles.Where(f => f.DatasetId == datasetTitle).ToList()
                         : selecedFiles;
-
-                    return ConvertToViewModel(selectedFiles, true);
                 }
             }
             catch (Exception)
             {
                 // TODO error handling
-                return new List<DatasetFileViewModel>();
+                return new List<DatasetFile>();
             }
+        }
+
+        public List<DatasetFileViewModel> GetSelectedFilesAsViewModel(string datasetTitle = null)
+        {
+            List<DatasetFile> selectedFiles = GetSelectedFiles(datasetTitle);
+            return ConvertToViewModel(selectedFiles, true);
         }
 
         private List<DatasetFileViewModel> ConvertToViewModel(List<DatasetFile> datasetFiles, bool selectedForDownload = false)

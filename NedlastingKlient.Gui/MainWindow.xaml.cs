@@ -30,14 +30,17 @@ namespace NedlastingKlient.Gui
 
         private List<DatasetFileViewModel> _selectedFiles;
         private List<DatasetFileViewModel> _datasetfiles;
+        public List<Dataset> _Datasets;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            DgDatasets.ItemsSource = new DatasetService().GetDatasets();
+            _Datasets = new DatasetService().GetDatasets();
+            DgDatasets.ItemsSource = _Datasets;
 
-            _selectedFiles = new DatasetService().GetSelectedFiles();
+
+            _selectedFiles = new DatasetService().GetSelectedFilesAsViewModel();
             LbSelectedFiles.ItemsSource = _selectedFiles;
 
             _datasetfiles = new List<DatasetFileViewModel>();
@@ -50,31 +53,34 @@ namespace NedlastingKlient.Gui
 
             if (sender is ListBox listBoxItem)
             {
-                Dataset selectedDataset = (Dataset)listBoxItem.SelectedItem;
+                Dataset selectedDataset = (Dataset)listBoxItem.SelectedItems[0];
 
-                var selectedDatasetFiles = new DatasetService().GetSelectedFiles(selectedDataset.Title);
-                _datasetfiles = new DatasetService().GetDatasetFiles(selectedDataset);
-
-                foreach (var selectedDatasetFile in selectedDatasetFiles)
+                if (selectedDataset != null)
                 {
-                    foreach (var datasetFile in _datasetfiles)
+                    var selectedDatasetFiles = new DatasetService().GetSelectedFilesAsViewModel(selectedDataset.Title);
+                    _datasetfiles = new DatasetService().GetDatasetFiles(selectedDataset);
+
+                    foreach (var selectedDatasetFile in selectedDatasetFiles)
                     {
-                        if (selectedDatasetFile.Id == datasetFile.Id)
+                        foreach (var datasetFile in _datasetfiles)
                         {
-                            datasetFile.SelectedForDownload = true;
-                            break;
+                            if (selectedDatasetFile.Id == datasetFile.Id)
+                            {
+                                datasetFile.SelectedForDownload = true;
+                                break;
+                            }
                         }
                     }
+
+                    //RemoveSelectedFilesFromFiles();
+
+
+                    if (_datasetfiles.Count == 0)
+                    {
+                        MessageBox.Show("Ingen filer for dette datasettet");
+                    }
+                    LbSelectedDatasetFiles.ItemsSource = _datasetfiles;
                 }
-
-                //RemoveSelectedFilesFromFiles();
-
-
-                if (_datasetfiles.Count == 0)
-                {
-                    MessageBox.Show("Ingen filer for dette datasettet");
-                }
-                LbSelectedDatasetFiles.ItemsSource = _datasetfiles;
             }
         }
 
