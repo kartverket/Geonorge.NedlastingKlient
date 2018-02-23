@@ -31,7 +31,7 @@
 
                 <StackPanel Orientation="Horizontal" Margin="0 0 20 10">
                     <!-- Ikon for datasett?<materialDesign:PackIcon Kind="" VerticalAlignment="Center" />-->
-                    <TextBlock FontWeight="Bold" FontSize="16"  Margin="0 0 0 0" VerticalAlignment="Center">Datasett</TextBlock>
+                        <TextBlock FontWeight="Bold" FontSize="16"  Margin="0 0 0 0" VerticalAlignment="Center" Text="Datasett"></TextBlock>
                 </StackPanel>
 
                 <ListBox x:Name="DgDatasets" 
@@ -75,9 +75,9 @@
                                 <TextBlock VerticalAlignment="Center" Grid.Column="0" Text="{Binding Title}"/>
                                 <TextBlock VerticalAlignment="Center" Grid.Column="1" Text="{Binding Category}"/>
 
-                                <ToggleButton x:Name="BtnAddOrRemove" Grid.Column="2" BindingGroup="{Binding LbSelectedDatasetFiles}" Click="ToggleButton_OnChecked"
+                                    <ToggleButton x:Name="BtnAddOrRemove" Grid.Column="2" BindingGroup="{Binding LbSelectedDatasetFiles}" IsChecked="{Binding SelectedForDownload}" Click="ToggleButton_OnChecked"
                                     Style="{StaticResource MaterialDesignActionToggleButton}"
-                                    ToolTip="Legg til">
+                                    ToolTip="Legg til/Fjern">
                                     <ToggleButton.Content>
                                         <materialDesign:PackIcon
                                             Kind="FileHidden" 

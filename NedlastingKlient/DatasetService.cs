@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Xml.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -18,10 +20,12 @@ namespace NedlastingKlient
             return new AtomFeedParser().ParseDatasets(getFeedTask.Result);
         }
 
-        public List<DatasetFile> GetDatasetFiles(Dataset dataset)
+        public List<DatasetFileViewModel> GetDatasetFiles(Dataset dataset)
         {
             var getFeedTask = HttpClient.GetStringAsync(dataset.Url);
-            return new AtomFeedParser().ParseDatasetFiles(getFeedTask.Result, dataset).OrderBy(d => d.Title).ToList();
+            List<DatasetFile> datasetFiles = new AtomFeedParser().ParseDatasetFiles(getFeedTask.Result, dataset).OrderBy(d => d.Title).ToList();
+
+            return ConvertToViewModel(datasetFiles);
         }
 
         public DatasetFile GetDatasetFile(DatasetFile originalDatasetFile)
@@ -33,9 +37,10 @@ namespace NedlastingKlient
         /// <summary>
         /// Writes the information about the selected files to the local download list. 
         /// </summary>
-        /// <param name="datasetFiles"></param>
-        public void WriteToDownloadFile(List<DatasetFile> datasetFiles)
+        /// <param name="datasetFilesViewModel"></param>
+        public void WriteToDownloadFile(List<DatasetFileViewModel> datasetFilesViewModel)
         {
+            List<DatasetFile> datasetFiles = ConvertToModel(datasetFilesViewModel);
             var serializer = new JsonSerializer();
             serializer.Converters.Add(new JavaScriptDateTimeConverter());
             serializer.NullValueHandling = NullValueHandling.Ignore;
@@ -48,12 +53,23 @@ namespace NedlastingKlient
             }
         }
 
+        private List<DatasetFile> ConvertToModel(List<DatasetFileViewModel> datasetFilesViewModel)
+        {
+            var datasetFiles = new List<DatasetFile>();
+            foreach (var datasetFileViewModel in datasetFilesViewModel)
+            {
+                var datasetFile = new DatasetFile(datasetFileViewModel);
+                datasetFiles.Add(datasetFile);
+            }
+            return datasetFiles;
+        }
+
         /// <summary>
         /// Returns a list of dataset files to download. 
         /// </summary>
         /// <param name="datasetTitle">search for dataset with given title. List will only return dataset that matches.</param>
         /// <returns></returns>
-        public List<DatasetFile> GetSelectedFiles(string datasetTitle = null)
+        public List<DatasetFileViewModel> GetSelectedFiles(string datasetTitle = null)
         {
             try
             {
@@ -62,16 +78,29 @@ namespace NedlastingKlient
                     var json = r.ReadToEnd();
                     var selecedFiles = JsonConvert.DeserializeObject<List<DatasetFile>>(json);
                     r.Close();
-                    return datasetTitle != null
+                    List<DatasetFile> selectedFiles = datasetTitle != null
                         ? selecedFiles.Where(f => f.DatasetId == datasetTitle).ToList()
                         : selecedFiles;
+
+                    return ConvertToViewModel(selectedFiles, true);
                 }
             }
             catch (Exception)
             {
                 // TODO error handling
-                return new List<DatasetFile>();
+                return new List<DatasetFileViewModel>();
             }
+        }
+
+        private List<DatasetFileViewModel> ConvertToViewModel(List<DatasetFile> datasetFiles, bool selectedForDownload = false)
+        {
+            var selectedFilesViewModel = new List<DatasetFileViewModel>();
+            foreach (var selectedFile in datasetFiles)
+            {
+                DatasetFileViewModel selectedFileViewModel = new DatasetFileViewModel(selectedFile, selectedForDownload);
+                selectedFilesViewModel.Add(selectedFileViewModel);
+            }
+            return selectedFilesViewModel;
         }
     }
 }

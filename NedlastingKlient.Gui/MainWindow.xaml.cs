@@ -28,11 +28,8 @@ namespace NedlastingKlient.Gui
     {
         //public ICommand ShowProgressDialogCommand { get; }
 
-        private List<DatasetFile> _selectedFiles;
-        private List<DatasetFile> _datasetfiles;
-
-        private DatasetFile _currentItem;
-        private int _index = 0;
+        private List<DatasetFileViewModel> _selectedFiles;
+        private List<DatasetFileViewModel> _datasetfiles;
 
         public MainWindow()
         {
@@ -43,7 +40,7 @@ namespace NedlastingKlient.Gui
             _selectedFiles = new DatasetService().GetSelectedFiles();
             LbSelectedFiles.ItemsSource = _selectedFiles;
 
-            _datasetfiles = new List<DatasetFile>();
+            _datasetfiles = new List<DatasetFileViewModel>();
         }
 
 
@@ -55,7 +52,23 @@ namespace NedlastingKlient.Gui
             {
                 Dataset selectedDataset = (Dataset)listBoxItem.SelectedItem;
 
+                var selectedDatasetFiles = new DatasetService().GetSelectedFiles(selectedDataset.Title);
                 _datasetfiles = new DatasetService().GetDatasetFiles(selectedDataset);
+
+                foreach (var selectedDatasetFile in selectedDatasetFiles)
+                {
+                    foreach (var datasetFile in _datasetfiles)
+                    {
+                        if (selectedDatasetFile.Id == datasetFile.Id)
+                        {
+                            datasetFile.SelectedForDownload = true;
+                            break;
+                        }
+                    }
+                }
+
+                //RemoveSelectedFilesFromFiles();
+
 
                 if (_datasetfiles.Count == 0)
                 {
@@ -69,21 +82,21 @@ namespace NedlastingKlient.Gui
         private void ToggleButton_OnChecked(object sender, RoutedEventArgs e)
         {
             ToggleButton btn = (ToggleButton)sender;
-            DatasetFile datasetFile = (DatasetFile)btn.DataContext;
+            DatasetFileViewModel datasetFile = (DatasetFileViewModel)btn.DataContext;
 
             if (btn.IsChecked == true)
             {
+                datasetFile.SelectedForDownload = true;
                 AddToList(datasetFile);
-                btn.ToolTip = "Valgt for nedlasting";
             }
             else
             {
                 RemoveFromList(datasetFile);
-                btn.ToolTip = "Legg til";
+                datasetFile.SelectedForDownload = false;
             }
         }
 
-        private void AddToList(DatasetFile selectedFile)
+        private void AddToList(DatasetFileViewModel selectedFile)
         {
             if (selectedFile != null)
             {
@@ -97,7 +110,7 @@ namespace NedlastingKlient.Gui
             }
         }
 
-        private void RemoveFromList(DatasetFile selectedFile)
+        private void RemoveFromList(DatasetFileViewModel selectedFile)
         {
             if (selectedFile != null)
             {
@@ -120,7 +133,7 @@ namespace NedlastingKlient.Gui
         private void RemoveFromDownloadList(object sender, RoutedEventArgs e)
         {
             Button btn = (Button)sender;
-            DatasetFile datasetFile = (DatasetFile)btn.DataContext;
+            DatasetFileViewModel datasetFile = (DatasetFileViewModel)btn.DataContext;
 
             _selectedFiles.Remove(datasetFile);
             BindNewList();
@@ -142,7 +155,8 @@ namespace NedlastingKlient.Gui
 
         private void LoadedWindow(object sender, RoutedEventArgs e)
         {
-            
+
         }
     }
+
 }
