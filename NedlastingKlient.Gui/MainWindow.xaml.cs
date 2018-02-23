@@ -9,6 +9,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -162,6 +163,55 @@ namespace NedlastingKlient.Gui
         private void LoadedWindow(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void BtnSelectAll_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (LbSelectedDatasetFiles.Items.IsEmpty) return;
+            if (BtnSelectAll.IsChecked == true)
+            {
+                foreach (DatasetFileViewModel datasetFile in _datasetfiles)
+                {
+                    if (!datasetFile.SelectedForDownload)
+                    {
+                        datasetFile.SelectedForDownload = true;
+                        AddToList(datasetFile);
+                    }
+                }
+            }
+            else
+            {
+                foreach (DatasetFileViewModel datasetFile in _datasetfiles)
+                {
+                    if (datasetFile.SelectedForDownload)
+                    {
+                        datasetFile.SelectedForDownload = false;
+                        RemoveFromList(datasetFile);
+                    }
+                }
+            }
+            LbSelectedDatasetFiles.ItemsSource = null;
+            LbSelectedDatasetFiles.ItemsSource = _datasetfiles;
+        }
+
+        private void BtnRemoveAll_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (_selectedFiles.Any())
+            {
+                MessageBoxResult result = MessageBox.Show("Er du sikker på at du vil slette alle", "Slett alle",
+                    MessageBoxButton.YesNo);
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    _selectedFiles = new List<DatasetFileViewModel>();
+                    BindNewList();
+                    foreach (var datasetfile in _datasetfiles)
+                    {
+                        datasetfile.SelectedForDownload = false;
+                    }
+                    new DatasetService().WriteToDownloadFile(_selectedFiles);
+                }
+            }
         }
     }
 
