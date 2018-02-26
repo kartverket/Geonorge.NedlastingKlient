@@ -2,23 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Button = System.Windows.Controls.Button;
 using ListBox = System.Windows.Controls.ListBox;
 using MessageBox = System.Windows.MessageBox;
-using MessageBoxOptions = System.Windows.MessageBoxOptions;
 
 namespace NedlastingKlient.Gui
 {
@@ -48,38 +37,44 @@ namespace NedlastingKlient.Gui
         }
 
 
-        private void ShowFiles(object sender, RoutedEventArgs e)
+        private async void ShowFiles(object sender, RoutedEventArgs e)
         {
-            // TODO, må sjekke om noen av filene er valg. 
-
             if (sender is ListBox listBoxItem)
             {
                 Dataset selectedDataset = (Dataset)listBoxItem.SelectedItems[0];
-
                 if (selectedDataset != null)
                 {
-                    //var selectedDatasetFiles = new DatasetService().GetSelectedFilesAsViewModel(selectedDataset.Title);
-                    _datasetfiles = new DatasetService().GetDatasetFiles(selectedDataset);
+                    progressBar.IsIndeterminate = true;
 
-                    foreach (DatasetFileViewModel selectedDatasetFile in LbSelectedFiles.Items)
-                    {
-                        foreach (var datasetFile in _datasetfiles)
-                        {
-                            if (selectedDatasetFile.Id == datasetFile.Id)
-                            {
-                                datasetFile.SelectedForDownload = true;
-                                break;
-                            }
-                        }
-                    }
-
-                    if (_datasetfiles.Count == 0)
-                    {
-                        MessageBox.Show("Ingen filer for dette datasettet");
-                    }
-                    LbSelectedDatasetFiles.ItemsSource = _datasetfiles;
+                    LbSelectedDatasetFiles.ItemsSource = await Task.Run(() => GetFilesAsync(selectedDataset));
+                    progressBar.IsIndeterminate = false;
                 }
             }
+        }
+
+        private List<DatasetFileViewModel> GetFilesAsync(Dataset selctedDataset)
+        {
+
+            List<DatasetFileViewModel> selectedDatasetFiles = new DatasetService().GetDatasetFiles(selctedDataset);
+
+            foreach (DatasetFileViewModel selectedDatasetFile in LbSelectedFiles.Items)
+            {
+                foreach (var datasetFile in selectedDatasetFiles)
+                {
+                    if (selectedDatasetFile.Id == datasetFile.Id)
+                    {
+                        datasetFile.SelectedForDownload = true;
+                        break;
+                    }
+                }
+            }
+
+            if (selectedDatasetFiles.Count == 0)
+            {
+                MessageBox.Show("Ingen filer for dette datasettet");
+            }
+            _datasetfiles = selectedDatasetFiles;
+            return selectedDatasetFiles;
         }
 
 
