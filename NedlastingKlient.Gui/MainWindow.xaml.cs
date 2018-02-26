@@ -58,10 +58,10 @@ namespace NedlastingKlient.Gui
 
                 if (selectedDataset != null)
                 {
-                    var selectedDatasetFiles = new DatasetService().GetSelectedFilesAsViewModel(selectedDataset.Title);
+                    //var selectedDatasetFiles = new DatasetService().GetSelectedFilesAsViewModel(selectedDataset.Title);
                     _datasetfiles = new DatasetService().GetDatasetFiles(selectedDataset);
 
-                    foreach (var selectedDatasetFile in selectedDatasetFiles)
+                    foreach (DatasetFileViewModel selectedDatasetFile in LbSelectedFiles.Items)
                     {
                         foreach (var datasetFile in _datasetfiles)
                         {
@@ -72,9 +72,6 @@ namespace NedlastingKlient.Gui
                             }
                         }
                     }
-
-                    //RemoveSelectedFilesFromFiles();
-
 
                     if (_datasetfiles.Count == 0)
                     {
@@ -209,6 +206,7 @@ namespace NedlastingKlient.Gui
                     {
                         datasetfile.SelectedForDownload = false;
                     }
+                    LbSelectedDatasetFiles.ItemsSource = _datasetfiles;
                     new DatasetService().WriteToDownloadFile(_selectedFiles);
                 }
             }

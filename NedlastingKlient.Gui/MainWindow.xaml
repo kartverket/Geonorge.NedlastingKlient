@@ -58,7 +58,7 @@
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
                     <TextBlock ToolTip="Filnavn" Margin="8 0 0 0" Width="350" VerticalAlignment="Center" Text="Navn"></TextBlock>
                     <TextBlock ToolTip="Proposjon" Width="200" VerticalAlignment="Center" Text="Proposjon"></TextBlock>
-                    <ToggleButton x:Name="BtnSelectAll" BindingGroup="{Binding LbSelectedDatasetFiles}" IsChecked="{Binding LbSelectedDatasetFiles}" Click="BtnSelectAll_OnClick"
+                    <ToggleButton x:Name="BtnSelectAll" Click="BtnSelectAll_OnClick"
                                   Style="{StaticResource MaterialDesignActionToggleButton}"
                                   ToolTip="Velg/fjern alle">
                         <ToggleButton.Content>
@@ -120,7 +120,7 @@
                                     <TextBlock VerticalAlignment="Center" Grid.Column="0" Text="{Binding Title}"/>
                                     <TextBlock VerticalAlignment="Center" Grid.Column="1" Text="{Binding Category}"/>
 
-                                    <ToggleButton x:Name="BtnAddOrRemove" Grid.Column="2" BindingGroup="{Binding LbSelectedDatasetFiles}" IsChecked="{Binding SelectedForDownload, Mode=TwoWay}" Click="ToggleButton_OnChecked"
+                                    <ToggleButton x:Name="BtnAddOrRemove" Grid.Column="2" BindingGroup="{Binding LbSelectedDatasetFiles}" IsChecked="{Binding SelectedForDownload}" Click="ToggleButton_OnChecked"
                                         Style="{StaticResource MaterialDesignActionToggleButton}"
                                         ToolTip="Legg til/Fjern">
                                         <ToggleButton.Content>
@@ -162,7 +162,7 @@
                     <TextBlock ToolTip="Filnavn" Margin="0 0 0 0" Width="250" VerticalAlignment="Center" Text="Filnavn"></TextBlock>
                     <TextBlock ToolTip="Filnavn" Margin="0 0 0 0" Width="250" VerticalAlignment="Center" Text="Proposjon"></TextBlock>
                     <TextBlock ToolTip="Filnavn" Margin="0 0 0 0" Width="200" VerticalAlignment="Center" Text="Sist oppdatert"></TextBlock>
-                    <!--<Button x:Name="BtnRemoveAll" BindingGroup="{Binding LbSelectedFiles}" Click="BtnRemoveAll_OnClick"
+                    <Button x:Name="BtnRemoveAll" BindingGroup="{Binding LbSelectedFiles}" Click="BtnRemoveAll_OnClick"
                                   Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
                                   ToolTip="Fjern alle"
                                   Height="32"
@@ -171,7 +171,7 @@
                             Kind="Delete"
                             Height="22"
                             Width="22" />
-                    </Button>-->
+                    </Button>
                 </StackPanel>
             </Grid>
 
