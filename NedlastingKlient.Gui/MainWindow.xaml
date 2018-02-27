@@ -23,7 +23,7 @@
         
         <StackPanel Margin="0,20,0,20">
 
-            <StackPanel Background="#f8f8f7">
+            <StackPanel>
                 <Image HorizontalAlignment="Left" Margin="40 0 0 20" Source="Content/geonorge_logo_225px.gif"/>
             </StackPanel>
 
@@ -80,13 +80,13 @@
             </Grid>
 
             <ProgressBar
-                Style="{StaticResource MaterialDesignCircularProgressBar}"
-                Value="0"
-                Name="progressBar"
-                IsIndeterminate="False"/>
+                Value="0" 
+                Name="progressBar" Background="White" BorderBrush="White"
+                IsIndeterminate="False">
+            </ProgressBar>
 
 
-            <!-- Filer for valgt datasett-->
+                <!-- Filer for valgt datasett-->
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
