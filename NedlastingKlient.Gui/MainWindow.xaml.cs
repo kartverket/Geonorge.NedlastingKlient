@@ -19,7 +19,7 @@ namespace NedlastingKlient.Gui
         //public ICommand ShowProgressDialogCommand { get; }
 
         private List<DatasetFileViewModel> _selectedFiles;
-        private List<DatasetFileViewModel> _datasetfiles;
+        private List<DatasetFileViewModel> _selectedDatasetFiles;
         public List<Dataset> _Datasets;
 
         public MainWindow()
@@ -27,13 +27,13 @@ namespace NedlastingKlient.Gui
             InitializeComponent();
 
             _Datasets = new DatasetService().GetDatasets();
-            DgDatasets.ItemsSource = _Datasets;
+            LbDatasets.ItemsSource = _Datasets;
 
 
             _selectedFiles = new DatasetService().GetSelectedFilesAsViewModel();
             LbSelectedFiles.ItemsSource = _selectedFiles;
 
-            _datasetfiles = new List<DatasetFileViewModel>();
+            _selectedDatasetFiles = new List<DatasetFileViewModel>();
         }
 
 
@@ -57,7 +57,7 @@ namespace NedlastingKlient.Gui
 
             List<DatasetFileViewModel> selectedDatasetFiles = new DatasetService().GetDatasetFiles(selctedDataset);
 
-            foreach (DatasetFileViewModel selectedDatasetFile in LbSelectedFiles.Items)
+            foreach (DatasetFileViewModel selectedDatasetFile in _selectedFiles)
             {
                 foreach (var datasetFile in selectedDatasetFiles)
                 {
@@ -73,12 +73,12 @@ namespace NedlastingKlient.Gui
             {
                 MessageBox.Show("Ingen filer for dette datasettet");
             }
-            _datasetfiles = selectedDatasetFiles;
+            _selectedDatasetFiles = selectedDatasetFiles;
             return selectedDatasetFiles;
         }
 
 
-        private void ToggleButton_OnChecked(object sender, RoutedEventArgs e)
+        private void AddRemove_OnChecked(object sender, RoutedEventArgs e)
         {
             ToggleButton btn = (ToggleButton)sender;
             DatasetFileViewModel datasetFile = (DatasetFileViewModel)btn.DataContext;
@@ -127,18 +127,36 @@ namespace NedlastingKlient.Gui
         {
             LbSelectedFiles.ItemsSource = null;
             LbSelectedFiles.ItemsSource = _selectedFiles;
+            LbSelectedDatasetFiles.ItemsSource = null;
+            LbSelectedDatasetFiles.ItemsSource = _selectedDatasetFiles;
         }
 
-        private void RemoveFromDownloadList(object sender, RoutedEventArgs e)
+        private void RemoveFromDownloadList_Click(object sender, RoutedEventArgs e)
         {
             Button btn = (Button)sender;
-            DatasetFileViewModel datasetFile = (DatasetFileViewModel)btn.DataContext;
+            DatasetFileViewModel selectedDatasetFile = (DatasetFileViewModel)btn.DataContext;
+            UpdateSelectedDatasetFiles(selectedDatasetFile);
 
-            _selectedFiles.Remove(datasetFile);
+            _selectedFiles.Remove(selectedDatasetFile);
             BindNewList();
         }
 
-        private void SaveList(object sender, RoutedEventArgs e)
+        private void UpdateSelectedDatasetFiles(DatasetFileViewModel selectedDatasetFile)
+        {
+            if (_selectedDatasetFiles.Any())
+            {
+                foreach (DatasetFileViewModel datasetFile in _selectedDatasetFiles)
+                {
+                    if (datasetFile.Id == selectedDatasetFile.Id)
+                    {
+                        datasetFile.SelectedForDownload = false;
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void SaveList_Click(object sender, RoutedEventArgs e)
         {
             new DatasetService().WriteToDownloadFile(_selectedFiles);
             MessageBox.Show("Lagring, OK!");
@@ -149,12 +167,7 @@ namespace NedlastingKlient.Gui
             MessageBoxResult result = MessageBox.Show("Vil du lagre før du avslutter?", "Lagre", MessageBoxButton.YesNo);
 
             if (result == MessageBoxResult.Yes)
-                SaveList(null, null);
-        }
-
-        private void LoadedWindow(object sender, RoutedEventArgs e)
-        {
-
+                SaveList_Click(null, null);
         }
 
         private void BtnSelectAll_OnClick(object sender, RoutedEventArgs e)
@@ -162,7 +175,7 @@ namespace NedlastingKlient.Gui
             if (LbSelectedDatasetFiles.Items.IsEmpty) return;
             if (BtnSelectAll.IsChecked == true)
             {
-                foreach (DatasetFileViewModel datasetFile in _datasetfiles)
+                foreach (DatasetFileViewModel datasetFile in LbSelectedDatasetFiles.Items)
                 {
                     if (!datasetFile.SelectedForDownload)
                     {
@@ -173,7 +186,7 @@ namespace NedlastingKlient.Gui
             }
             else
             {
-                foreach (DatasetFileViewModel datasetFile in _datasetfiles)
+                foreach (DatasetFileViewModel datasetFile in _selectedDatasetFiles)
                 {
                     if (datasetFile.SelectedForDownload)
                     {
@@ -183,26 +196,24 @@ namespace NedlastingKlient.Gui
                 }
             }
             LbSelectedDatasetFiles.ItemsSource = null;
-            LbSelectedDatasetFiles.ItemsSource = _datasetfiles;
+            LbSelectedDatasetFiles.ItemsSource = _selectedDatasetFiles;
         }
 
         private void BtnRemoveAll_OnClick(object sender, RoutedEventArgs e)
         {
             if (_selectedFiles.Any())
             {
-                MessageBoxResult result = MessageBox.Show("Er du sikker på at du vil slette alle", "Slett alle",
-                    MessageBoxButton.YesNo);
+                MessageBoxResult result = MessageBox.Show("Er du sikker på at du vil slette alle", "Slett alle", MessageBoxButton.YesNo);
 
                 if (result == MessageBoxResult.Yes)
                 {
                     _selectedFiles = new List<DatasetFileViewModel>();
-                    BindNewList();
-                    foreach (var datasetfile in _datasetfiles)
+                    foreach (DatasetFileViewModel datasetfile in _selectedDatasetFiles)
                     {
                         datasetfile.SelectedForDownload = false;
                     }
-                    LbSelectedDatasetFiles.ItemsSource = _datasetfiles;
-                    new DatasetService().WriteToDownloadFile(_selectedFiles);
+                    BindNewList();
+                    //new DatasetService().WriteToDownloadFile(_selectedFiles);
                 }
             }
         }

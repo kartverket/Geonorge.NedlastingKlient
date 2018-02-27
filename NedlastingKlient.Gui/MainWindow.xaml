@@ -16,7 +16,7 @@
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen" WindowState="Maximized"    
         Title="Geonorge Nedlasting"
-        Closing="ClosingWindow" Loaded="LoadedWindow">
+        Closing="ClosingWindow">
 
 
     <ScrollViewer x:Name="MainScrollbar" HorizontalScrollBarVisibility="Auto">
@@ -95,7 +95,7 @@
 
                 <!-- Datasett -->
                 <StackPanel Grid.Column="0" Margin="40 0 0 0">
-                    <ListBox BorderThickness="0.4" Name="DgDatasets" MaxHeight="450"
+                    <ListBox BorderThickness="0.4" Name="LbDatasets" MaxHeight="450"
                          SelectionChanged="ShowFiles">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
@@ -131,7 +131,7 @@
                                     <TextBlock VerticalAlignment="Center" Grid.Column="0" Text="{Binding Title}"/>
                                     <TextBlock VerticalAlignment="Center" Grid.Column="1" Text="{Binding Category}"/>
 
-                                    <ToggleButton x:Name="BtnAddOrRemove" Grid.Column="2" Width="20" Height="20" BindingGroup="{Binding LbSelectedDatasetFiles}" IsChecked="{Binding SelectedForDownload}" Click="ToggleButton_OnChecked"
+                                    <ToggleButton x:Name="BtnAddOrRemove" Grid.Column="2" Width="20" Height="20" BindingGroup="{Binding LbSelectedDatasetFiles}" IsChecked="{Binding SelectedForDownload}" Click="AddRemove_OnChecked"
                                         Style="{StaticResource MaterialDesignActionToggleButton}"
                                         ToolTip="Legg til/Fjern">
                                         <ToggleButton.Content>
@@ -208,7 +208,7 @@
                             <TextBlock VerticalAlignment="Center" Grid.Column="1" Text="{Binding Title}"/>
                             <TextBlock VerticalAlignment="Center" Grid.Column="2" Text="{Binding Category}"/>
                             <TextBlock VerticalAlignment="Center" Grid.Column="3" Text="{Binding LastUpdated}"/>
-                            <Button x:Name="BtnAddOrRemove" Margin="10 0" Grid.Column="4" BindingGroup="{Binding LbSelectedFiles}" Click="RemoveFromDownloadList"
+                            <Button x:Name="BtnAddOrRemove" Margin="10 0" Grid.Column="4" BindingGroup="{Binding LbSelectedFiles}" Click="RemoveFromDownloadList_Click"
                                 Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
                                 ToolTip="Fjern"
                                     Height="20"
@@ -223,7 +223,7 @@
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <Button Width="100" Content="Lagre" x:Name="BtnSave" Margin="40 0" HorizontalAlignment="Right" Click="SaveList"/>
+        <Button Width="100" Content="Lagre" x:Name="BtnSave" Margin="40 0" HorizontalAlignment="Right" Click="SaveList_Click"/>
         
     </StackPanel>
         
