@@ -18,10 +18,13 @@
         Title="Geonorge Nedlasting"
         Closing="ClosingWindow">
 
-
     <ScrollViewer x:Name="MainScrollbar" HorizontalScrollBarVisibility="Auto">
         
         <StackPanel Margin="0,20,0,20">
+
+            <StackPanel.Resources>
+                <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
+            </StackPanel.Resources>
 
             <StackPanel>
                 <Image HorizontalAlignment="Left" Margin="40 0 0 20" Source="Content/geonorge_logo_225px.gif"/>
@@ -59,7 +62,7 @@
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
                     <TextBlock ToolTip="Filnavn" Margin="8 0 0 0" Width="350" VerticalAlignment="Center" Text="Navn"></TextBlock>
-                    <TextBlock ToolTip="Proposjon" Width="200" VerticalAlignment="Center" Text="Proposjon"></TextBlock>
+                    <TextBlock ToolTip="Proporsjon" Width="150" VerticalAlignment="Center" Text="Proporsjon"></TextBlock>
                     <ToggleButton x:Name="BtnSelectAll" Width="20" Height="20"  Click="BtnSelectAll_OnClick"
                                   Style="{StaticResource MaterialDesignActionToggleButton}"
                                   ToolTip="Velg/fjern alle">
@@ -125,12 +128,13 @@
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="350" SharedSizeGroup="Column1"/>
-                                        <ColumnDefinition Width="200" SharedSizeGroup="Column2"/>
+                                        <ColumnDefinition Width="150" SharedSizeGroup="Column2"/>
                                         <ColumnDefinition Width="Auto" SharedSizeGroup="Column3"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock VerticalAlignment="Center" Grid.Column="0" Text="{Binding Title}"/>
+                                    <TextBlock VerticalAlignment="Center" Grid.Column="0" Text="{Binding Title}">
+                                        <materialDesign:PackIcon Margin="0 0 0 -2" Grid.Column="2" Kind="Lock" Visibility="{Binding IsRestricted, Converter={StaticResource BoolToVisConverter}}"></materialDesign:PackIcon>
+                                    </TextBlock>
                                     <TextBlock VerticalAlignment="Center" Grid.Column="1" Text="{Binding Category}"/>
-
                                     <ToggleButton x:Name="BtnAddOrRemove" Grid.Column="2" Width="20" Height="20" BindingGroup="{Binding LbSelectedDatasetFiles}" IsChecked="{Binding SelectedForDownload}" Click="AddRemove_OnChecked"
                                         Style="{StaticResource MaterialDesignActionToggleButton}"
                                         ToolTip="Legg til/Fjern">

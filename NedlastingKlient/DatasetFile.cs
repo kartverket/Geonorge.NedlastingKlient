@@ -5,11 +5,10 @@ namespace NedlastingKlient
 
     public class DatasetFile
     {
-        private const string norwayDigitalRestricted = "norway digital restricted";
+        private DatasetFileViewModel datasetFileViewModel;
+        private const string NorwayDigitalRestricted = "norway digital restricted";
         private const string Restricted = "restricted";
         private const string NoRestrictions = "norway digital restricted";
-
-        private DatasetFileViewModel datasetFileViewModel;
 
         public DatasetFile(DatasetFileViewModel datasetFileViewModel)
         {
@@ -42,8 +41,9 @@ namespace NedlastingKlient
             return Title + "_" + Proportion;
         }
 
-        public bool IsRestricted() {
-            return Restrictions != NoRestrictions;
+        public bool IsRestricted()
+        {
+            return Restrictions == Restricted || Restrictions == NorwayDigitalRestricted;
         }
     }
 
@@ -59,6 +59,7 @@ namespace NedlastingKlient
         public string DatasetId { get; set; }
         public string DatasetUrl { get; set; }
         public bool SelectedForDownload { get; set; }
+        public bool IsRestricted { get; set; }
 
         public string GetId()
         {
@@ -77,6 +78,7 @@ namespace NedlastingKlient
             DatasetUrl = datasetFile.DatasetUrl;
             Id = GetId();
             SelectedForDownload = selectedForDownload;
+            IsRestricted = datasetFile.IsRestricted();
         }
     }
 }
