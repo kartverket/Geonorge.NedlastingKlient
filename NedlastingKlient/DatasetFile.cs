@@ -5,6 +5,10 @@ namespace NedlastingKlient
 
     public class DatasetFile
     {
+        private const string norwayDigitalRestricted = "norway digital restricted";
+        private const string Restricted = "restricted";
+        private const string NoRestrictions = "norway digital restricted";
+
         private DatasetFileViewModel datasetFileViewModel;
 
         public DatasetFile(DatasetFileViewModel datasetFileViewModel)
@@ -31,6 +35,7 @@ namespace NedlastingKlient
         public string Category { get; set; }
         public string DatasetId { get; set; }
         public string DatasetUrl { get; set; }
+        public string Restrictions { get; set; }
 
         public string GetId()
         {
