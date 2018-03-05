@@ -19,9 +19,7 @@
         Closing="ClosingWindow">
 
     <ScrollViewer x:Name="MainScrollbar" HorizontalScrollBarVisibility="Auto">
-        
         <StackPanel Margin="0,20,0,20">
-
             <StackPanel.Resources>
                 <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
             </StackPanel.Resources>
@@ -30,7 +28,7 @@
                 <Image HorizontalAlignment="Left" Margin="40 0 0 20" Source="Content/geonorge_logo_225px.gif"/>
             </StackPanel>
 
-            
+
             <!-- Overskrifter -->
             <Grid Background="#dfdcda">
                 <Grid.ColumnDefinitions>
@@ -89,7 +87,7 @@
             </ProgressBar>
 
 
-                <!-- Filer for valgt datasett-->
+            <!-- Filer for valgt datasett-->
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -110,7 +108,7 @@
                                     </Grid.ColumnDefinitions>
                                     <TextBlock VerticalAlignment="Center" ToolTip="{Binding Title}" Margin="0 0 10 3"  Grid.Column="0" Text="{Binding Title}"/>
                                     <TextBlock VerticalAlignment="Center" Grid.Column="1" Text="{Binding Organization}"/>
-                                    
+
                                 </Grid>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
@@ -223,13 +221,15 @@
                                     Width="18" />
                             </Button>
                         </Grid>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
 
-        <Button Width="100" Content="Lagre" x:Name="BtnSave" Margin="40 0" HorizontalAlignment="Right" Click="SaveList_Click"/>
-        
-    </StackPanel>
-        
+            <StackPanel Margin="0 20 40 20" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Width="Auto" Content="Lagre" x:Name="BtnSave" Margin="0 0 10 0" HorizontalAlignment="Right" Click="SaveList_Click"/>
+                <Button Width="Auto" Content="Start nedlasting" x:Name="BtnDownload" Margin="0 0" HorizontalAlignment="Right" Click="BtnDownload_OnClick"/>
+            </StackPanel>
+
+</StackPanel>
     </ScrollViewer>
 </Window>

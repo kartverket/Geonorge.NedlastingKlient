@@ -223,6 +223,12 @@ namespace NedlastingKlient.Gui
                 BtnSelectAll.IsChecked = false;
             }
         }
+
+        private void BtnDownload_OnClick(object sender, RoutedEventArgs e)
+        {
+            //Process.Start("");
+            MessageBox.Show("nedlasting startet...");
+        }
     }
 
 }
