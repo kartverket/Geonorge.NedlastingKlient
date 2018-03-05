@@ -59,7 +59,7 @@ namespace NedlastingKlient
             return downloadDirectory.FullName;
         }
 
-        private static void WriteToAppSettingsFile(AppSettings appSettings)
+        public static void WriteToAppSettingsFile(AppSettings appSettings)
         {
             var serializer = new JsonSerializer();
             serializer.Converters.Add(new JavaScriptDateTimeConverter());

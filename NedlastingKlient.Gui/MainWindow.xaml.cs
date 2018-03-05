@@ -200,6 +200,7 @@ namespace NedlastingKlient.Gui
         {
             new DatasetService().WriteToDownloadFile(_selectedFiles);
             MessageBox.Show("Lagring, OK!");
+            
         }
 
         private void ClosingWindow(object sender, CancelEventArgs e)
@@ -275,6 +276,13 @@ namespace NedlastingKlient.Gui
             {
                 CollectionViewSource.GetDefaultView(LbSelectedDatasetFiles.ItemsSource).Refresh();
             }
+        }
+
+        private void BtnLogin_OnClick(object sender, RoutedEventArgs e)
+        {
+            LoginDialog loginDialog = new LoginDialog();
+            if (loginDialog.ShowDialog() == true)
+                loginDialog.txtUsername.Text = "test";
         }
     }
 
