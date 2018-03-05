@@ -63,7 +63,7 @@ namespace NedlastingKlient
 
         public string GetId()
         {
-            return Title + "_" + Category;
+            return DatasetId + "_" + Title + "_" + Category;
         }
 
         public DatasetFileViewModel(DatasetFile datasetFile, bool selectedForDownload = false)
