@@ -6,7 +6,9 @@ using System.Linq;
 using System.Security.Policy;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Data;
 using Button = System.Windows.Controls.Button;
 using ListBox = System.Windows.Controls.ListBox;
 using MessageBox = System.Windows.MessageBox;
@@ -34,6 +36,9 @@ namespace NedlastingKlient.Gui
 
             _datasets = new DatasetService().GetDatasets();
             LbDatasets.ItemsSource = _datasets;
+            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(LbDatasets.ItemsSource);
+            view.Filter = UserFilter;
+
 
             _selectedFiles = new DatasetService().GetSelectedFilesAsViewModel();
             LbSelectedFiles.ItemsSource = _selectedFiles;
@@ -41,19 +46,32 @@ namespace NedlastingKlient.Gui
             _selectedDatasetFiles = new List<DatasetFileViewModel>();
         }
 
+        private bool UserFilter(object item)
+        {
+            if (String.IsNullOrEmpty(SearchDataset.Text))
+                return true;
+            else
+                return ((item as Dataset).Title.IndexOf(SearchDataset.Text, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                        (item as Dataset).Organization.IndexOf(SearchDataset.Text, StringComparison.OrdinalIgnoreCase) >= 0);
+        }
+
 
         private async void ShowFiles(object sender, RoutedEventArgs e)
         {
             if (sender is ListBox listBoxItem)
             {
-                Dataset selectedDataset = (Dataset)listBoxItem.SelectedItems[0];
-                if (selectedDataset != null)
+                if (listBoxItem.SelectedItems.Count > 0)
                 {
-                    progressBar.IsIndeterminate = true;
+                    Dataset selectedDataset = (Dataset)listBoxItem.SelectedItems[0];
+                    if (selectedDataset != null)
+                    {
+                        progressBar.IsIndeterminate = true;
 
-                    LbSelectedDatasetFiles.ItemsSource = await Task.Run(() => GetFilesAsync(selectedDataset));
-                    progressBar.IsIndeterminate = false;
+                        LbSelectedDatasetFiles.ItemsSource = await Task.Run(() => GetFilesAsync(selectedDataset));
+                        progressBar.IsIndeterminate = false;
+                    }
                 }
+
                 BtnSelectAll.Visibility = Visibility.Visible;
                 BtnSelectAll.IsChecked = false;
             }
@@ -228,6 +246,11 @@ namespace NedlastingKlient.Gui
         {
             //Process.Start("");
             MessageBox.Show("nedlasting startet...");
+        }
+
+        private void SearchDataset_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            CollectionViewSource.GetDefaultView(LbDatasets.ItemsSource).Refresh();
         }
     }
 

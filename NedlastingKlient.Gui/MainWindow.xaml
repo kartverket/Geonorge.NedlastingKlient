@@ -37,7 +37,9 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Column="0" Orientation="Horizontal" >
-                    <TextBlock FontWeight="Bold" ToolTip="Datasett" FontSize="16" Margin="40 0 0 0" VerticalAlignment="Center" Text="Datasett"></TextBlock>
+                    <TextBlock FontWeight="Bold" ToolTip="Datasett" FontSize="16" Margin="40 0 20 0" VerticalAlignment="Center" Text="Datasett"></TextBlock>
+                    <materialDesign:PackIcon Kind="Filter" Foreground="{Binding ElementName=SearchDataset, Path=BorderBrush}" VerticalAlignment="Center" />
+                    <TextBox Name="SearchDataset" materialDesign:HintAssist.Hint="Søk" MinWidth="100" VerticalAlignment="Center" Margin="0 0 0 0" TextChanged="SearchDataset_OnTextChanged" />
                 </StackPanel>
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
@@ -96,7 +98,7 @@
 
                 <!-- Datasett -->
                 <StackPanel Grid.Column="0" Margin="40 0 0 0">
-                    <ListBox BorderThickness="0.4" Name="LbDatasets" MaxHeight="450"
+                    <ListBox BorderThickness="0.4" Name="LbDatasets" Height="450"
                          SelectionChanged="ShowFiles">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
@@ -120,7 +122,7 @@
                 <StackPanel Grid.Column="1">
 
                     <ListBox x:Name="LbSelectedDatasetFiles" 
-                             BorderThickness="0.4"  MaxHeight="450">
+                             BorderThickness="0.4"  Height="450">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <Grid>
