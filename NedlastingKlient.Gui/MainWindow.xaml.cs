@@ -20,15 +20,16 @@ namespace NedlastingKlient.Gui
 
         private List<DatasetFileViewModel> _selectedFiles;
         private List<DatasetFileViewModel> _selectedDatasetFiles;
-        public List<Dataset> _Datasets;
+        private List<Dataset> _datasets;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            _Datasets = new DatasetService().GetDatasets();
-            LbDatasets.ItemsSource = _Datasets;
+            BtnSelectAll.IsChecked = false;
 
+            _datasets = new DatasetService().GetDatasets();
+            LbDatasets.ItemsSource = _datasets;
 
             _selectedFiles = new DatasetService().GetSelectedFilesAsViewModel();
             LbSelectedFiles.ItemsSource = _selectedFiles;
@@ -49,12 +50,12 @@ namespace NedlastingKlient.Gui
                     LbSelectedDatasetFiles.ItemsSource = await Task.Run(() => GetFilesAsync(selectedDataset));
                     progressBar.IsIndeterminate = false;
                 }
+                BtnSelectAll.IsChecked = false;
             }
         }
 
         private List<DatasetFileViewModel> GetFilesAsync(Dataset selctedDataset)
         {
-
             List<DatasetFileViewModel> selectedDatasetFiles = new DatasetService().GetDatasetFiles(selctedDataset);
 
             foreach (DatasetFileViewModel selectedDatasetFile in _selectedFiles)
@@ -197,7 +198,6 @@ namespace NedlastingKlient.Gui
             }
             LbSelectedDatasetFiles.ItemsSource = null;
             LbSelectedDatasetFiles.ItemsSource = _selectedDatasetFiles;
-            //BindNewList();
         }
 
         private void BtnRemoveAll_OnClick(object sender, RoutedEventArgs e)
@@ -214,8 +214,8 @@ namespace NedlastingKlient.Gui
                         datasetfile.SelectedForDownload = false;
                     }
                     BindNewList();
-                    //new DatasetService().WriteToDownloadFile(_selectedFiles);
                 }
+                BtnSelectAll.IsChecked = false;
             }
         }
     }
