@@ -39,12 +39,14 @@
                 <StackPanel Grid.Column="0" Orientation="Horizontal" >
                     <TextBlock FontWeight="Bold" ToolTip="Datasett" FontSize="16" Margin="40 0 20 0" VerticalAlignment="Center" Text="Datasett"></TextBlock>
                     <materialDesign:PackIcon Kind="Filter" Foreground="{Binding ElementName=SearchDataset, Path=BorderBrush}" VerticalAlignment="Center" />
-                    <TextBox Name="SearchDataset" materialDesign:HintAssist.Hint="Søk" MinWidth="100" VerticalAlignment="Center" Margin="0 0 0 0" TextChanged="SearchDataset_OnTextChanged" />
+                    <TextBox Name="SearchDataset" materialDesign:HintAssist.Hint="Søk" ToolTip="Søk på navn eller eier" MinWidth="100" VerticalAlignment="Center" Margin="0 0 0 0" TextChanged="SearchDataset_OnTextChanged" />
                 </StackPanel>
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
                     <materialDesign:PackIcon Kind="File" Margin="0 0 0 0" VerticalAlignment="Center" />
-                    <TextBlock FontWeight="Bold" FontSize="16" ToolTip="Nedlastbare filer for valgt datasett" Padding="10" Margin="0 0 0 0" VerticalAlignment="Center">Filer</TextBlock>
+                    <TextBlock FontWeight="Bold" FontSize="16" ToolTip="Nedlastbare filer for valgt datasett" Padding="10" Margin="0 0 10 0" VerticalAlignment="Center">Filer</TextBlock>
+                    <materialDesign:PackIcon Kind="Filter" Foreground="{Binding ElementName=SearchDatasetFiles, Path=BorderBrush}" VerticalAlignment="Center" />
+                    <TextBox Name="SearchDatasetFiles" materialDesign:HintAssist.Hint="Søk" ToolTip="Søk på filnavn eller proporsjon" MinWidth="100" VerticalAlignment="Center" Margin="0 0 0 0" TextChanged="SearchDatasetFiles_OnTextChanged" />
                 </StackPanel>
             </Grid>
 

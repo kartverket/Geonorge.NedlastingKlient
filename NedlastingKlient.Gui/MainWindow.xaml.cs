@@ -36,9 +36,11 @@ namespace NedlastingKlient.Gui
 
             _datasets = new DatasetService().GetDatasets();
             LbDatasets.ItemsSource = _datasets;
-            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(LbDatasets.ItemsSource);
-            view.Filter = UserFilter;
-
+            CollectionView viewDatasets = (CollectionView) CollectionViewSource.GetDefaultView(LbDatasets.ItemsSource);
+            if (viewDatasets != null)
+            {
+                viewDatasets.Filter = UserDatasetFilter;
+            }
 
             _selectedFiles = new DatasetService().GetSelectedFilesAsViewModel();
             LbSelectedFiles.ItemsSource = _selectedFiles;
@@ -46,13 +48,22 @@ namespace NedlastingKlient.Gui
             _selectedDatasetFiles = new List<DatasetFileViewModel>();
         }
 
-        private bool UserFilter(object item)
+        private bool UserDatasetFilter(object item)
         {
             if (String.IsNullOrEmpty(SearchDataset.Text))
                 return true;
             else
                 return ((item as Dataset).Title.IndexOf(SearchDataset.Text, StringComparison.OrdinalIgnoreCase) >= 0 ||
                         (item as Dataset).Organization.IndexOf(SearchDataset.Text, StringComparison.OrdinalIgnoreCase) >= 0);
+        }
+
+        private bool UserDatasetFileFilter(object item)
+        {
+            if (String.IsNullOrEmpty(SearchDatasetFiles.Text))
+                return true;
+            else
+                return ((item as DatasetFileViewModel).Title.IndexOf(SearchDatasetFiles.Text, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                        (item as DatasetFileViewModel).Category.IndexOf(SearchDatasetFiles.Text, StringComparison.OrdinalIgnoreCase) >= 0);
         }
 
 
@@ -69,6 +80,11 @@ namespace NedlastingKlient.Gui
 
                         LbSelectedDatasetFiles.ItemsSource = await Task.Run(() => GetFilesAsync(selectedDataset));
                         progressBar.IsIndeterminate = false;
+                        CollectionView viewDatasetFiles = (CollectionView)CollectionViewSource.GetDefaultView(LbSelectedDatasetFiles.ItemsSource);
+                        if (viewDatasetFiles != null)
+                        {
+                            viewDatasetFiles.Filter = UserDatasetFileFilter;
+                        }
                     }
                 }
 
@@ -251,6 +267,14 @@ namespace NedlastingKlient.Gui
         private void SearchDataset_OnTextChanged(object sender, TextChangedEventArgs e)
         {
             CollectionViewSource.GetDefaultView(LbDatasets.ItemsSource).Refresh();
+        }
+
+        private void SearchDatasetFiles_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (LbSelectedDatasetFiles != null&& LbSelectedDatasetFiles.ItemsSource != null)
+            {
+                CollectionViewSource.GetDefaultView(LbSelectedDatasetFiles.ItemsSource).Refresh();
+            }
         }
     }
 
