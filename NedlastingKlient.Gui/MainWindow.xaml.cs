@@ -113,7 +113,7 @@ namespace NedlastingKlient.Gui
         {
             if (selectedFile != null)
             {
-                _selectedFiles.Remove(selectedFile);
+                _selectedFiles.RemoveAll(f => f.Id == selectedFile.Id);
                 BindNewList();
             }
             else
@@ -197,6 +197,7 @@ namespace NedlastingKlient.Gui
             }
             LbSelectedDatasetFiles.ItemsSource = null;
             LbSelectedDatasetFiles.ItemsSource = _selectedDatasetFiles;
+            //BindNewList();
         }
 
         private void BtnRemoveAll_OnClick(object sender, RoutedEventArgs e)

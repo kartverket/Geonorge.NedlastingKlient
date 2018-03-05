@@ -12,6 +12,7 @@
       <name>Kartverket</name>
     </author>
     <category term="EPSG:25833" scheme="http://www.opengis.net/def/crs/" label="EPSG/0/25833"/>
+    <category term="norway digital restricted" scheme="https://register.geonorge.no/subregister/metadata-kodelister/kartverket/tilgangsrestriksjoner/" label="Norge digitalt-begrenset"/>
     <content type="html">Trykk på linken for å laste ned landsdekkende data i koordinatsystemet EPSG:25833. &lt;br /&gt;  &lt;a href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_0000_Norge_25833_Fylker_GEOJSON.zip"&gt;GEOJSON-format, Landsdekkende&lt;\a&gt;</content>
     <id>https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_0000_Norge_25833_Fylker_GEOJSON.zip_2018-01-10T13:13:27</id>
     <link rel="alternate" href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_0000_Norge_25833_Fylker_GEOJSON.zip" type="application/gml+xml;version=3.2.1" title="Datasettet som GML-fil i EPSG:25833"/>
@@ -39,6 +40,7 @@
       <name>Kartverket</name>
     </author>
     <category term="EPSG:25833" scheme="http://www.opengis.net/def/crs/" label="EPSG/0/25833"/>
+    <category term="norway digital restricted" scheme="https://register.geonorge.no/subregister/metadata-kodelister/kartverket/tilgangsrestriksjoner/" label="Norge digitalt-begrenset"/>
     <category term="Fylke" label="Oslo"/>
     <content type="html">Trykk på linken for å laste ned data for fylke 03, Oslo i koordinatsystemet EPSG:25833. &lt;br /&gt;  &lt;a href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_03_Oslo_25833_Fylker_GEOJSON.zip"&gt;GEOJSON-format, 03 Oslo&lt;\a&gt;</content>
     <id>https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_03_Oslo_25833_Fylker_GEOJSON.zip_2018-01-10T12:21:21</id>
@@ -54,6 +56,7 @@
     </author>
     <category term="EPSG:25832" scheme="http://www.opengis.net/def/crs/" label="EPSG/0/25832"/>
     <category term="Fylke" label="Hedmark"/>
+    <category term="norway digital restricted" scheme="https://register.geonorge.no/subregister/metadata-kodelister/kartverket/tilgangsrestriksjoner/" label="Norge digitalt-begrenset"/>
     <content type="html">Trykk på linken for å laste ned data for fylke 04, Hedmark i koordinatsystemet EPSG:25832. &lt;br /&gt;  &lt;a href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_04_Hedmark_25832_Fylker_GEOJSON.zip"&gt;GEOJSON-format, 04 Hedmark&lt;\a&gt;</content>
     <id>https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_04_Hedmark_25832_Fylker_GEOJSON.zip_2018-01-10T11:30:16</id>
     <link rel="alternate" href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_04_Hedmark_25832_Fylker_GEOJSON.zip" type="application/gml+xml;version=3.2.1" title="Datasettet som GML-fil i EPSG:25832"/>
@@ -82,6 +85,7 @@
     </author>
     <category term="EPSG:25832" scheme="http://www.opengis.net/def/crs/" label="EPSG/0/25832"/>
     <category term="Fylke" label="Oppland"/>
+    <category term="norway digital restricted" scheme="https://register.geonorge.no/subregister/metadata-kodelister/kartverket/tilgangsrestriksjoner/" label="Norge digitalt-begrenset"/>
     <content type="html">Trykk på linken for å laste ned data for fylke 05, Oppland i koordinatsystemet EPSG:25832. &lt;br /&gt;  &lt;a href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_05_Oppland_25832_Fylker_GEOJSON.zip"&gt;GEOJSON-format, 05 Oppland&lt;\a&gt;</content>
     <id>https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_05_Oppland_25832_Fylker_GEOJSON.zip_2018-01-10T12:05:06</id>
     <link rel="alternate" href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_05_Oppland_25832_Fylker_GEOJSON.zip" type="application/gml+xml;version=3.2.1" title="Datasettet som GML-fil i EPSG:25832"/>
@@ -110,6 +114,7 @@
     </author>
     <category term="EPSG:25832" scheme="http://www.opengis.net/def/crs/" label="EPSG/0/25832"/>
     <category term="Fylke" label="Buskerud"/>
+    <category term="norway digital restricted" scheme="https://register.geonorge.no/subregister/metadata-kodelister/kartverket/tilgangsrestriksjoner/" label="Norge digitalt-begrenset"/>
     <content type="html">Trykk på linken for å laste ned data for fylke 06, Buskerud i koordinatsystemet EPSG:25832. &lt;br /&gt;  &lt;a href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_06_Buskerud_25832_Fylker_GEOJSON.zip"&gt;GEOJSON-format, 06 Buskerud&lt;\a&gt;</content>
     <id>https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_06_Buskerud_25832_Fylker_GEOJSON.zip_2018-01-10T12:14:29</id>
     <link rel="alternate" href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_06_Buskerud_25832_Fylker_GEOJSON.zip" type="application/gml+xml;version=3.2.1" title="Datasettet som GML-fil i EPSG:25832"/>
@@ -138,6 +143,7 @@
     </author>
     <category term="EPSG:25832" scheme="http://www.opengis.net/def/crs/" label="EPSG/0/25832"/>
     <category term="Fylke" label="Vestfold"/>
+    <category term="norway digital restricted" scheme="https://register.geonorge.no/subregister/metadata-kodelister/kartverket/tilgangsrestriksjoner/" label="Norge digitalt-begrenset"/>
     <content type="html">Trykk på linken for å laste ned data for fylke 07, Vestfold i koordinatsystemet EPSG:25832. &lt;br /&gt;  &lt;a href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_07_Vestfold_25832_Fylker_GEOJSON.zip"&gt;GEOJSON-format, 07 Vestfold&lt;\a&gt;</content>
     <id>https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_07_Vestfold_25832_Fylker_GEOJSON.zip_2018-01-10T12:07:03</id>
     <link rel="alternate" href="https://nedlasting.geonorge.no/geonorge/Basisdata/Fylker/GEOJSON/Basisdata_07_Vestfold_25832_Fylker_GEOJSON.zip" type="application/gml+xml;version=3.2.1" title="Datasettet som GML-fil i EPSG:25832"/>

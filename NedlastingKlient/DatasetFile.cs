@@ -6,6 +6,9 @@ namespace NedlastingKlient
     public class DatasetFile
     {
         private DatasetFileViewModel datasetFileViewModel;
+        private const string NorwayDigitalRestricted = "norway digital restricted";
+        private const string Restricted = "restricted";
+        private const string NoRestrictions = "norway digital restricted";
 
         public DatasetFile(DatasetFileViewModel datasetFileViewModel)
         {
@@ -14,7 +17,7 @@ namespace NedlastingKlient
             Url = datasetFileViewModel.Url;
             LastUpdated = datasetFileViewModel.LastUpdated;
             Organization = datasetFileViewModel.Organization;
-            Category = datasetFileViewModel.Category;
+            Proportion = datasetFileViewModel.Category;
             DatasetId = datasetFileViewModel.DatasetId;
             DatasetUrl = datasetFileViewModel.DatasetUrl;
         }
@@ -28,13 +31,19 @@ namespace NedlastingKlient
         public string Url { get; set; }
         public string LastUpdated { get; set; }
         public string Organization { get; set; }
-        public string Category { get; set; }
+        public string Proportion { get; set; }
         public string DatasetId { get; set; }
         public string DatasetUrl { get; set; }
+        public string Restrictions { get; set; }
 
         public string GetId()
         {
-            return Title + "_" + Category;
+            return Title + "_" + Proportion;
+        }
+
+        public bool IsRestricted()
+        {
+            return Restrictions == Restricted || Restrictions == NorwayDigitalRestricted;
         }
     }
 
@@ -50,6 +59,7 @@ namespace NedlastingKlient
         public string DatasetId { get; set; }
         public string DatasetUrl { get; set; }
         public bool SelectedForDownload { get; set; }
+        public bool IsRestricted { get; set; }
 
         public string GetId()
         {
@@ -63,11 +73,12 @@ namespace NedlastingKlient
             Url = datasetFile.Url;
             LastUpdated = datasetFile.LastUpdated;
             Organization = datasetFile.Organization;
-            Category = datasetFile.Category;
+            Category = datasetFile.Proportion;
             DatasetId = datasetFile.DatasetId;
             DatasetUrl = datasetFile.DatasetUrl;
             Id = GetId();
             SelectedForDownload = selectedForDownload;
+            IsRestricted = datasetFile.IsRestricted();
         }
     }
 }

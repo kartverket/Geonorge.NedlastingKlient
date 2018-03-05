@@ -56,21 +56,47 @@ namespace NedlastingKlient
             foreach (XmlNode childrenNode in nodes)
             {
                 string title = childrenNode.SelectSingleNode("a:title", nsmgr).InnerXml;
-                string category = childrenNode.SelectSingleNode("a:category", nsmgr).Attributes[0].Value;
+                string proportion = GetProportion(childrenNode.SelectNodes("a:category", nsmgr));
 
-                if (originalDatasetFile.Title == title && originalDatasetFile.Category == category)
+                if (originalDatasetFile.Title == title && originalDatasetFile.Proportion == proportion)
                 {
-                    datasetFileFromFeed.Title = childrenNode.SelectSingleNode("a:title", nsmgr).InnerXml;
+                    datasetFileFromFeed.Title = title;
                     datasetFileFromFeed.Description = childrenNode.SelectSingleNode("a:category", nsmgr).InnerXml;
                     datasetFileFromFeed.Url = childrenNode.SelectSingleNode("a:link", nsmgr).Attributes[1].Value;
                     datasetFileFromFeed.LastUpdated = childrenNode.SelectSingleNode("a:updated", nsmgr).InnerXml;
                     datasetFileFromFeed.Organization = childrenNode.SelectSingleNode("a:author/a:name", nsmgr).InnerXml;
-                    datasetFileFromFeed.Category = childrenNode.SelectSingleNode("a:category", nsmgr).Attributes[0].Value;
+                    datasetFileFromFeed.Proportion = proportion;
+                    datasetFileFromFeed.Restrictions = GetRestrictions(childrenNode.SelectNodes("a:category", nsmgr));
                     datasetFileFromFeed.DatasetId = originalDatasetFile.DatasetId;
                     datasetFileFromFeed.DatasetUrl = originalDatasetFile.DatasetUrl;
+                    datasetFileFromFeed.Restrictions = childrenNode.SelectSingleNode("a:category", nsmgr).Attributes[0].Value;
                 }
             }
             return datasetFileFromFeed;
+        }
+
+        private string GetRestrictions(XmlNodeList selectNodes)
+        {
+            foreach (XmlNode node in selectNodes)
+            {
+                if (node.Attributes["scheme"]?.Value == "https://register.geonorge.no/subregister/metadata-kodelister/kartverket/tilgangsrestriksjoner/")
+                {
+                    return node.Attributes["term"].Value;
+                }
+            }
+            return null;
+        }
+
+        private string GetProportion(XmlNodeList xmlNodeList)
+        {
+            foreach (XmlNode node in xmlNodeList)
+            {
+                if (node.Attributes["scheme"].Value == "http://www.opengis.net/def/crs/")
+                {
+                    return node.Attributes["term"].Value;
+                }
+            }
+            return null;
         }
 
         public List<DatasetFile> ParseDatasetFiles(string xml, Dataset dataset)
@@ -96,7 +122,8 @@ namespace NedlastingKlient
                 datasetFile.Url = childrenNode.SelectSingleNode("a:link", nsmgr).Attributes[1].Value;
                 datasetFile.LastUpdated = childrenNode.SelectSingleNode("a:updated", nsmgr).InnerXml;
                 datasetFile.Organization = childrenNode.SelectSingleNode("a:author/a:name", nsmgr).InnerXml;
-                datasetFile.Category = childrenNode.SelectSingleNode("a:category", nsmgr).Attributes[0].Value;
+                datasetFile.Proportion = GetProportion(childrenNode.SelectNodes("a:category", nsmgr));
+                datasetFile.Restrictions = GetRestrictions(childrenNode.SelectNodes("a:category", nsmgr));
                 datasetFile.DatasetId = dataset.Title;
                 datasetFile.DatasetUrl = dataset.Url;
 
