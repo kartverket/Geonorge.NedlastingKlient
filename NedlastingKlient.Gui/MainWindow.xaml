@@ -26,7 +26,15 @@
 
             <DockPanel>
                 <Image HorizontalAlignment="Left" Margin="40 0 0 20" Source="Content/geonorge_logo_225px.gif"/>
-                <Button Name="BtnLogin" VerticalAlignment="Top" Margin="0 0 40 0" HorizontalAlignment="Right" Click="BtnLogin_OnClick">Logginn</Button>
+                <Button Name="BtnSettings" VerticalAlignment="Top"
+                        Margin="0 0 40 0" HorizontalAlignment="Right" Click="BtnLogin_OnClick"
+                        Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
+                    ToolTip="MaterialDesignFloatingActionMiniLightButton">
+                    <materialDesign:PackIcon
+                        Kind="Settings"
+                        Height="24"
+                        Width="24" />
+                </Button>
             </DockPanel>
 
 

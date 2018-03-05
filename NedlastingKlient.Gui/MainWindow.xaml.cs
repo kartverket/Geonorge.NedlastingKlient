@@ -25,6 +25,7 @@ namespace NedlastingKlient.Gui
         private List<DatasetFileViewModel> _selectedFiles;
         private List<DatasetFileViewModel> _selectedDatasetFiles;
         private List<Dataset> _datasets;
+        public bool LoggedIn;
 
         public MainWindow()
         {
@@ -280,7 +281,7 @@ namespace NedlastingKlient.Gui
 
         private void BtnLogin_OnClick(object sender, RoutedEventArgs e)
         {
-            LoginDialog loginDialog = new LoginDialog();
+            SettingsDialog loginDialog = new SettingsDialog();
             if (loginDialog.ShowDialog() == true)
                 loginDialog.txtUsername.Text = "test";
         }

@@ -6,16 +6,18 @@ namespace NedlastingKlient.Gui
     /// <summary>
     /// Interaction logic for Login.xaml
     /// </summary>
-    public partial class LoginDialog
+    public partial class SettingsDialog
     {
 
-        public LoginDialog()
+        public SettingsDialog()
         {
             InitializeComponent();
 
             AppSettings appSettings = ApplicationService.GetAppSettings();
+
             txtUsername.Text = appSettings.Username;
             txtPassword.Password = appSettings.Password;
+            txtDownloadDirectory.Text = appSettings.DownloadDirectory;
         }
 
         private void BtnDialogOk_Click(object sender, RoutedEventArgs e)
@@ -23,8 +25,9 @@ namespace NedlastingKlient.Gui
             AppSettings appSettings = new AppSettings();
             appSettings.Password = txtPassword.Password;
             appSettings.Username = txtUsername.Text;
-            ApplicationService.WriteToAppSettingsFile(appSettings);   
-            
+            appSettings.DownloadDirectory = txtDownloadDirectory.Text;
+            ApplicationService.WriteToAppSettingsFile(appSettings);
+
             this.Close();
         }
 
