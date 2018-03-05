@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Security.Policy;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls.Primitives;
@@ -25,6 +27,8 @@ namespace NedlastingKlient.Gui
         public MainWindow()
         {
             InitializeComponent();
+
+            BtnSelectAll.Visibility = Visibility.Hidden;
 
             BtnSelectAll.IsChecked = false;
 
@@ -50,6 +54,7 @@ namespace NedlastingKlient.Gui
                     LbSelectedDatasetFiles.ItemsSource = await Task.Run(() => GetFilesAsync(selectedDataset));
                     progressBar.IsIndeterminate = false;
                 }
+                BtnSelectAll.Visibility = Visibility.Visible;
                 BtnSelectAll.IsChecked = false;
             }
         }
