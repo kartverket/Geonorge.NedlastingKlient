@@ -45,7 +45,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <StackPanel Grid.Column="0" Orientation="Horizontal" >
+                <StackPanel Grid.Column="0" Orientation="Horizontal" MinWidth="625">
                     <TextBlock FontWeight="Bold" ToolTip="Datasett" FontSize="16" Margin="40 0 20 0" VerticalAlignment="Center" Text="Datasett"></TextBlock>
                     <materialDesign:PackIcon Kind="Filter" Foreground="{Binding ElementName=SearchDataset, Path=BorderBrush}" VerticalAlignment="Center" />
                     <TextBox Name="SearchDataset" materialDesign:HintAssist.Hint="Søk" ToolTip="Søk på navn eller eier" MinWidth="100" VerticalAlignment="Center" Margin="0 0 0 0" TextChanged="SearchDataset_OnTextChanged" />
@@ -68,7 +68,7 @@
 
                 <StackPanel Grid.Column="0" Orientation="Horizontal" >
                     <TextBlock ToolTip="Navn på datasett" Margin="48 0 0 0" Width="350" VerticalAlignment="Center" Text="Navn"></TextBlock>
-                    <TextBlock ToolTip="Eier av datasettet" Margin="0 0 0 0" VerticalAlignment="Center" Text="Eier"></TextBlock>
+                    <TextBlock ToolTip="Eier av datasettet" Margin="0 0 26 0" Width="200" VerticalAlignment="Center" Text="Eier"></TextBlock>
                 </StackPanel>
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
@@ -117,10 +117,9 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="350" SharedSizeGroup="Column1"/>
                                         <ColumnDefinition Width="200" SharedSizeGroup="Column2"/>
-                                        <ColumnDefinition Width="100" SharedSizeGroup="Column3"/>
                                     </Grid.ColumnDefinitions>
                                     <TextBlock VerticalAlignment="Center" ToolTip="{Binding Title}" Margin="0 0 10 3"  Grid.Column="0" Text="{Binding Title}"/>
-                                    <TextBlock VerticalAlignment="Center" Grid.Column="1" Text="{Binding Organization}"/>
+                                    <TextBlock VerticalAlignment="Center" Grid.Column="1" ToolTip="{Binding Organization}" Text="{Binding Organization}"/>
 
                                 </Grid>
                             </DataTemplate>
@@ -142,10 +141,10 @@
                                         <ColumnDefinition Width="150" SharedSizeGroup="Column2"/>
                                         <ColumnDefinition Width="Auto" SharedSizeGroup="Column3"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock VerticalAlignment="Center" Grid.Column="0" Text="{Binding Title}">
-                                        <materialDesign:PackIcon Margin="0 0 0 -2" Grid.Column="2" Kind="Lock" Visibility="{Binding IsRestricted, Converter={StaticResource BoolToVisConverter}}"></materialDesign:PackIcon>
+                                    <TextBlock VerticalAlignment="Center" Grid.Column="0" ToolTip="{Binding Title}"  Text="{Binding Title}">
+                                        <materialDesign:PackIcon Margin="10 0 0 -2" ToolTip="{Binding Restrictions}" Grid.Column="2" Kind="Lock" Visibility="{Binding IsRestricted, Converter={StaticResource BoolToVisConverter}}"></materialDesign:PackIcon>
                                     </TextBlock>
-                                    <TextBlock VerticalAlignment="Center" Grid.Column="1" Text="{Binding Category}"/>
+                                    <TextBlock VerticalAlignment="Center" Grid.Column="1" ToolTip="{Binding Category}" Text="{Binding Category}"/>
                                     <ToggleButton x:Name="BtnAddOrRemove" Grid.Column="2" Width="20" Height="20" BindingGroup="{Binding LbSelectedDatasetFiles}" IsChecked="{Binding SelectedForDownload}" Click="AddRemove_OnChecked"
                                         Style="{StaticResource MaterialDesignActionToggleButton}"
                                         ToolTip="Legg til/Fjern">
