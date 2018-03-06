@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 
 namespace NedlastingKlient
 {
@@ -20,6 +21,7 @@ namespace NedlastingKlient
             Proportion = datasetFileViewModel.Category;
             DatasetId = datasetFileViewModel.DatasetId;
             DatasetUrl = datasetFileViewModel.DatasetUrl;
+            Restrictions = datasetFileViewModel.Restrictions;
         }
 
         public DatasetFile()
@@ -60,6 +62,7 @@ namespace NedlastingKlient
         public string DatasetUrl { get; set; }
         public bool SelectedForDownload { get; set; }
         public bool IsRestricted { get; set; }
+        public string Restrictions { get; set; }
 
         public string GetId()
         {
@@ -79,6 +82,7 @@ namespace NedlastingKlient
             Id = GetId();
             SelectedForDownload = selectedForDownload;
             IsRestricted = datasetFile.IsRestricted();
+            Restrictions = datasetFile.Restrictions;
         }
     }
 }

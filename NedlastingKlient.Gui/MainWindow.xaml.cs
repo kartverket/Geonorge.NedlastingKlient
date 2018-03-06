@@ -25,6 +25,7 @@ namespace NedlastingKlient.Gui
         private List<DatasetFileViewModel> _selectedFiles;
         private List<DatasetFileViewModel> _selectedDatasetFiles;
         private List<Dataset> _datasets;
+        public bool LoggedIn;
 
         public MainWindow()
         {
@@ -200,6 +201,7 @@ namespace NedlastingKlient.Gui
         {
             new DatasetService().WriteToDownloadFile(_selectedFiles);
             MessageBox.Show("Lagring, OK!");
+            
         }
 
         private void ClosingWindow(object sender, CancelEventArgs e)
@@ -275,6 +277,12 @@ namespace NedlastingKlient.Gui
             {
                 CollectionViewSource.GetDefaultView(LbSelectedDatasetFiles.ItemsSource).Refresh();
             }
+        }
+
+        private void BtnLogin_OnClick(object sender, RoutedEventArgs e)
+        {
+            SettingsDialog loginDialog = new SettingsDialog();
+            loginDialog.ShowDialog();
         }
     }
 

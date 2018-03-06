@@ -59,7 +59,7 @@ namespace NedlastingKlient
             return downloadDirectory.FullName;
         }
 
-        private static void WriteToAppSettingsFile(AppSettings appSettings)
+        public static void WriteToAppSettingsFile(AppSettings appSettings)
         {
             var serializer = new JsonSerializer();
             serializer.Converters.Add(new JavaScriptDateTimeConverter());
@@ -78,6 +78,11 @@ namespace NedlastingKlient
         private static string GetAppSettingsFilePath()
         {
             return Path.Combine(GetAppDirectory().FullName, "settings.json");
+        }
+
+        public static string DownloadDirectory()
+        {
+            return GetAppSettings().DownloadDirectory;
         }
     }
 }
