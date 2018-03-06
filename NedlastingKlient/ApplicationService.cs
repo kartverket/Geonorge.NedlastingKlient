@@ -79,5 +79,10 @@ namespace NedlastingKlient
         {
             return Path.Combine(GetAppDirectory().FullName, "settings.json");
         }
+
+        public static string DownloadDirectory()
+        {
+            return GetAppSettings().DownloadDirectory;
+        }
     }
 }

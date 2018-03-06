@@ -282,8 +282,7 @@ namespace NedlastingKlient.Gui
         private void BtnLogin_OnClick(object sender, RoutedEventArgs e)
         {
             SettingsDialog loginDialog = new SettingsDialog();
-            if (loginDialog.ShowDialog() == true)
-                loginDialog.txtUsername.Text = "test";
+            loginDialog.ShowDialog();
         }
     }
 

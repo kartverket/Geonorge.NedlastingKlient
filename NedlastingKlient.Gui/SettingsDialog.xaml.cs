@@ -8,6 +8,7 @@ namespace NedlastingKlient.Gui
     /// </summary>
     public partial class SettingsDialog
     {
+        public string downloadDirectory;
 
         public SettingsDialog()
         {
@@ -17,7 +18,8 @@ namespace NedlastingKlient.Gui
 
             txtUsername.Text = appSettings.Username;
             txtPassword.Password = appSettings.Password;
-            txtDownloadDirectory.Text = appSettings.DownloadDirectory;
+            downloadDirectory = appSettings.DownloadDirectory;
+            //txtDownloadDirectory.Text = appSettings.DownloadDirectory;
         }
 
         private void BtnDialogOk_Click(object sender, RoutedEventArgs e)
@@ -25,7 +27,7 @@ namespace NedlastingKlient.Gui
             AppSettings appSettings = new AppSettings();
             appSettings.Password = txtPassword.Password;
             appSettings.Username = txtUsername.Text;
-            appSettings.DownloadDirectory = txtDownloadDirectory.Text;
+            appSettings.DownloadDirectory = FolderPickerDialogBox.DirectoryPath;
             ApplicationService.WriteToAppSettingsFile(appSettings);
 
             this.Close();
