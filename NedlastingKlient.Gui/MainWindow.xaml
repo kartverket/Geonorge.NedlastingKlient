@@ -26,15 +26,35 @@
 
             <DockPanel>
                 <Image HorizontalAlignment="Left" Margin="40 0 0 20" Source="Content/geonorge_logo_225px.gif"/>
-                <Button Name="BtnSettings" VerticalAlignment="Top"
-                        Margin="0 0 40 0" HorizontalAlignment="Right" Click="BtnLogin_OnClick"
-                        Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
-                    ToolTip="MaterialDesignFloatingActionMiniLightButton">
-                    <materialDesign:PackIcon
-                        Kind="Settings"
-                        Height="24"
-                        Width="24" />
-                </Button>
+                <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right" Orientation="Horizontal" Margin="0 0 40 0">
+                    <Button Name="BtnSave" 
+                            Margin="0 0 10 0"  Click="SaveList_Click"
+                            Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
+                            ToolTip="Lagre">
+                        <materialDesign:PackIcon
+                            Kind="ContentSave"
+                            Height="24"
+                            Width="24" />
+                    </Button>
+                    <Button Name="BtnDownload" 
+                            Margin="0 0 10 0"  Click="BtnDownload_OnClick"
+                            Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
+                            ToolTip="Start nedlasting">
+                        <materialDesign:PackIcon
+                            Kind="Download"
+                            Height="24"
+                            Width="24" />
+                    </Button>
+                    <Button Name="BtnSettings" 
+                            Margin="0 0 10 0"  Click="BtnSettings_OnClick"
+                            Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
+                            ToolTip="Innstillinger">
+                        <materialDesign:PackIcon
+                            Kind="Settings"
+                            Height="24"
+                            Width="24" />
+                    </Button>
+                </StackPanel>
             </DockPanel>
 
 
@@ -240,10 +260,10 @@
                 </ListBox.ItemTemplate>
             </ListBox>
 
-            <StackPanel Margin="0 20 40 20" Orientation="Horizontal" HorizontalAlignment="Right">
+            <!--<StackPanel Margin="0 20 40 20" Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button Width="Auto" Content="Lagre" x:Name="BtnSave" Margin="0 0 10 0" HorizontalAlignment="Right" Click="SaveList_Click"/>
                 <Button Width="Auto" Content="Start nedlasting" x:Name="BtnDownload" Margin="0 0" HorizontalAlignment="Right" Click="BtnDownload_OnClick"/>
-            </StackPanel>
+            </StackPanel>-->
 
 </StackPanel>
     </ScrollViewer>
