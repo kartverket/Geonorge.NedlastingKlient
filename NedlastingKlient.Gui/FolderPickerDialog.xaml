@@ -15,8 +15,9 @@
                 Kind="Folder"
                 Height="20"
                 Width="20" />
+            
         </Button>
-        <TextBlock VerticalAlignment="Center" MinWidth="100" Text="{Binding ElementName=Self, Path=DirectoryPath}"></TextBlock>
+        <TextBlock VerticalAlignment="Center" MouseDown="FolderButton_OnClick" MinWidth="100" Text="{Binding ElementName=Self, Path=DirectoryPath}"></TextBlock>
     
     </StackPanel>
 </UserControl>
