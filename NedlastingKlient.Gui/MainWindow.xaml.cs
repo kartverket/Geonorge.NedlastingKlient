@@ -279,11 +279,19 @@ namespace NedlastingKlient.Gui
             }
         }
 
-        private void BtnLogin_OnClick(object sender, RoutedEventArgs e)
         private void BtnSettings_OnClick(object sender, RoutedEventArgs e)
         {
             SettingsDialog loginDialog = new SettingsDialog();
             loginDialog.ShowDialog();
+        }
+
+        private void BtnHelp_OnClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Process.Start("https://www.geonorge.no/");
+            }
+            catch { }
         }
     }
 

@@ -54,6 +54,15 @@
                             Height="24"
                             Width="24" />
                     </Button>
+                    <Button Name="BtnHelp" 
+                            Margin="0 0 10 0"  Click="BtnHelp_OnClick"
+                            Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
+                            ToolTip="Hjelp">
+                        <materialDesign:PackIcon
+                            Kind="Help"
+                            Height="24"
+                            Width="24" />
+                    </Button>
                 </StackPanel>
             </DockPanel>
 
