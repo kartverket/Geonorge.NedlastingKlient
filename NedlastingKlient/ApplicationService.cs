@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.DataProtection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -10,6 +12,7 @@ namespace NedlastingKlient
     /// </summary>
     public class ApplicationService
     {
+
         /// <summary>
         /// Returns path to the file containing the list of dataset to download.
         /// </summary>
@@ -43,7 +46,6 @@ namespace NedlastingKlient
             var appSettingsFileInfo = new FileInfo(GetAppSettingsFilePath());
             if (!appSettingsFileInfo.Exists)
                 WriteToAppSettingsFile(new AppSettings() { DownloadDirectory = GetDefaultDownloadDirectory() });
-
 
             return JsonConvert.DeserializeObject<AppSettings>(File.ReadAllText(GetAppSettingsFilePath()));
         }

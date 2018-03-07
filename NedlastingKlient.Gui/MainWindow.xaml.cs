@@ -32,16 +32,12 @@ namespace NedlastingKlient.Gui
             InitializeComponent();
 
             BtnSelectAll.Visibility = Visibility.Hidden;
-
             BtnSelectAll.IsChecked = false;
 
             _datasets = new DatasetService().GetDatasets();
             LbDatasets.ItemsSource = _datasets;
             CollectionView viewDatasets = (CollectionView) CollectionViewSource.GetDefaultView(LbDatasets.ItemsSource);
-            if (viewDatasets != null)
-            {
-                viewDatasets.Filter = UserDatasetFilter;
-            }
+            if (viewDatasets != null) viewDatasets.Filter = UserDatasetFilter;
 
             _selectedFiles = new DatasetService().GetSelectedFilesAsViewModel();
             LbSelectedFiles.ItemsSource = _selectedFiles;
@@ -118,7 +114,6 @@ namespace NedlastingKlient.Gui
             return selectedDatasetFiles;
         }
 
-
         private void AddRemove_OnChecked(object sender, RoutedEventArgs e)
         {
             ToggleButton btn = (ToggleButton)sender;
@@ -163,7 +158,6 @@ namespace NedlastingKlient.Gui
             }
         }
 
-
         private void BindNewList()
         {
             LbSelectedFiles.ItemsSource = null;
@@ -201,7 +195,6 @@ namespace NedlastingKlient.Gui
         {
             new DatasetService().WriteToDownloadFile(_selectedFiles);
             MessageBox.Show("Lagring, OK!");
-            
         }
 
         private void ClosingWindow(object sender, CancelEventArgs e)
