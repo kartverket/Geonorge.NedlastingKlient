@@ -85,9 +85,8 @@ namespace NedlastingKlient
         /// <summary>
         /// Returns a list of dataset files to download. 
         /// </summary>
-        /// <param name="datasetTitle">search for dataset with given title. List will only return dataset that matches.</param>
         /// <returns></returns>
-        public List<DatasetFile> GetSelectedFiles(string datasetTitle = null)
+        public List<DatasetFile> GetSelectedFiles()
         {
             try
             {
@@ -96,9 +95,7 @@ namespace NedlastingKlient
                     var json = r.ReadToEnd();
                     var selecedFiles = JsonConvert.DeserializeObject<List<DatasetFile>>(json);
                     r.Close();
-                    return datasetTitle != null
-                        ? selecedFiles.Where(f => f.DatasetId == datasetTitle).ToList()
-                        : selecedFiles;
+                    return selecedFiles;
                 }
             }
             catch (Exception)
@@ -108,9 +105,9 @@ namespace NedlastingKlient
             }
         }
 
-        public List<DatasetFileViewModel> GetSelectedFilesAsViewModel(string datasetTitle = null)
+        public List<DatasetFileViewModel> GetSelectedFilesAsViewModel()
         {
-            List<DatasetFile> selectedFiles = GetSelectedFiles(datasetTitle);
+            List<DatasetFile> selectedFiles = GetSelectedFiles();
             return ConvertToViewModel(selectedFiles, true);
         }
 
