@@ -49,7 +49,7 @@ namespace NedlastingKlient.Konsoll
         {
             if (!response.IsSuccessStatusCode)
             {
-                Console.WriteLine("Nedlasting av fil krever brukernavn og passord");
+                Console.WriteLine("Restricted access.");
             }
             else
             {
