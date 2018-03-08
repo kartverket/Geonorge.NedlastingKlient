@@ -13,7 +13,7 @@ namespace NedlastingKlient.Konsoll
             var datasetService = new DatasetService();
             List<DatasetFile> datasetToDownload = datasetService.GetSelectedFiles();
 
-            List<DatasetFile> datasetSuccessfullyDownloaded = new List<DatasetFile>();
+            List<DatasetFile> UpdatedDatasetToDownload = new List<DatasetFile>();
 
             var appSettings = ApplicationService.GetAppSettings();
 
@@ -26,31 +26,35 @@ namespace NedlastingKlient.Konsoll
 
                     DatasetFile datasetFromFeed = datasetService.GetDatasetFile(localDataset);
 
-                    if (downloadFilePath.Exists && !ShouldDownload(localDataset, datasetFromFeed))
-                        continue;
-
-                    Console.WriteLine("-------------");
-                    Console.WriteLine(localDataset.DatasetId + " - " + localDataset.Title);
-
-                    downloader.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) =>
+                    if (downloadFilePath.Exists && ShouldDownload(localDataset, datasetFromFeed))
                     {
-                        Console.CursorLeft = 0;
-                        Console.Write($"{progressPercentage}% ({totalBytesDownloaded}/{totalFileSize})");
-                    };
+                        Console.WriteLine("-------------");
+                        Console.WriteLine(localDataset.DatasetId + " - " + localDataset.Title);
 
-                    downloader.StartDownload(localDataset.Url, downloadFilePath.FullName).Wait();
+                        downloader.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) =>
+                        {
+                            Console.CursorLeft = 0;
+                            Console.Write($"{progressPercentage}% ({totalBytesDownloaded}/{totalFileSize})");
+                        };
 
-                    datasetSuccessfullyDownloaded.Add(datasetFromFeed);
+                        downloader.StartDownload(localDataset.Url, downloadFilePath.FullName).Wait();
 
-                    Console.WriteLine();
+                        Console.WriteLine();
+                        UpdatedDatasetToDownload.Add(datasetFromFeed);
+                    }
+                    else
+                    {
+                        UpdatedDatasetToDownload.Add(localDataset);
+                    }
                 }
                 catch (Exception e)
                 {
+                    UpdatedDatasetToDownload.Add(localDataset);
                     Console.WriteLine("Error while downloading dataset: " + e.Message);
                 }
             }
 
-            datasetService.WriteToDownloadFile(datasetSuccessfullyDownloaded);
+            datasetService.WriteToDownloadFile(datasetToDownload);
         }
 
         private static FileInfo GetDownloadFilePath(AppSettings appSettings, DatasetFile dataset)
