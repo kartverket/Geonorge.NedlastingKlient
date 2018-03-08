@@ -12,7 +12,6 @@ namespace NedlastingKlient
 
         public static string CreateProtectedPassword(string unprotectedPassword)
         {
-            //IDataProtector protector = AddDataProtectionService();
             return _protector.Protect(unprotectedPassword);
         }
 
@@ -27,7 +26,6 @@ namespace NedlastingKlient
 
         public static string GetUnprotectedPassword(string protectedPassword)
         {
-            //IDataProtector protector = AddDataProtectionService();
             return _protector.Unprotect(protectedPassword);
         }
     }

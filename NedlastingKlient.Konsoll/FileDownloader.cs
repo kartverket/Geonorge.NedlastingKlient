@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace NedlastingKlient.Konsoll
@@ -19,24 +21,44 @@ namespace NedlastingKlient.Konsoll
 
         public event ProgressChangedHandler ProgressChanged;
 
-        public async Task StartDownload(string downloadUrl, string destinationFilePath)
+        public async Task StartDownload(string downloadUrl, string destinationFilePath, AppSettings appSettings, bool isRestricted)
         {
+            HttpClient client = SetClientRequestHeaders(appSettings, isRestricted);
 
-            using (var response = await Client.GetAsync(downloadUrl, HttpCompletionOption.ResponseHeadersRead))
+            using (var response = await client.GetAsync(downloadUrl, HttpCompletionOption.ResponseHeadersRead))
             {
                 await DownloadFileFromHttpResponseMessage(response, destinationFilePath);
             }
         }
 
+        private static HttpClient SetClientRequestHeaders(AppSettings appSettings, bool isRestricted)
+        {
+           // ... Use HttpClient.            
+            HttpClient client = new HttpClient();
+
+            if (isRestricted)
+            {
+                var byteArray = Encoding.ASCII.GetBytes(appSettings.Username + ":" + ProtectionService.GetUnprotectedPassword(appSettings.Password));
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+            }
+
+            return client;
+        }
+
         private async Task DownloadFileFromHttpResponseMessage(HttpResponseMessage response, string destinationFilePath)
         {
-            response.EnsureSuccessStatusCode();
-
-            var totalBytes = response.Content.Headers.ContentLength;
-
-            using (var contentStream = await response.Content.ReadAsStreamAsync())
+            if (!response.IsSuccessStatusCode)
             {
-                await ProcessContentStream(totalBytes, contentStream, destinationFilePath);
+                Console.WriteLine("Nedlasting av fil krever brukernavn og passord");
+            }
+            else
+            {
+                var totalBytes = response.Content.Headers.ContentLength;
+
+                using (var contentStream = await response.Content.ReadAsStreamAsync())
+                {
+                    await ProcessContentStream(totalBytes, contentStream, destinationFilePath);
+                }
             }
         }
 

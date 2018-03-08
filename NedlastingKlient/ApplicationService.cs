@@ -24,6 +24,11 @@ namespace NedlastingKlient
             return Path.Combine(appDirectory.FullName, "download.json");
         }
 
+        public static string GetUserName()
+        {
+            return GetAppSettings().Username;
+        }
+
         /// <summary>
         ///     App directory is located within the users AppData folder
         /// </summary>

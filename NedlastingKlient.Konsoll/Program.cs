@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
+using System.Net.Http;
 
 namespace NedlastingKlient.Konsoll
 {
@@ -26,7 +28,7 @@ namespace NedlastingKlient.Konsoll
 
                     DatasetFile datasetFromFeed = datasetService.GetDatasetFile(localDataset);
 
-                    if (downloadFilePath.Exists && ShouldDownload(localDataset, datasetFromFeed))
+                    if (!downloadFilePath.Exists && ShouldDownload(localDataset, datasetFromFeed))
                     {
                         Console.WriteLine("-------------");
                         Console.WriteLine(localDataset.DatasetId + " - " + localDataset.Title);
@@ -37,7 +39,7 @@ namespace NedlastingKlient.Konsoll
                             Console.Write($"{progressPercentage}% ({totalBytesDownloaded}/{totalFileSize})");
                         };
 
-                        downloader.StartDownload(localDataset.Url, downloadFilePath.FullName).Wait();
+                        downloader.StartDownload(localDataset.Url, downloadFilePath.FullName, appSettings, localDataset.IsRestricted()).Wait();
 
                         Console.WriteLine();
                         UpdatedDatasetToDownload.Add(datasetFromFeed);
@@ -77,7 +79,7 @@ namespace NedlastingKlient.Konsoll
             var originalDatasetLastUpdated = DateTime.Parse(localDataset.LastUpdated);
             var datasetFromFeedLastUpdated = DateTime.Parse(datasetFromFeed.LastUpdated);
 
-            return originalDatasetLastUpdated < datasetFromFeedLastUpdated;
+            return originalDatasetLastUpdated <= datasetFromFeedLastUpdated;
         }
     }
 }
