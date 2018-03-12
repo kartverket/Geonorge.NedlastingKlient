@@ -26,7 +26,7 @@ namespace NedlastingKlient
 
         public static string GetUnprotectedPassword(string protectedPassword)
         {
-            return _protector.Unprotect(protectedPassword);
+            return string.IsNullOrEmpty(protectedPassword) ? null : _protector.Unprotect(protectedPassword);
         }
     }
 }
