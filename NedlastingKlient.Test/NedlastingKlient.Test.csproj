@@ -28,4 +28,10 @@
     <ProjectReference Include="..\NedlastingKlient\NedlastingKlient.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="AdministrativeEnheterFylker_AtomFeedGEOJSON.fmw.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
