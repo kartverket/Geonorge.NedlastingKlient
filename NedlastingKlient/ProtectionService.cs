@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,7 +27,20 @@ namespace NedlastingKlient
 
         public static string GetUnprotectedPassword(string protectedPassword)
         {
-            return _protector.Unprotect(protectedPassword);
+            if (protectedPassword == null)
+            {
+                return "";
+            }
+            try
+            {
+                return _protector.Unprotect(protectedPassword);
+            }
+            catch (CryptographicException e)
+            {
+                Console.WriteLine("Data was not encrypted. An error occurred.");
+                Console.WriteLine(e.ToString());
+                return null;
+            }
         }
     }
 }
