@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Security.Policy;
 using System.Threading.Tasks;
 using System.Windows;
@@ -255,9 +257,21 @@ namespace NedlastingKlient.Gui
 
         private void BtnDownload_OnClick(object sender, RoutedEventArgs e)
         {
-            //Process.Start("");
-            MessageBox.Show("nedlasting startet...");
+            string executingAssemblyDirectory = GetExecutingAssemblyDirectory();
+
+            var pathToConsoleApp = Path.Combine(executingAssemblyDirectory, "..", "Console", "NedlastingKlient.Konsoll.exe");
+            
+            Process.Start(pathToConsoleApp);
         }
+
+        private static string GetExecutingAssemblyDirectory()
+        {
+            string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+            UriBuilder uri = new UriBuilder(codeBase);
+            string path = Uri.UnescapeDataString(uri.Path);
+            return Path.GetDirectoryName(path);
+        }
+
 
         private void SearchDataset_OnTextChanged(object sender, TextChangedEventArgs e)
         {
