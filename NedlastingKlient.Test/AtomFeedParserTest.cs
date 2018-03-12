@@ -20,7 +20,7 @@ namespace NedlastingKlient.Test
         [Fact]
         public void ShouldParseDatasetFileAtomFeed()
         {
-            List<DatasetFile> result = new AtomFeedParser().ParseDatasetFiles(File.ReadAllText("C:\\dev\\Geonorge.NedlastingKlient\\NedlastingKlient.Test\\AdministrativeEnheterFylker_AtomFeedGEOJSON.fmw.xml"), NewDataset());
+            List<DatasetFile> result = new AtomFeedParser().ParseDatasetFiles(File.ReadAllText("AdministrativeEnheterFylker_AtomFeedGEOJSON.fmw.xml"), NewDataset());
             result.Count.Should().Be(10);
         }
 

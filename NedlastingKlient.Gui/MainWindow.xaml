@@ -102,7 +102,7 @@
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
                     <TextBlock ToolTip="Filnavn" Margin="8 0 0 0" Width="350" VerticalAlignment="Center" Text="Navn"></TextBlock>
-                    <TextBlock ToolTip="Proporsjon" Width="150" VerticalAlignment="Center" Text="Proporsjon"></TextBlock>
+                    <TextBlock ToolTip="Projeksjon" Width="150" VerticalAlignment="Center" Text="Projeksjon"></TextBlock>
                     <ToggleButton x:Name="BtnSelectAll" Width="20" Height="20"  Click="BtnSelectAll_OnClick"
                                   Style="{StaticResource MaterialDesignActionToggleButton}"
                                   ToolTip="Velg/fjern alle">
@@ -214,7 +214,7 @@
                 <StackPanel Grid.Column="0" Orientation="Horizontal" >
                     <TextBlock ToolTip="Navn på datasett" Margin="48 0 0 0" Width="350" VerticalAlignment="Center" Text="Datasett navn"></TextBlock>
                     <TextBlock ToolTip="Filnavn" Width="250" VerticalAlignment="Center" Text="Filnavn"></TextBlock>
-                    <TextBlock ToolTip="Proposjon" Width="150" VerticalAlignment="Center" Text="Proposjon"></TextBlock>
+                    <TextBlock ToolTip="Projeksjon" Width="150" VerticalAlignment="Center" Text="Projeksjon"></TextBlock>
                     <TextBlock ToolTip="Sist oppdatert" Width="150" VerticalAlignment="Center" Text="Sist oppdatert"></TextBlock>
                     <Button x:Name="BtnRemoveAll" Margin="10 0" BindingGroup="{Binding LbSelectedFiles}" Click="BtnRemoveAll_OnClick"
                                   

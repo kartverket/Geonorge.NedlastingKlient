@@ -282,5 +282,8 @@
   <ItemGroup>
     <Resource Include="Content\favicon.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Content\geonorge-ikon.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

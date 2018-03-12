@@ -52,3 +52,14 @@ Compilation target: .net framework 4.7.1
 Console application for downloading selected files
 
 Compilation target: netstandard 2.0 (.net core)
+
+
+## How to build
+
+Build and publish for windows (64-bit)
+
+    dotnet publish -r win-x64
+
+Build and publish for windows (64 bit) self contained
+
+    dotnet publish -r win-x64 --self-contained
