@@ -15,7 +15,7 @@
         FontFamily="{DynamicResource MaterialDesignFont}"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen" WindowState="Maximized"    
-        Title="Geonorge Nedlasting" Icon="Content/favicon.ico"
+        Title="Geonorge Nedlasting" Icon="Content/geonorge.ico"
         Closing="ClosingWindow">
 
     <ScrollViewer x:Name="MainScrollbar" HorizontalScrollBarVisibility="Auto">

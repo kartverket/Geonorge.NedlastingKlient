@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:gui="clr-namespace:NedlastingKlient.Gui"
-        Title="Innstillinger" SizeToContent="WidthAndHeight" Icon="Content/favicon.ico" WindowStartupLocation="CenterScreen">
+        Title="Innstillinger" SizeToContent="WidthAndHeight" Icon="Content/geonorge.ico" WindowStartupLocation="CenterScreen">
     <Grid Margin="15">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />

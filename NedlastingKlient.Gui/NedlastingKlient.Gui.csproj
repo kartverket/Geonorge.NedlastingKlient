@@ -280,10 +280,7 @@
     <Resource Include="Content\geonorge_logo_225px.gif" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Content\favicon.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Content\geonorge-ikon.ico" />
+    <Resource Include="Content\geonorge.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
