@@ -28,6 +28,7 @@ namespace NedlastingKlient.Gui
         private List<DatasetFileViewModel> _selectedDatasetFiles;
         private List<Dataset> _datasets;
         public bool LoggedIn;
+        private DatasetService _datasetService;
 
         public MainWindow()
         {
@@ -36,12 +37,14 @@ namespace NedlastingKlient.Gui
             BtnSelectAll.Visibility = Visibility.Hidden;
             BtnSelectAll.IsChecked = false;
 
-            _datasets = new DatasetService().GetDatasets();
+            _datasetService = new DatasetService();
+
+            _datasets = _datasetService.GetDatasets();
             LbDatasets.ItemsSource = _datasets;
             CollectionView viewDatasets = (CollectionView) CollectionViewSource.GetDefaultView(LbDatasets.ItemsSource);
             if (viewDatasets != null) viewDatasets.Filter = UserDatasetFilter;
 
-            _selectedFiles = new DatasetService().GetSelectedFilesAsViewModel();
+            _selectedFiles = _datasetService.GetSelectedFilesAsViewModel();
             LbSelectedFiles.ItemsSource = _selectedFiles;
 
             _selectedDatasetFiles = new List<DatasetFileViewModel>();
@@ -94,7 +97,7 @@ namespace NedlastingKlient.Gui
 
         private List<DatasetFileViewModel> GetFilesAsync(Dataset selctedDataset)
         {
-            List<DatasetFileViewModel> selectedDatasetFiles = new DatasetService().GetDatasetFiles(selctedDataset);
+            List<DatasetFileViewModel> selectedDatasetFiles = _datasetService.GetDatasetFiles(selctedDataset);
 
             foreach (DatasetFileViewModel selectedDatasetFile in _selectedFiles)
             {
@@ -138,7 +141,6 @@ namespace NedlastingKlient.Gui
             if (selectedFile != null)
             {
                 _selectedFiles.Add(selectedFile);
-
                 BindNewList();
             }
             else
@@ -178,6 +180,8 @@ namespace NedlastingKlient.Gui
             BindNewList();
         }
 
+
+
         private void UpdateSelectedDatasetFiles(DatasetFileViewModel selectedDatasetFile)
         {
             if (_selectedDatasetFiles.Any())
@@ -193,18 +197,14 @@ namespace NedlastingKlient.Gui
             }
         }
 
-        private void SaveList_Click(object sender, RoutedEventArgs e)
-        {
-            new DatasetService().WriteToDownloadFile(_selectedFiles);
-            MessageBox.Show("Lagring, OK!");
-        }
-
         private void ClosingWindow(object sender, CancelEventArgs e)
         {
-            MessageBoxResult result = MessageBox.Show("Vil du lagre før du avslutter?", "Lagre", MessageBoxButton.YesNo);
-
-            if (result == MessageBoxResult.Yes)
-                SaveList_Click(null, null);
+            SaveDownloadList();
+        }
+ 
+        private void SaveDownloadList()
+        {
+            _datasetService.WriteToDownloadFile(_selectedFiles);
         }
 
         private void BtnSelectAll_OnClick(object sender, RoutedEventArgs e)
@@ -232,6 +232,7 @@ namespace NedlastingKlient.Gui
                     }
                 }
             }
+
             LbSelectedDatasetFiles.ItemsSource = null;
             LbSelectedDatasetFiles.ItemsSource = _selectedDatasetFiles;
         }
@@ -257,6 +258,8 @@ namespace NedlastingKlient.Gui
 
         private void BtnDownload_OnClick(object sender, RoutedEventArgs e)
         {
+            SaveDownloadList();
+
             string executingAssemblyDirectory = GetExecutingAssemblyDirectory();
 
             var pathToConsoleApp = Path.Combine(executingAssemblyDirectory, "..", "Console", "NedlastingKlient.Konsoll.exe");
