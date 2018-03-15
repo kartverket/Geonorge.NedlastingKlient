@@ -15,10 +15,4 @@
     <PackageReference Include="System.Net.Http" Version="4.3.3" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="System.Web.Services">
-      <HintPath>..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Web.Services.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>

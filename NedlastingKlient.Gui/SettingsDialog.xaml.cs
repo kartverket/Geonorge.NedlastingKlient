@@ -1,7 +1,6 @@
 ﻿
 using System;
 using System.Windows;
-using Microsoft.AspNetCore.DataProtection;
 
 namespace NedlastingKlient.Gui
 {
