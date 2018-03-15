@@ -44,8 +44,9 @@ namespace NedlastingKlient.Konsoll
                         downloader.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) =>
                         {
                             Console.CursorLeft = 0;
+                            /*
                             Console.Write(new string(' ', Console.WindowWidth)); 
-                            Console.CursorLeft = 0;
+                            Console.CursorLeft = 0;*/
                             Console.Write($"{progressPercentage}% ({HumanReadableBytes(totalBytesDownloaded)}/{HumanReadableBytes(totalFileSize.Value)})");
                         };
 
@@ -69,7 +70,7 @@ namespace NedlastingKlient.Konsoll
                 }
             }
 
-            datasetService.WriteToDownloadFile(datasetToDownload);
+            datasetService.WriteToDownloadFile(updatedDatasetToDownload);
 
             if (!IsRunningAsBackgroundTask(args))
             {
