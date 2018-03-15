@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.IO;
 
 namespace NedlastingKlient
 {
@@ -46,6 +47,21 @@ namespace NedlastingKlient
         public bool IsRestricted()
         {
             return Restrictions == Restricted || Restrictions == NorwayDigitalRestricted;
+        }
+
+        public string LocalFileName()
+        {
+            var fileName = Path.GetFileName(new Uri(Url).LocalPath);
+            var extension = Path.GetExtension(fileName);
+            if (string.IsNullOrWhiteSpace(extension))
+                return null;
+
+            return fileName;
+        }
+
+        public bool HasLocalFileName()
+        {
+            return !string.IsNullOrWhiteSpace(LocalFileName());
         }
     }
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,45 +19,36 @@ namespace NedlastingKlient.Konsoll
         private static readonly HttpClient Client = new HttpClient();
 
         public event ProgressChangedHandler ProgressChanged;
-
-        public async Task StartDownload(string downloadUrl, string destinationFilePath, AppSettings appSettings, bool isRestricted)
+        
+        public async Task StartDownload(DownloadRequest downloadRequest, AppSettings appSettings)
         {
-            HttpClient client = SetClientRequestHeaders(appSettings, isRestricted);
+            SetClientRequestHeaders(downloadRequest, appSettings);
 
-            using (var response = await client.GetAsync(downloadUrl, HttpCompletionOption.ResponseHeadersRead))
+            using (var response = await Client.GetAsync(downloadRequest.DownloadUrl, HttpCompletionOption.ResponseHeadersRead))
             {
-                await DownloadFileFromHttpResponseMessage(response, destinationFilePath);
+                if (!response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine("Restricted access.");
+                }
+                else
+                {
+                    using (var contentStream = await response.Content.ReadAsStreamAsync())
+                    {
+                        string destinationFilePath = downloadRequest.GetDestinationFileName(response);
+
+                        var totalBytes = response.Content.Headers.ContentLength;
+                        await ProcessContentStream(totalBytes, contentStream, destinationFilePath);
+                    }
+                }
             }
         }
 
-        private static HttpClient SetClientRequestHeaders(AppSettings appSettings, bool isRestricted)
+        private static void SetClientRequestHeaders(DownloadRequest downloadRequest, AppSettings appSettings)
         {
-           // ... Use HttpClient.            
-            HttpClient client = new HttpClient();
-
-            if (isRestricted)
+            if (downloadRequest.MustAuthenticate)
             {
                 var byteArray = Encoding.ASCII.GetBytes(appSettings.Username + ":" + ProtectionService.GetUnprotectedPassword(appSettings.Password));
-                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
-            }
-
-            return client;
-        }
-
-        private async Task DownloadFileFromHttpResponseMessage(HttpResponseMessage response, string destinationFilePath)
-        {
-            if (!response.IsSuccessStatusCode)
-            {
-                Console.WriteLine("Restricted access.");
-            }
-            else
-            {
-                var totalBytes = response.Content.Headers.ContentLength;
-
-                using (var contentStream = await response.Content.ReadAsStreamAsync())
-                {
-                    await ProcessContentStream(totalBytes, contentStream, destinationFilePath);
-                }
+                Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
             }
         }
 
@@ -68,6 +58,7 @@ namespace NedlastingKlient.Konsoll
             var readCount = 0L;
             var buffer = new byte[8192];
             var isMoreToRead = true;
+
 
             using (var fileStream = new FileStream(destinationFilePath, FileMode.Create, FileAccess.Write,
                 FileShare.None, 8192, true))
@@ -104,5 +95,6 @@ namespace NedlastingKlient.Konsoll
 
             ProgressChanged(totalDownloadSize, totalBytesRead, progressPercentage);
         }
+
     }
 }

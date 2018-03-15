@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
-using System.Net.Http;
+using System.Linq;
 
 namespace NedlastingKlient.Konsoll
 {
@@ -15,7 +14,7 @@ namespace NedlastingKlient.Konsoll
             var datasetService = new DatasetService();
             List<DatasetFile> datasetToDownload = datasetService.GetSelectedFiles();
 
-            List<DatasetFile> UpdatedDatasetToDownload = new List<DatasetFile>();
+            List<DatasetFile> updatedDatasetToDownload = new List<DatasetFile>();
 
             var appSettings = ApplicationService.GetAppSettings();
 
@@ -24,42 +23,90 @@ namespace NedlastingKlient.Konsoll
             {
                 try
                 {
-                    FileInfo downloadFilePath = GetDownloadFilePath(appSettings, localDataset);
+                    DirectoryInfo downloadDirectory = GetDownloadDirectory(appSettings, localDataset);
 
                     DatasetFile datasetFromFeed = datasetService.GetDatasetFile(localDataset);
 
-                    if (!downloadFilePath.Exists && ShouldDownload(localDataset, datasetFromFeed))
-                    {
-                        Console.WriteLine("-------------");
-                        Console.WriteLine(localDataset.DatasetId + " - " + localDataset.Title);
+                    
+                    Console.WriteLine(localDataset.DatasetId + " - " + localDataset.Title);
 
+                    bool newDatasetAvailable = NewDatasetAvailable(localDataset, datasetFromFeed);
+                    if (newDatasetAvailable)
+                        Console.WriteLine("Updated version of dataset is available.");
+
+                    bool localFileExists = LocalFileExists(downloadDirectory, localDataset);
+                    if (localFileExists)
+                        Console.WriteLine("Local copy of dataset already exists.");
+
+                    if (newDatasetAvailable || !localFileExists)
+                    {
+                        Console.WriteLine("Starting download process.");
                         downloader.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) =>
                         {
                             Console.CursorLeft = 0;
-                            Console.Write($"{progressPercentage}% ({totalBytesDownloaded}/{totalFileSize})");
+                            Console.Write(new string(' ', Console.WindowWidth)); 
+                            Console.CursorLeft = 0;
+                            Console.Write($"{progressPercentage}% ({HumanReadableBytes(totalBytesDownloaded)}/{HumanReadableBytes(totalFileSize.Value)})");
                         };
 
-                        downloader.StartDownload(localDataset.Url, downloadFilePath.FullName, appSettings, localDataset.IsRestricted()).Wait();
-
+                        var downloadRequest = new DownloadRequest(localDataset.Url, downloadDirectory, localDataset.IsRestricted());
+                        downloader.StartDownload(downloadRequest, appSettings).Wait();
                         Console.WriteLine();
-                        UpdatedDatasetToDownload.Add(datasetFromFeed);
+                        Console.WriteLine("-------------");
+
+                        updatedDatasetToDownload.Add(datasetFromFeed);
                     }
                     else
                     {
-                        UpdatedDatasetToDownload.Add(localDataset);
+                        Console.WriteLine("Not necessary to download dataset.");
+                        updatedDatasetToDownload.Add(localDataset);
                     }
                 }
                 catch (Exception e)
                 {
-                    UpdatedDatasetToDownload.Add(localDataset);
+                    updatedDatasetToDownload.Add(localDataset);
                     Console.WriteLine("Error while downloading dataset: " + e.Message);
                 }
             }
 
             datasetService.WriteToDownloadFile(datasetToDownload);
+
+            if (!IsRunningAsBackgroundTask(args))
+            {
+                Console.WriteLine("Press any key to exit");
+                Console.ReadKey();
+            }
         }
 
-        private static FileInfo GetDownloadFilePath(AppSettings appSettings, DatasetFile dataset)
+        private static bool LocalFileExists(DirectoryInfo downloadDirectory, DatasetFile dataset)
+        {
+            if (!dataset.HasLocalFileName())
+                return false;
+
+            var filePath = new FileInfo(Path.Combine(downloadDirectory.FullName, dataset.LocalFileName()));
+
+            return filePath.Exists;
+        }
+
+
+        private static string HumanReadableBytes(long bytes)
+        {
+            string[] sizes = { "B", "KB", "MB", "GB", "TB" };
+            double len = bytes;
+            int order = 0;
+            while (len >= 1024 && order < sizes.Length - 1) {
+                order++;
+                len = len/1024;
+            }
+            return String.Format("{0:0.##} {1}", len, sizes[order]);
+        }
+
+        private static bool IsRunningAsBackgroundTask(string[] args)
+        {
+            return args != null && args.Any() && args.First() == "-background";
+        }
+
+        private static DirectoryInfo GetDownloadDirectory(AppSettings appSettings, DatasetFile dataset)
         {
             var downloadDirectory = new DirectoryInfo(Path.Combine(appSettings.DownloadDirectory, dataset.DatasetId));
             if (!downloadDirectory.Exists)
@@ -67,19 +114,20 @@ namespace NedlastingKlient.Konsoll
                 Console.WriteLine($"Download directory [{downloadDirectory}] does not exist, creating it now.");
                 downloadDirectory.Create();
             }
-
-            var filenameFromUrl = new Uri(dataset.Url).LocalPath;
-            var downloadFilePath =
-                new FileInfo(Path.Combine(downloadDirectory.FullName, Path.GetFileName(filenameFromUrl)));
-            return downloadFilePath;
+            return downloadDirectory;
         }
 
-        private static bool ShouldDownload(DatasetFile localDataset, DatasetFile datasetFromFeed)
+        private static bool NewDatasetAvailable(DatasetFile localDataset, DatasetFile datasetFromFeed)
         {
             var originalDatasetLastUpdated = DateTime.Parse(localDataset.LastUpdated);
             var datasetFromFeedLastUpdated = DateTime.Parse(datasetFromFeed.LastUpdated);
 
-            return originalDatasetLastUpdated <= datasetFromFeedLastUpdated;
+            Console.WriteLine("local file last updated:" + originalDatasetLastUpdated);
+            Console.WriteLine("atom feed last updated:" + datasetFromFeedLastUpdated);
+
+            var updatedDatasetAvailable = originalDatasetLastUpdated < datasetFromFeedLastUpdated;
+            Console.WriteLine("Updated dataset available: " + updatedDatasetAvailable);
+            return updatedDatasetAvailable;
         }
     }
 }
