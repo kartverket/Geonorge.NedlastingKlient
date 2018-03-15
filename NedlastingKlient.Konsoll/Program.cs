@@ -36,7 +36,7 @@ namespace NedlastingKlient.Konsoll
 
                     bool localFileExists = LocalFileExists(downloadDirectory, localDataset);
                     if (localFileExists)
-                        Console.WriteLine("Local copy of dataset already exists.");
+                        Console.WriteLine("Local copy of file already exists.");
 
                     if (newDatasetAvailable || !localFileExists)
                     {

@@ -36,6 +36,13 @@ namespace NedlastingKlient.Konsoll
                     {
                         string destinationFilePath = downloadRequest.GetDestinationFileName(response);
 
+                        var destinationFileInfo = new FileInfo(destinationFilePath);
+                        if (destinationFileInfo.Exists)
+                        {
+                            Console.WriteLine("Local copy of file already exists.");
+                            return;
+                        }
+
                         var totalBytes = response.Content.Headers.ContentLength;
                         await ProcessContentStream(totalBytes, contentStream, destinationFilePath);
                     }
