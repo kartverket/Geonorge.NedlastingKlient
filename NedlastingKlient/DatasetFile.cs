@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data;
 using System.IO;
 
 namespace NedlastingKlient
@@ -19,7 +18,7 @@ namespace NedlastingKlient
             Url = datasetFileViewModel.Url;
             LastUpdated = datasetFileViewModel.LastUpdated;
             Organization = datasetFileViewModel.Organization;
-            Proportion = datasetFileViewModel.Category;
+            Projection = datasetFileViewModel.Category;
             DatasetId = datasetFileViewModel.DatasetId;
             DatasetUrl = datasetFileViewModel.DatasetUrl;
             Restrictions = datasetFileViewModel.Restrictions;
@@ -34,15 +33,10 @@ namespace NedlastingKlient
         public string Url { get; set; }
         public string LastUpdated { get; set; }
         public string Organization { get; set; }
-        public string Proportion { get; set; }
+        public string Projection { get; set; }
         public string DatasetId { get; set; }
         public string DatasetUrl { get; set; }
         public string Restrictions { get; set; }
-
-        public string GetId()
-        {
-            return Title + "_" + Proportion;
-        }
 
         public bool IsRestricted()
         {
@@ -92,7 +86,7 @@ namespace NedlastingKlient
             Url = datasetFile.Url;
             LastUpdated = datasetFile.LastUpdated;
             Organization = datasetFile.Organization;
-            Category = datasetFile.Proportion;
+            Category = datasetFile.Projection;
             DatasetId = datasetFile.DatasetId;
             DatasetUrl = datasetFile.DatasetUrl;
             Id = GetId();

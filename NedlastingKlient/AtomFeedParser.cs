@@ -56,20 +56,19 @@ namespace NedlastingKlient
             foreach (XmlNode childrenNode in nodes)
             {
                 string title = childrenNode.SelectSingleNode("a:title", nsmgr).InnerXml;
-                string proportion = GetProportion(childrenNode.SelectNodes("a:category", nsmgr));
+                string projection = GetProjection(childrenNode.SelectNodes("a:category", nsmgr));
 
-                if (originalDatasetFile.Title == title && originalDatasetFile.Proportion == proportion)
+                if (originalDatasetFile.Title == title && originalDatasetFile.Projection == projection)
                 {
                     datasetFileFromFeed.Title = title;
                     datasetFileFromFeed.Description = childrenNode.SelectSingleNode("a:category", nsmgr).InnerXml;
                     datasetFileFromFeed.Url = childrenNode.SelectSingleNode("a:link", nsmgr).Attributes[1].Value;
                     datasetFileFromFeed.LastUpdated = childrenNode.SelectSingleNode("a:updated", nsmgr).InnerXml;
                     datasetFileFromFeed.Organization = childrenNode.SelectSingleNode("a:author/a:name", nsmgr).InnerXml;
-                    datasetFileFromFeed.Proportion = proportion;
+                    datasetFileFromFeed.Projection = projection;
                     datasetFileFromFeed.Restrictions = GetRestrictions(childrenNode.SelectNodes("a:category", nsmgr));
                     datasetFileFromFeed.DatasetId = originalDatasetFile.DatasetId;
                     datasetFileFromFeed.DatasetUrl = originalDatasetFile.DatasetUrl;
-                    datasetFileFromFeed.Restrictions = childrenNode.SelectSingleNode("a:category", nsmgr).Attributes[0].Value;
                 }
             }
             return datasetFileFromFeed;
@@ -87,7 +86,7 @@ namespace NedlastingKlient
             return null;
         }
 
-        private string GetProportion(XmlNodeList xmlNodeList)
+        private string GetProjection(XmlNodeList xmlNodeList)
         {
             foreach (XmlNode node in xmlNodeList)
             {
@@ -122,7 +121,7 @@ namespace NedlastingKlient
                 datasetFile.Url = childrenNode.SelectSingleNode("a:link", nsmgr).Attributes[1].Value;
                 datasetFile.LastUpdated = childrenNode.SelectSingleNode("a:updated", nsmgr).InnerXml;
                 datasetFile.Organization = childrenNode.SelectSingleNode("a:author/a:name", nsmgr).InnerXml;
-                datasetFile.Proportion = GetProportion(childrenNode.SelectNodes("a:category", nsmgr));
+                datasetFile.Projection = GetProjection(childrenNode.SelectNodes("a:category", nsmgr));
                 datasetFile.Restrictions = GetRestrictions(childrenNode.SelectNodes("a:category", nsmgr));
                 datasetFile.DatasetId = dataset.Title;
                 datasetFile.DatasetUrl = dataset.Url;
