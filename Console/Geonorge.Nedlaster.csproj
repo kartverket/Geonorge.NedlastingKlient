@@ -8,6 +8,7 @@
     <AssemblyName>Geonorge.Nedlaster</AssemblyName>
     <RootNamespace>Geonorge.Nedlaster</RootNamespace>
     <Authors>Kartverket</Authors>
+    <ApplicationIcon>geonorge.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
