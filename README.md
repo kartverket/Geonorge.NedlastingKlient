@@ -35,6 +35,10 @@ https://www.microsoft.com/net/download/windows
 
 Solution builds with Visual Studio 2017. 
 
+Signing of application binaries can be done with signtool.exe. This tool is a part of Windows 8 SDK. On the build server you can start Visual Studio Installer, select modify on your Build Tools installation and select Windows 8 SDK. The signtool will hopefully be available at C:\Program Files (x86)\Windows Kits\8.1\bin\x86\signtool.exe.
+
+Remember to sign both the exe file and the final setup exe/msi file. 
+
 ## Project structure
 
 ### NedlastingKlient
