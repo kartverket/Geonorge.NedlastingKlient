@@ -49,6 +49,8 @@
     </WixExtension>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="banner.bmp" />
+    <Content Include="dialog.bmp" />
     <Content Include="geonorge.ico" />
     <Content Include="Transforms.xslt" />
   </ItemGroup>

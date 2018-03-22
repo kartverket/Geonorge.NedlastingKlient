@@ -12,6 +12,9 @@
     <Icon Id="Geonorge.ico" SourceFile=".\geonorge.ico" />
     <Property Id="ARPPRODUCTICON" Value="Geonorge.ico" /> <!-- icon in add/remove programs in control panel-->
 
+    <WixVariable Id="WixUIBannerBmp" Value="banner.bmp" />
+    <WixVariable Id="WixUIDialogBmp" Value="dialog.bmp" />
+
     <Feature Id="NedlastingKlient.Console" Title="Geonorge - nedlaster" Level="1">
       <ComponentGroupRef Id="ConsoleApp" />
     </Feature>
