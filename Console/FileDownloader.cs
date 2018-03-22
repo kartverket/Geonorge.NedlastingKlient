@@ -29,7 +29,7 @@ namespace Geonorge.Nedlaster
             {
                 if (!response.IsSuccessStatusCode)
                 {
-                    Console.WriteLine("Restricted access.");
+                    Console.WriteLine("Download failed - response from server was: " + response.StatusCode + " - " + response.ReasonPhrase);
                 }
                 else
                 {

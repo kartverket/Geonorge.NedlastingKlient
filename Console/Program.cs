@@ -11,6 +11,7 @@ namespace Geonorge.Nedlaster
         public static void Main(string[] args)
         {
             Console.WriteLine("Geonorge - nedlaster");
+            Console.WriteLine("--------------------");
 
             var datasetService = new DatasetService();
             List<DatasetFile> datasetToDownload = datasetService.GetSelectedFiles();
@@ -24,12 +25,11 @@ namespace Geonorge.Nedlaster
             {
                 try
                 {
+                    Console.WriteLine(localDataset.DatasetId + " - " + localDataset.Title);
+
                     DirectoryInfo downloadDirectory = GetDownloadDirectory(appSettings, localDataset);
 
                     DatasetFile datasetFromFeed = datasetService.GetDatasetFile(localDataset);
-
-                    
-                    Console.WriteLine(localDataset.DatasetId + " - " + localDataset.Title);
 
                     bool newDatasetAvailable = NewDatasetAvailable(localDataset, datasetFromFeed);
                     if (newDatasetAvailable)
@@ -45,16 +45,12 @@ namespace Geonorge.Nedlaster
                         downloader.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) =>
                         {
                             Console.CursorLeft = 0;
-                            /*
-                            Console.Write(new string(' ', Console.WindowWidth)); 
-                            Console.CursorLeft = 0;*/
-                            Console.Write($"{progressPercentage}% ({HumanReadableBytes(totalBytesDownloaded)}/{HumanReadableBytes(totalFileSize.Value)})");
+                            Console.Write($"{progressPercentage}% ({HumanReadableBytes(totalBytesDownloaded)}/{HumanReadableBytes(totalFileSize.Value)})                "); // add som extra whitespace to blank out previous updates
                         };
 
                         var downloadRequest = new DownloadRequest(localDataset.Url, downloadDirectory, localDataset.IsRestricted());
                         downloader.StartDownload(downloadRequest, appSettings).Wait();
                         Console.WriteLine();
-                        Console.WriteLine("-------------");
 
                         updatedDatasetToDownload.Add(datasetFromFeed);
                     }
@@ -69,6 +65,8 @@ namespace Geonorge.Nedlaster
                     updatedDatasetToDownload.Add(localDataset);
                     Console.WriteLine("Error while downloading dataset: " + e.Message);
                 }
+                
+                Console.WriteLine("-------------");
             }
 
             datasetService.WriteToDownloadFile(updatedDatasetToDownload);
@@ -113,7 +111,7 @@ namespace Geonorge.Nedlaster
             var downloadDirectory = new DirectoryInfo(Path.Combine(appSettings.DownloadDirectory, dataset.DatasetId));
             if (!downloadDirectory.Exists)
             {
-                Console.WriteLine($"Download directory [{downloadDirectory}] does not exist, creating it now.");
+                Console.WriteLine($"Creating directory: {downloadDirectory}");
                 downloadDirectory.Create();
             }
             return downloadDirectory;
@@ -124,11 +122,7 @@ namespace Geonorge.Nedlaster
             var originalDatasetLastUpdated = DateTime.Parse(localDataset.LastUpdated);
             var datasetFromFeedLastUpdated = DateTime.Parse(datasetFromFeed.LastUpdated);
 
-            Console.WriteLine("local file last updated:" + originalDatasetLastUpdated);
-            Console.WriteLine("atom feed last updated:" + datasetFromFeedLastUpdated);
-
             var updatedDatasetAvailable = originalDatasetLastUpdated < datasetFromFeedLastUpdated;
-            Console.WriteLine("Updated dataset available: " + updatedDatasetAvailable);
             return updatedDatasetAvailable;
         }
     }
