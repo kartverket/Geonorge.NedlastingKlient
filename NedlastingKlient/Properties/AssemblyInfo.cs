@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("NedlastingKlient")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Tilbyr nedlasting av datasett fra Geonorge.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Geonorge")]
-[assembly: AssemblyProduct("NedlastingKlient")]
-[assembly: AssemblyCopyright("Copyright ©  2018")]
+[assembly: AssemblyCompany("Kartverket")]
+[assembly: AssemblyProduct("Geonorge - massiv nedlasting")]
+[assembly: AssemblyCopyright("Copyright © Kartverket 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

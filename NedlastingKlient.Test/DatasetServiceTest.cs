@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 using FluentAssertions;
+using Geonorge.MassivNedlasting;
 using Xunit;
 
-namespace NedlastingKlient.Test
+namespace Geonorge.MassivNedlasting.Test
 {
     public class DatasetServiceTest
     {

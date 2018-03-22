@@ -5,10 +5,13 @@
     <OutputType>exe</OutputType>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <RuntimeIdentifiers>win-x64;linux-x64</RuntimeIdentifiers>
+    <AssemblyName>Geonorge.Nedlaster</AssemblyName>
+    <RootNamespace>Geonorge.Nedlaster</RootNamespace>
+    <Authors>Kartverket</Authors>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NedlastingKlient\NedlastingKlient.csproj" />
+    <ProjectReference Include="..\NedlastingKlient\Geonorge.MassivNedlasting.csproj" />
   </ItemGroup>
 
 </Project>

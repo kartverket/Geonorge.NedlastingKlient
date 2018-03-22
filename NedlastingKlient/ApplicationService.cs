@@ -1,11 +1,9 @@
 ﻿using System;
 using System.IO;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.DataProtection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace NedlastingKlient
+namespace Geonorge.MassivNedlasting
 {
     /// <summary>
     /// Holds application settings

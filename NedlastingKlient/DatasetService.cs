@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Xml.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace NedlastingKlient
+namespace Geonorge.MassivNedlasting
 {
     public class DatasetService
     {

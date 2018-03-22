@@ -2,7 +2,7 @@
 using System;
 using System.Windows;
 
-namespace NedlastingKlient.Gui
+namespace Geonorge.MassivNedlasting.Gui
 {
     /// <summary>
     /// Interaction logic for Login.xaml

@@ -2,17 +2,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NedlastingKlient", "NedlastingKlient\NedlastingKlient.csproj", "{E56A268C-4C6D-4425-9F3F-F8ABFB3FEEDD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geonorge.MassivNedlasting", "NedlastingKlient\Geonorge.MassivNedlasting.csproj", "{E56A268C-4C6D-4425-9F3F-F8ABFB3FEEDD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NedlastingKlient.Gui", "NedlastingKlient.Gui\NedlastingKlient.Gui.csproj", "{8C20E9A5-573F-430C-A4AB-879C9DCBCD2B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geonorge.MassivNedlasting.Gui", "NedlastingKlient.Gui\Geonorge.MassivNedlasting.Gui.csproj", "{8C20E9A5-573F-430C-A4AB-879C9DCBCD2B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NedlastingKlient.Konsoll", "NedlastingKlient.Konsoll\NedlastingKlient.Konsoll.csproj", "{F3F01547-BC08-469F-B7BE-2B5EB77FC9A6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geonorge.Nedlaster", "NedlastingKlient.Konsoll\Geonorge.Nedlaster.csproj", "{F3F01547-BC08-469F-B7BE-2B5EB77FC9A6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NedlastingKlient.Test", "NedlastingKlient.Test\NedlastingKlient.Test.csproj", "{B225ABF0-27C9-472D-A9EA-39D9F9C8C752}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geonorge.MassivNedlasting.Test", "NedlastingKlient.Test\Geonorge.MassivNedlasting.Test.csproj", "{B225ABF0-27C9-472D-A9EA-39D9F9C8C752}"
 EndProject
-Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "NedlastingKlient.Setup", "NedlastingKlient.Setup\NedlastingKlient.Setup.wixproj", "{241B56AF-DBC8-4DB5-99D7-7739BA59949C}"
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Geonorge.MassivNedlasting.Setup", "NedlastingKlient.Setup\Geonorge.MassivNedlasting.Setup.wixproj", "{241B56AF-DBC8-4DB5-99D7-7739BA59949C}"
 EndProject
-Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "NedlastingKlient.Setup.Bootstrapper", "NedlastingKlient.Setup.Bootstrapper\NedlastingKlient.Setup.Bootstrapper.wixproj", "{62792086-3C32-4620-9064-444AD6DB12C8}"
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Geonorge.MassivNedlasting.Setup.Bootstrapper", "NedlastingKlient.Setup.Bootstrapper\Geonorge.MassivNedlasting.Setup.Bootstrapper.wixproj", "{62792086-3C32-4620-9064-444AD6DB12C8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -7,12 +7,12 @@ using System.Windows;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("NedlastingKlient.Gui")]
+[assembly: AssemblyTitle("Geonorge - massiv nedlasting")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Geonorge")]
-[assembly: AssemblyProduct("NedlastingKlient.Gui")]
-[assembly: AssemblyCopyright("Copyright ©  2018")]
+[assembly: AssemblyCompany("Kartverket")]
+[assembly: AssemblyProduct("Geonorge - massiv nedlasting")]
+[assembly: AssemblyCopyright("Copyright © Kartverket 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

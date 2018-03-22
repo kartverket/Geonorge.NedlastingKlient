@@ -19,26 +19,26 @@
   
   <!-- Add program shortcut -->
   <xsl:template
-    match="wix:Component[wix:File[contains(@Source, 'NedlastingKlient.Konsoll.exe') and not(contains(@Source, '.config'))]]">
+    match="wix:Component[wix:File[contains(@Source, 'Geonorge.Nedlaster.exe') and not(contains(@Source, '.config'))]]">
     <xsl:copy>
       <xsl:apply-templates select="@* | node()" />
       <wix:Shortcut Id="ApplicationConsoleStartMenuShortcut"
                     Advertise="yes"
                     Directory="ApplicationProgramsFolder"
-                    Name="Geonorge nedlaster"
+                    Name="Geonorge - nedlaster"
                     Icon="Geonorge.ico"
                     WorkingDirectory="INSTALLFOLDER_CONSOLE"/>
     </xsl:copy>
   </xsl:template>
 
   <xsl:template
-    match="wix:Component[wix:File[contains(@Source, 'NedlastingKlient.Gui.exe') and not(contains(@Source, '.config'))]]">
+    match="wix:Component[wix:File[contains(@Source, 'Geonorge.MassivNedlasting.exe') and not(contains(@Source, '.config'))]]">
     <xsl:copy>
       <xsl:apply-templates select="@* | node()" />
       <wix:Shortcut Id="ApplicationGuiStartMenuShortcut"
                     Advertise="yes"
                     Directory="ApplicationProgramsFolder"
-                    Name="Geonorge utforsker"
+                    Name="Geonorge - massiv nedlasting"
                     Icon="Geonorge.ico"
                     WorkingDirectory="INSTALLFOLDER_GUI"/>
 

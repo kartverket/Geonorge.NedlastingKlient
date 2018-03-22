@@ -10,8 +10,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
+using Geonorge.MassivNedlasting;
+using Geonorge.MassivNedlasting.Gui;
 
-namespace NedlastingKlient.Gui
+namespace Geonorge.MassivNedlasting.Gui
 {
     /// <summary>
     ///     Interaction logic for MainWindow.xaml
@@ -240,7 +242,7 @@ namespace NedlastingKlient.Gui
             var executingAssemblyDirectory = GetExecutingAssemblyDirectory();
 
             var pathToConsoleApp =
-                Path.Combine(executingAssemblyDirectory, "..", "Console", "NedlastingKlient.Konsoll.exe");
+                Path.Combine(executingAssemblyDirectory, "..", "Nedlaster", "Geonorge.Nedlaster.exe");
 
             Process.Start(pathToConsoleApp);
         }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace NedlastingKlient
+namespace Geonorge.MassivNedlasting
 {
 
     public class DatasetFile

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Id="*" Name="Geonorge NedlastingKlient" Manufacturer="Kartverket" Language="1033" 
+  <Product Id="*" Name="Geonorge - massiv nedlasting" Manufacturer="Kartverket" Language="1033" 
            Version="1.0.0.0" 
            UpgradeCode="a738cf32-d338-4b98-b2a3-028a20e61e7e">
     <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
@@ -12,11 +12,11 @@
     <Icon Id="Geonorge.ico" SourceFile=".\geonorge.ico" />
     <Property Id="ARPPRODUCTICON" Value="Geonorge.ico" /> <!-- icon in add/remove programs in control panel-->
 
-    <Feature Id="NedlastingKlient.Console" Title="Geonorge nedlaster" Level="1">
+    <Feature Id="NedlastingKlient.Console" Title="Geonorge - nedlaster" Level="1">
       <ComponentGroupRef Id="ConsoleApp" />
     </Feature>
 
-    <Feature Id="NedlastingKlient.Gui" Title="Geonorge utforsker" Level="1">
+    <Feature Id="NedlastingKlient.Gui" Title="Geonorge - massiv nedlasting" Level="1">
       <ComponentGroupRef Id="GuiApp" /> 
     </Feature>
 
@@ -28,15 +28,15 @@
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFilesFolder">
         <Directory Id="ManufacturerFolder" Name="Geonorge">
-          <Directory Id="INSTALLFOLDER" Name="NedlastingKlient">
-            <Directory Id="INSTALLFOLDER_CONSOLE" Name="Console"/>
-            <Directory Id="INSTALLFOLDER_GUI" Name="Gui"/>
+          <Directory Id="INSTALLFOLDER" Name="Nedlasting">
+            <Directory Id="INSTALLFOLDER_CONSOLE" Name="Nedlaster"/>
+            <Directory Id="INSTALLFOLDER_GUI" Name="Massiv nedlasting"/>
           </Directory>
         </Directory>
       </Directory>
 
       <Directory Id="ProgramMenuFolder">
-        <Directory Id="ApplicationProgramsFolder" Name="Geonorge nedlastingklient" />
+        <Directory Id="ApplicationProgramsFolder" Name="Geonorge - massiv nedlasting" />
       </Directory>
     </Directory>
   </Fragment>

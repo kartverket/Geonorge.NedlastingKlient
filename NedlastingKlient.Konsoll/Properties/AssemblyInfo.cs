@@ -7,9 +7,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("NedlastingKlient.Konsoll")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Geonorge")]
-[assembly: AssemblyProduct("NedlastingKlient.Konsoll")]
-[assembly: AssemblyCopyright("Copyright ©  2018")]
+[assembly: AssemblyCompany("Kartverket")]
+[assembly: AssemblyProduct("Geonorge.Nedlaster")]
+[assembly: AssemblyCopyright("Copyright © Kartverket 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
 using FluentAssertions;
+using Geonorge.MassivNedlasting;
 using Xunit;
 
-namespace NedlastingKlient.Test
+namespace Geonorge.MassivNedlasting.Test
 {
     public class AtomFeedParserTest
     {

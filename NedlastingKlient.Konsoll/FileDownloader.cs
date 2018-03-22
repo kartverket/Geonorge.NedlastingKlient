@@ -3,8 +3,9 @@ using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Geonorge.MassivNedlasting;
 
-namespace NedlastingKlient.Konsoll
+namespace Geonorge.Nedlaster
 {
     /// <summary>
     /// Download file with progress event

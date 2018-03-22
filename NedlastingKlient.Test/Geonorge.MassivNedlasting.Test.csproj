@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NedlastingKlient\NedlastingKlient.csproj" />
+    <ProjectReference Include="..\NedlastingKlient\Geonorge.MassivNedlasting.csproj" />
   </ItemGroup>
 
   <ItemGroup>

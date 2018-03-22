@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Geonorge.MassivNedlasting;
 
-namespace NedlastingKlient.Konsoll
+namespace Geonorge.Nedlaster
 {
     public class Program
     {
         public static void Main(string[] args)
         {
-            Console.WriteLine("Geonorge Nedlastingklient");
+            Console.WriteLine("Geonorge - nedlaster");
 
             var datasetService = new DatasetService();
             List<DatasetFile> datasetToDownload = datasetService.GetSelectedFiles();

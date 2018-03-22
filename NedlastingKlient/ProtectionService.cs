@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace NedlastingKlient
+namespace Geonorge.MassivNedlasting
 {
     public class ProtectionService
     {

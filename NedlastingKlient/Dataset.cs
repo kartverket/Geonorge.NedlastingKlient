@@ -1,4 +1,4 @@
-﻿namespace NedlastingKlient
+﻿namespace Geonorge.MassivNedlasting
 {
     public class Dataset
     {
