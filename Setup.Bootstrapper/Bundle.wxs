@@ -5,7 +5,7 @@
 	  <BootstrapperApplicationRef Id="WixStandardBootstrapperApplication.RtfLicense" />
 		<Chain>
 		  <PackageGroupRef Id="NetFx471Redist"/>
-		  <MsiPackage Id="Geonorge.MassivNedlasting.Setup" SourceFile="..\NedlastingKlient.Setup\bin\$(var.Geonorge.MassivNedlasting.Setup.Configuration)\Geonorge.MassivNedlasting.Setup.msi"  />
+		  <MsiPackage Id="Geonorge.MassivNedlasting.Setup" SourceFile="..\Setup\bin\$(var.Geonorge.MassivNedlasting.Setup.Configuration)\Geonorge.MassivNedlasting.Setup.msi"  />
 		</Chain>
 	</Bundle>
 </Wix>

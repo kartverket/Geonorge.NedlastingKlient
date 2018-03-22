@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NedlastingKlient\Geonorge.MassivNedlasting.csproj" />
+    <ProjectReference Include="..\Lib\Geonorge.MassivNedlasting.csproj" />
   </ItemGroup>
 
 </Project>

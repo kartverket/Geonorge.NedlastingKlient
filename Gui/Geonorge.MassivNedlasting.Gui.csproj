@@ -162,7 +162,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NedlastingKlient\Geonorge.MassivNedlasting.csproj">
+    <ProjectReference Include="..\Lib\Geonorge.MassivNedlasting.csproj">
       <Project>{e56a268c-4c6d-4425-9f3f-f8abfb3feedd}</Project>
       <Name>Geonorge.MassivNedlasting</Name>
     </ProjectReference>
