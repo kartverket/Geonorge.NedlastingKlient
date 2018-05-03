@@ -243,8 +243,14 @@ namespace Geonorge.MassivNedlasting.Gui
 
             var pathToConsoleApp =
                 Path.Combine(executingAssemblyDirectory, "..", "Nedlaster", "Geonorge.Nedlaster.exe");
-
-            Process.Start(pathToConsoleApp);
+            try
+            {
+                Process.Start(pathToConsoleApp);
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show("Finner ikke nedlaster...");
+            }
         }
 
         private static string GetExecutingAssemblyDirectory()
