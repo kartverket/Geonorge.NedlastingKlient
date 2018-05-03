@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Windows.Forms;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -14,8 +15,17 @@ namespace Geonorge.MassivNedlasting
 
         public List<Dataset> GetDatasets()
         {
-            var getFeedTask = HttpClient.GetStringAsync("https://nedlasting.geonorge.no/geonorge/Tjenestefeed.xml");
-            return new AtomFeedParser().ParseDatasets(getFeedTask.Result);
+            try
+            {
+                var getFeedTask = HttpClient.GetStringAsync("https://nedlasting.geonorge.no/geonorge/Tjenestefeed.xml");
+                return new AtomFeedParser().ParseDatasets(getFeedTask.Result);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Klarer ikke hente fra tjenestefeed");
+            }
+
+            return new List<Dataset>();
         }
 
         public List<DatasetFileViewModel> GetDatasetFiles(Dataset dataset)
