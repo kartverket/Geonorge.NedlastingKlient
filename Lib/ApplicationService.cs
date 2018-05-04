@@ -22,6 +22,17 @@ namespace Geonorge.MassivNedlasting
             return Path.Combine(appDirectory.FullName, "download.json");
         }
 
+        /// <summary>
+        /// Returns path to the file containing the list of downloaded datasets.
+        /// </summary>
+        /// <returns></returns>
+        public static string GetDownloadHistoryFilePath()
+        {
+            DirectoryInfo appDirectory = GetAppDirectory();
+
+            return Path.Combine(appDirectory.FullName, "downloadHistory.json");
+        }
+
         public static string GetUserName()
         {
             return GetAppSettings().Username;

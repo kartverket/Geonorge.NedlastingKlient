@@ -253,13 +253,10 @@ namespace Geonorge.MassivNedlasting.Gui
             {
                 Process.Start(pathToConsoleApp);
             }
-            catch (Exception exception)
+            catch (Exception)
             {
                 MessageBox.Show("Finner ikke nedlaster...");
             }
-
-            _selectedFiles = _datasetService.GetSelectedFilesAsViewModel();
-            LbSelectedFiles.ItemsSource = _selectedFiles;
         }
 
         private static string GetExecutingAssemblyDirectory()

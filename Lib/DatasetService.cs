@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -69,6 +70,30 @@ namespace Geonorge.MassivNedlasting
             }
         }
 
+        /// <summary>
+        /// Writes the information about the selected files to the local download list. 
+        /// </summary>
+        /// <param name="datasetFilesViewModel"></param>
+        public void WriteToDownloadHistoryFile(List<DatasetFile> datasetFilesToDownload)
+        {
+            var downloadHistory = new List<DownloadHistory>();
+            foreach (var datasetFile in datasetFilesToDownload)
+            {
+                downloadHistory.Add(new DownloadHistory(datasetFile.Url));
+            }
+
+            var serializer = new JsonSerializer();
+            serializer.Converters.Add(new JavaScriptDateTimeConverter());
+            serializer.NullValueHandling = NullValueHandling.Ignore;
+
+            using (var outputFile = new StreamWriter(ApplicationService.GetDownloadHistoryFilePath(), false))
+            using (JsonWriter writer = new JsonTextWriter(outputFile))
+            {
+                serializer.Serialize(writer, downloadHistory);
+                writer.Close();
+            }
+        }
+
         private List<DatasetFile> ConvertToModel(List<DatasetFileViewModel> datasetFilesViewModel)
         {
             var datasetFiles = new List<DatasetFile>();
@@ -100,6 +125,31 @@ namespace Geonorge.MassivNedlasting
             {
                 // TODO error handling
                 return new List<DatasetFile>();
+            }
+        }
+
+        /// <summary>
+        /// Returns a list of downloded datasets. 
+        /// </summary>
+        /// <returns></returns>
+        public DownloadHistory GetFileDownloaHistory(string url)
+        {
+            var downloadHistoryFilePath = ApplicationService.GetDownloadHistoryFilePath();
+            try
+            {
+                using (var r = new StreamReader(downloadHistoryFilePath))
+                {
+                    var json = r.ReadToEnd();
+                    var downloadHistories = JsonConvert.DeserializeObject<List<DownloadHistory>>(json);
+                    r.Close();
+                    DownloadHistory downloadHistory = downloadHistories.FirstOrDefault(d => d.Id == url);
+                    return downloadHistory;
+                }
+            }
+            catch (FileNotFoundException)
+            {
+                return null;
+
             }
         }
 

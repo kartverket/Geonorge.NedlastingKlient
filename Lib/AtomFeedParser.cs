@@ -117,8 +117,7 @@ namespace Geonorge.MassivNedlasting
                 datasetFile.Title = childrenNode.SelectSingleNode("a:title", nsmgr).InnerXml;
                 datasetFile.Description = childrenNode.SelectSingleNode("a:category", nsmgr).InnerXml;
                 datasetFile.Url = childrenNode.SelectSingleNode("a:link", nsmgr).Attributes[1].Value;
-                //datasetFile.LastUpdated = childrenNode.SelectSingleNode("a:updated", nsmgr).InnerXml;
-                datasetFile.LastUpdated = null;
+                datasetFile.LastUpdated = childrenNode.SelectSingleNode("a:updated", nsmgr).InnerXml;
                 datasetFile.Organization = childrenNode.SelectSingleNode("a:author/a:name", nsmgr).InnerXml;
                 datasetFile.Projection = GetProjection(childrenNode.SelectNodes("a:category", nsmgr));
                 datasetFile.Restrictions = GetRestrictions(childrenNode.SelectNodes("a:category", nsmgr));
