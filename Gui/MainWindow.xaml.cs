@@ -35,7 +35,15 @@ namespace Geonorge.MassivNedlasting.Gui
 
             _datasetService = new DatasetService();
 
-            LbDatasets.ItemsSource = _datasetService.GetDatasets();
+            try
+            {
+                LbDatasets.ItemsSource = _datasetService.GetDatasets();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Klarer ikke hente datasett... Sjekk internett tilkoblingen din");
+            }
+            
             var viewDatasets = (CollectionView) CollectionViewSource.GetDefaultView(LbDatasets.ItemsSource);
             if (viewDatasets != null) viewDatasets.Filter = UserDatasetFilter;
 
