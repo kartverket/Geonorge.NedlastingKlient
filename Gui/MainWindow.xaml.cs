@@ -281,5 +281,10 @@ namespace Geonorge.MassivNedlasting.Gui
         {
             Process.Start("https://www.geonorge.no/");
         }
+
+        private void BtnSave_OnClick(object sender, RoutedEventArgs e)
+        {
+            SaveDownloadList();
+        }
     }
 }

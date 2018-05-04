@@ -25,6 +25,15 @@
             <DockPanel>
                 <Image HorizontalAlignment="Left" Margin="40 0 0 20" Source="Content/geonorge_logo_225px.gif"/>
                 <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right" Orientation="Horizontal" Margin="0 0 40 0">
+                    <Button Name="BtnSave" 
+                            Margin="0 0 10 0"  Click="BtnSave_OnClick"
+                            Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
+                            ToolTip="Lagre">
+                        <materialDesign:PackIcon
+                            Kind="ContentSave"
+                            Height="24"
+                            Width="24" />
+                    </Button>
                     <Button Name="BtnDownload" 
                             Margin="0 0 10 0"  Click="BtnDownload_OnClick"
                             Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
