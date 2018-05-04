@@ -20,7 +20,7 @@ namespace Geonorge.MassivNedlasting
                 var getFeedTask = HttpClient.GetStringAsync("https://nedlasting.geonorge.no/geonorge/Tjenestefeed.xml");
                 return new AtomFeedParser().ParseDatasets(getFeedTask.Result);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 MessageBox.Show("Klarer ikke hente fra tjenestefeed");
             }
