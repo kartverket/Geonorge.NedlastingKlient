@@ -257,6 +257,9 @@ namespace Geonorge.MassivNedlasting.Gui
             {
                 MessageBox.Show("Finner ikke nedlaster...");
             }
+
+            _selectedFiles = _datasetService.GetSelectedFilesAsViewModel();
+            BindNewList();
         }
 
         private static string GetExecutingAssemblyDirectory()
