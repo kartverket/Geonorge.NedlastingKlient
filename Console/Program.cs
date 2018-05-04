@@ -35,11 +35,7 @@ namespace Geonorge.Nedlaster
                     if (newDatasetAvailable)
                         Console.WriteLine("Updated version of dataset is available.");
 
-                    bool localFileExists = LocalFileExists(downloadDirectory, localDataset);
-                    if (localFileExists)
-                        Console.WriteLine("Local copy of file already exists.");
-
-                    if (newDatasetAvailable || !localFileExists)
+                    if (newDatasetAvailable)
                     {
                         Console.WriteLine("Starting download process.");
                         downloader.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) =>
@@ -119,11 +115,18 @@ namespace Geonorge.Nedlaster
 
         private static bool NewDatasetAvailable(DatasetFile localDataset, DatasetFile datasetFromFeed)
         {
-            var originalDatasetLastUpdated = DateTime.Parse(localDataset.LastUpdated);
-            var datasetFromFeedLastUpdated = DateTime.Parse(datasetFromFeed.LastUpdated);
+            if (localDataset.LastUpdated == null)
+            {
+                return true;
+            }
+            else
+            {
+                var originalDatasetLastUpdated = DateTime.Parse(localDataset.LastUpdated);
+                var datasetFromFeedLastUpdated = DateTime.Parse(datasetFromFeed.LastUpdated);
 
-            var updatedDatasetAvailable = originalDatasetLastUpdated < datasetFromFeedLastUpdated;
-            return updatedDatasetAvailable;
+                var updatedDatasetAvailable = originalDatasetLastUpdated < datasetFromFeedLastUpdated;
+                return updatedDatasetAvailable;
+            }
         }
     }
 }
