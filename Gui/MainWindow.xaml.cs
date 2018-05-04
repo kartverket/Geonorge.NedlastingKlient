@@ -259,7 +259,7 @@ namespace Geonorge.MassivNedlasting.Gui
             }
 
             _selectedFiles = _datasetService.GetSelectedFilesAsViewModel();
-            BindNewList();
+            LbSelectedFiles.ItemsSource = _selectedFiles;
         }
 
         private static string GetExecutingAssemblyDirectory()
