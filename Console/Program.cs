@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Geonorge.MassivNedlasting;
+using System.Threading.Tasks;
 
 namespace Geonorge.Nedlaster
 {
@@ -45,11 +46,13 @@ namespace Geonorge.Nedlaster
                             Console.CursorLeft = 0;
                             Console.Write($"{progressPercentage}% ({HumanReadableBytes(totalBytesDownloaded)}/{HumanReadableBytes(totalFileSize.Value)})                "); // add som extra whitespace to blank out previous updates
                         };
-
                         var downloadRequest = new DownloadRequest(localDataset.Url, downloadDirectory, localDataset.IsRestricted());
-                        downloader.StartDownload(downloadRequest, appSettings).Wait();
+                        
+                        Task<string> download = downloader.StartDownload(downloadRequest, appSettings);
+                        download.Wait();
+                        string filename = download.Result;
                         Console.WriteLine();
-
+                        Console.WriteLine(filename);
                         updatedDatasetToDownload.Add(datasetFromFeed);
                     }
                     else
