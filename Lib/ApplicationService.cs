@@ -100,5 +100,10 @@ namespace Geonorge.MassivNedlasting
         {
             return GetAppSettings().DownloadDirectory;
         }
+
+        public static string GetDownloadLogfilePath()
+        {
+            return Path.Combine(DownloadDirectory(), "nedlastinglog.csv");
+        }
     }
 }
