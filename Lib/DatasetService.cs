@@ -15,7 +15,7 @@ namespace Geonorge.MassivNedlasting
 
         public List<Dataset> GetDatasets()
         {
-            var getFeedTask = HttpClient.GetStringAsync("https://nedlasting.geonorge.no/geonorge/Tjenestefeed.xml");
+            var getFeedTask = HttpClient.GetStringAsync("https://nedlasting.geonorge.no/geonorge/Tjenestefeed_daglig.xml");
             return new AtomFeedParser().ParseDatasets(getFeedTask.Result);
         }
 
