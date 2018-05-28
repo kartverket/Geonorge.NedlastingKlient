@@ -21,10 +21,10 @@ namespace Geonorge.Nedlaster
 
         public event ProgressChangedHandler ProgressChanged;
         
-        public async Task StartDownload(DownloadRequest downloadRequest, AppSettings appSettings)
+        public async Task<string> StartDownload(DownloadRequest downloadRequest, AppSettings appSettings)
         {
             SetClientRequestHeaders(downloadRequest, appSettings);
-
+            string destinationFilePath = String.Empty;
             using (var response = await Client.GetAsync(downloadRequest.DownloadUrl, HttpCompletionOption.ResponseHeadersRead))
             {
                 if (!response.IsSuccessStatusCode)
@@ -35,13 +35,13 @@ namespace Geonorge.Nedlaster
                 {
                     using (var contentStream = await response.Content.ReadAsStreamAsync())
                     {
-                        string destinationFilePath = downloadRequest.GetDestinationFileName(response);
-
+                        destinationFilePath = downloadRequest.GetDestinationFileName(response);
                         var totalBytes = response.Content.Headers.ContentLength;
                         await ProcessContentStream(totalBytes, contentStream, destinationFilePath);
                     }
                 }
             }
+            return destinationFilePath;
         }
 
         private static void SetClientRequestHeaders(DownloadRequest downloadRequest, AppSettings appSettings)

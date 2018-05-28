@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Geonorge.MassivNedlasting;
+using System.Threading.Tasks;
 
 namespace Geonorge.Nedlaster
 {
@@ -17,10 +18,12 @@ namespace Geonorge.Nedlaster
             List<DatasetFile> datasetToDownload = datasetService.GetSelectedFiles();
 
             List<DatasetFile> updatedDatasetToDownload = new List<DatasetFile>();
-
+            
+            // List to hold downloaded files with filename.
+            List<string> downloadlog = new List<string>();
+            downloadlog.Add("FileId;Filename;Updated");
             var appSettings = ApplicationService.GetAppSettings();
-
-            var downloader = new FileDownloader();
+            var downloader = new FileDownloader();            
             foreach (var localDataset in datasetToDownload)
             {
                 try
@@ -45,11 +48,13 @@ namespace Geonorge.Nedlaster
                             Console.CursorLeft = 0;
                             Console.Write($"{progressPercentage}% ({HumanReadableBytes(totalBytesDownloaded)}/{HumanReadableBytes(totalFileSize.Value)})                "); // add som extra whitespace to blank out previous updates
                         };
-
                         var downloadRequest = new DownloadRequest(localDataset.Url, downloadDirectory, localDataset.IsRestricted());
-                        downloader.StartDownload(downloadRequest, appSettings).Wait();
+                        
+                        Task<string> download = downloader.StartDownload(downloadRequest, appSettings);
+                        download.Wait();
+                        string filename = download.Result;
                         Console.WriteLine();
-
+                        downloadlog.Add(String.Format("{0};{1};{2}", localDataset.DatasetId, filename, datasetFromFeed.LastUpdated));
                         updatedDatasetToDownload.Add(datasetFromFeed);
                     }
                     else
@@ -63,7 +68,8 @@ namespace Geonorge.Nedlaster
                     updatedDatasetToDownload.Add(localDataset);
                     Console.WriteLine("Error while downloading dataset: " + e.Message);
                 }
-
+                // Write downloadlogfile.
+                System.IO.File.WriteAllLines(ApplicationService.GetDownloadLogfilePath(), downloadlog.ToArray());
                 Console.WriteLine("-------------");
             }
 
