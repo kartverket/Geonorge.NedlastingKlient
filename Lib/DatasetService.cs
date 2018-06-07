@@ -73,7 +73,7 @@ namespace Geonorge.MassivNedlasting
 
                 w.WriteLine();
 
-                w.WriteLine("FAILD: " + downloadLog.Faild.Count());
+                w.WriteLine("FAILED: " + downloadLog.Faild.Count());
                 Log(downloadLog.Faild, w);
 
             }
