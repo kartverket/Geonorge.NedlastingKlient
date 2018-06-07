@@ -80,12 +80,6 @@ namespace Geonorge.Nedlaster
             datasetService.WriteToDownloadLogFile(downloadLog);
             datasetService.WriteToDownloadFile(updatedDatasetToDownload);
             datasetService.WriteToDownloadHistoryFile(updatedDatasetToDownload);
-
-            if (!IsRunningAsBackgroundTask(args))
-            {
-                Console.WriteLine("Press any key to exit");
-                Console.ReadKey();
-        }
         }
 
 
