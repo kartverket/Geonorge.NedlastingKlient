@@ -17,12 +17,15 @@ namespace Geonorge.Nedlaster
             List<DatasetFile> datasetToDownload = datasetService.GetSelectedFiles();
 
             List<DatasetFile> updatedDatasetToDownload = new List<DatasetFile>();
-
+            DownloadLog downloadLog = new DownloadLog();
+            downloadLog.TotalDatasetsToDownload = datasetToDownload.Count;
             var appSettings = ApplicationService.GetAppSettings();
 
             var downloader = new FileDownloader();
             foreach (var localDataset in datasetToDownload)
             {
+                var fileLog = new DatasetFileLog(localDataset);
+
                 try
                 {
                     Console.WriteLine(localDataset.DatasetId + " - " + localDataset.Title);
@@ -42,6 +45,7 @@ namespace Geonorge.Nedlaster
                         Console.WriteLine("Starting download process.");
                         downloader.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) =>
                         {
+                            fileLog.HumanReadableSize = HumanReadableBytes(totalFileSize.Value);
                             Console.CursorLeft = 0;
                             Console.Write($"{progressPercentage}% ({HumanReadableBytes(totalBytesDownloaded)}/{HumanReadableBytes(totalFileSize.Value)})                "); // add som extra whitespace to blank out previous updates
                         };
@@ -50,10 +54,14 @@ namespace Geonorge.Nedlaster
                         downloader.StartDownload(downloadRequest, appSettings).Wait();
                         Console.WriteLine();
 
+                        downloadLog.Updated.Add(fileLog);
                         updatedDatasetToDownload.Add(datasetFromFeed);
+
                     }
                     else
                     {
+                        fileLog.Message = "Not necessary to download dataset.";
+                        downloadLog.NotUpdated.Add(fileLog);
                         Console.WriteLine("Not necessary to download dataset.");
                         updatedDatasetToDownload.Add(localDataset);
                     }
@@ -61,12 +69,15 @@ namespace Geonorge.Nedlaster
                 catch (Exception e)
                 {
                     updatedDatasetToDownload.Add(localDataset);
+                    fileLog.Message = "Error while downloading dataset: " + e.Message;
+                    downloadLog.Faild.Add(fileLog);
                     Console.WriteLine("Error while downloading dataset: " + e.Message);
                 }
 
                 Console.WriteLine("-------------");
             }
 
+            datasetService.WriteToDownloadLogFile(downloadLog);
             datasetService.WriteToDownloadFile(updatedDatasetToDownload);
             datasetService.WriteToDownloadHistoryFile(updatedDatasetToDownload);
 
@@ -74,7 +85,7 @@ namespace Geonorge.Nedlaster
             {
                 Console.WriteLine("Press any key to exit");
                 Console.ReadKey();
-            }
+        }
         }
 
 
