@@ -13,7 +13,20 @@ namespace Geonorge.Nedlaster
         {
             Console.WriteLine("Geonorge - nedlaster");
             Console.WriteLine("--------------------");
+            DeleteOldLogs();
             StartDownloadAsync().Wait();
+        }
+
+        private static void DeleteOldLogs()
+        {
+            string[] files = Directory.GetFiles(ApplicationService.GetLogAppDirectory().ToString());
+
+            foreach (string file in files)
+            {
+                FileInfo fi = new FileInfo(file);
+                if (fi.LastAccessTime < DateTime.Now.AddMonths(-1))
+                    fi.Delete();
+            }
         }
 
         private static async Task StartDownloadAsync()
@@ -81,7 +94,6 @@ namespace Geonorge.Nedlaster
 
                 Console.WriteLine("-------------");
             }
-
             datasetService.WriteToDownloadLogFile(downloadLog);
             datasetService.WriteToDownloadFile(updatedDatasetToDownload);
             datasetService.WriteToDownloadHistoryFile(updatedDatasetToDownload);
@@ -120,7 +132,7 @@ namespace Geonorge.Nedlaster
         {
             if (downloadHistory == null) return true;
             if (!LocalFileExists(downloadHistory, downloadDirectory, datasetFromFeed)) return true;
-            
+
             var originalDatasetLastUpdated = DateTime.Parse(downloadHistory.Downloaded);
             var datasetFromFeedLastUpdated = DateTime.Parse(datasetFromFeed.LastUpdated);
 
