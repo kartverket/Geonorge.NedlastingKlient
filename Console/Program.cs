@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Geonorge.MassivNedlasting;
 
 namespace Geonorge.Nedlaster
@@ -12,7 +13,11 @@ namespace Geonorge.Nedlaster
         {
             Console.WriteLine("Geonorge - nedlaster");
             Console.WriteLine("--------------------");
+            StartDownloadAsync().Wait();
+        }
 
+        private static async Task StartDownloadAsync()
+        {
             var datasetService = new DatasetService();
             List<DatasetFile> datasetToDownload = datasetService.GetSelectedFiles();
 
@@ -36,7 +41,7 @@ namespace Geonorge.Nedlaster
 
                     DownloadHistory downloadHistory = datasetService.GetFileDownloaHistory(datasetFromFeed.Url);
 
-                    bool newDatasetAvailable = NewDatasetAvailable(downloadHistory, datasetFromFeed);
+                    bool newDatasetAvailable = NewDatasetAvailable(downloadHistory, datasetFromFeed, downloadDirectory);
                     if (newDatasetAvailable)
                         Console.WriteLine("Updated version of dataset is available.");
 
@@ -51,11 +56,11 @@ namespace Geonorge.Nedlaster
                         };
 
                         var downloadRequest = new DownloadRequest(localDataset.Url, downloadDirectory, localDataset.IsRestricted());
-                        downloader.StartDownload(downloadRequest, appSettings).Wait();
+                        localDataset.FilePath = await downloader.StartDownload(downloadRequest, appSettings);
                         Console.WriteLine();
 
                         downloadLog.Updated.Add(fileLog);
-                        updatedDatasetToDownload.Add(datasetFromFeed);
+                        updatedDatasetToDownload.Add(localDataset);
 
                     }
                     else
@@ -81,7 +86,6 @@ namespace Geonorge.Nedlaster
             datasetService.WriteToDownloadFile(updatedDatasetToDownload);
             datasetService.WriteToDownloadHistoryFile(updatedDatasetToDownload);
         }
-
 
         private static string HumanReadableBytes(long bytes)
         {
@@ -112,16 +116,40 @@ namespace Geonorge.Nedlaster
             return downloadDirectory;
         }
 
-        private static bool NewDatasetAvailable(DownloadHistory downloadHistory, DatasetFile datasetFromFeed)
+        private static bool NewDatasetAvailable(DownloadHistory downloadHistory, DatasetFile datasetFromFeed, DirectoryInfo downloadDirectory)
         {
             if (downloadHistory == null) return true;
+            if (!LocalFileExists(downloadHistory, downloadDirectory, datasetFromFeed)) return true;
             
             var originalDatasetLastUpdated = DateTime.Parse(downloadHistory.Downloaded);
             var datasetFromFeedLastUpdated = DateTime.Parse(datasetFromFeed.LastUpdated);
 
             var updatedDatasetAvailable = originalDatasetLastUpdated < datasetFromFeedLastUpdated;
             return updatedDatasetAvailable;
-
         }
+
+        private static bool LocalFileExists(DownloadHistory downloadHistory, DirectoryInfo downloadDirectory, DatasetFile dataset)
+        {
+            if (downloadHistory.FilePath != null)
+            {
+                var filePath = new FileInfo(Path.Combine(downloadDirectory.FullName, downloadHistory.FilePath));
+                return filePath.Exists;
+            }
+            else
+            {
+                return LocalFileExists(downloadDirectory, dataset);
+            }
+        }
+
+        private static bool LocalFileExists(DirectoryInfo downloadDirectory, DatasetFile dataset)
+        {
+            if (!dataset.HasLocalFileName())
+                return false;
+
+            var filePath = new FileInfo(Path.Combine(downloadDirectory.FullName, dataset.LocalFileName()));
+
+            return filePath.Exists;
+        }
+
     }
 }

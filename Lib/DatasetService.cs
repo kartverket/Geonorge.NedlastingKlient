@@ -73,6 +73,11 @@ namespace Geonorge.MassivNedlasting
 
                 w.WriteLine();
 
+                w.WriteLine("NOT UPDATED: " + downloadLog.NotUpdated.Count());
+                Log(downloadLog.NotUpdated, w);
+
+                w.WriteLine();
+
                 w.WriteLine("FAILED: " + downloadLog.Faild.Count());
                 Log(downloadLog.Faild, w);
 
@@ -82,12 +87,13 @@ namespace Geonorge.MassivNedlasting
         private void Log(List<DatasetFileLog> datasetFileLogs, TextWriter w)
         {
             w.WriteLine("-------------------------------");
-            foreach (var item in datasetFileLogs)
+            foreach (var item in datasetFileLogs.OrderBy(d => d.DatasetId))
             {
                 w.Write(item.DatasetId + " - ");
                 w.Write(item.Name + " " + item.Projection);
                 if (item.HumanReadableSize != null) w.WriteLine(" - " + item.HumanReadableSize);
-                if (item.Message != null) w.WriteLine("Message: " + item.Message);
+                else { w.WriteLine(); }
+                if (item.Message != null) w.WriteLine(" Message: " + item.Message);
                 w.WriteLine();
             }
         }
@@ -118,7 +124,7 @@ namespace Geonorge.MassivNedlasting
             var downloadHistory = new List<DownloadHistory>();
             foreach (var datasetFile in datasetFilesToDownload)
             {
-                downloadHistory.Add(new DownloadHistory(datasetFile.Url));
+                downloadHistory.Add(new DownloadHistory(datasetFile.Url, datasetFile.FilePath));
             }
 
             var serializer = new JsonSerializer();

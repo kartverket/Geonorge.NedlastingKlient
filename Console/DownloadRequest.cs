@@ -26,11 +26,16 @@ namespace Geonorge.Nedlaster
             var contentDisposition = response.Content.Headers.ContentDisposition;
             if (contentDisposition != null)
             {
-                return Path.Combine(DestinationDirectory.FullName, contentDisposition.FileName.Replace("\"", ""));
+                return contentDisposition.FileName.Replace("\"", "");
             }
 
             var filenameFromUrl = new Uri(DownloadUrl).LocalPath;
-            return Path.Combine(DestinationDirectory.FullName, Path.GetFileName(filenameFromUrl));
+            return Path.GetFileName(filenameFromUrl);
+        }
+
+        public string GetDestinationFilePath(HttpResponseMessage response)
+        {
+            return Path.Combine(DestinationDirectory.FullName, GetDestinationFileName(response));
         }
     }
 }
