@@ -37,6 +37,7 @@ namespace Geonorge.MassivNedlasting
         public string DatasetId { get; set; }
         public string DatasetUrl { get; set; }
         public string Restrictions { get; set; }
+        public string FilePath { get; set; }
 
         public bool IsRestricted()
         {
@@ -56,6 +57,11 @@ namespace Geonorge.MassivNedlasting
         public bool HasLocalFileName()
         {
             return !string.IsNullOrWhiteSpace(LocalFileName());
+        }
+
+        public void SetFilePath(string filePath)
+        {
+            FilePath = filePath;
         }
     }
 

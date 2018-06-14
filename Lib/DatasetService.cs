@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using Geonorge.Nedlaster;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -55,7 +56,50 @@ namespace Geonorge.MassivNedlasting
         /// <summary>
         /// Writes the information about the selected files to the local download list. 
         /// </summary>
-        /// <param name="datasetFilesViewModel"></param>
+        public void WriteToDownloadLogFile(DownloadLog downloadLog)
+        {
+            var serializer = new JsonSerializer();
+            serializer.Converters.Add(new JavaScriptDateTimeConverter());
+            serializer.NullValueHandling = NullValueHandling.Ignore;
+
+            using (var w = new StreamWriter(ApplicationService.GetDownloadLogFilePath()))
+            {
+                w.WriteLine("SELECTED FILES: " + downloadLog.TotalDatasetsToDownload);
+                w.WriteLine("-------------------------------");
+                w.WriteLine();
+
+                w.WriteLine("UPDATED: " + downloadLog.Updated.Count() + " TOTAL SIZE: " + downloadLog.TotalSizeOfDownloadedFiles);
+                Log(downloadLog.Updated, w);
+
+                w.WriteLine();
+
+                w.WriteLine("NOT UPDATED: " + downloadLog.NotUpdated.Count());
+                Log(downloadLog.NotUpdated, w);
+
+                w.WriteLine();
+
+                w.WriteLine("FAILED: " + downloadLog.Faild.Count());
+                Log(downloadLog.Faild, w);
+            }
+        }
+
+        private void Log(List<DatasetFileLog> datasetFileLogs, TextWriter w)
+        {
+            w.WriteLine("-------------------------------");
+            foreach (var item in datasetFileLogs.OrderBy(d => d.DatasetId))
+            {
+                w.Write(item.DatasetId + " - ");
+                w.Write(item.Name + " " + item.Projection);
+                if (item.HumanReadableSize != null) w.WriteLine(" - " + item.HumanReadableSize);
+                else { w.WriteLine(); }
+                if (item.Message != null) w.WriteLine(" Message: " + item.Message);
+                w.WriteLine();
+            }
+        }
+
+        /// <summary>
+        /// Writes the information about the selected files to the local download list. 
+        /// </summary>
         public void WriteToDownloadFile(List<DatasetFile> datasetFiles)
         {
             var serializer = new JsonSerializer();
@@ -79,7 +123,7 @@ namespace Geonorge.MassivNedlasting
             var downloadHistory = new List<DownloadHistory>();
             foreach (var datasetFile in datasetFilesToDownload)
             {
-                downloadHistory.Add(new DownloadHistory(datasetFile.Url));
+                downloadHistory.Add(new DownloadHistory(datasetFile.Url, datasetFile.FilePath));
             }
 
             var serializer = new JsonSerializer();
