@@ -41,7 +41,7 @@ namespace Geonorge.MassivNedlasting
         {
             DirectoryInfo logAppDirectory = GetLogAppDirectory();
 
-            return Path.Combine(logAppDirectory.FullName, DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss") + ".txt");
+            return Path.Combine(logAppDirectory.FullName, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ".txt");
         }
 
         public static string GetUserName()
