@@ -38,6 +38,7 @@ namespace Geonorge.Nedlaster
             DownloadLog downloadLog = new DownloadLog();
             downloadLog.TotalDatasetsToDownload = datasetToDownload.Count;
             var appSettings = ApplicationService.GetAppSettings();
+            long totalSizeUpdatedFiles = 0;
 
             var downloader = new FileDownloader();
             foreach (var localDataset in datasetToDownload)
@@ -64,6 +65,7 @@ namespace Geonorge.Nedlaster
                         downloader.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) =>
                         {
                             fileLog.HumanReadableSize = HumanReadableBytes(totalFileSize.Value);
+                            totalSizeUpdatedFiles += totalFileSize.Value;
                             Console.CursorLeft = 0;
                             Console.Write($"{progressPercentage}% ({HumanReadableBytes(totalBytesDownloaded)}/{HumanReadableBytes(totalFileSize.Value)})                "); // add som extra whitespace to blank out previous updates
                         };
@@ -94,6 +96,8 @@ namespace Geonorge.Nedlaster
 
                 Console.WriteLine("-------------");
             }
+
+            downloadLog.TotalSizeOfDownloadedFiles = HumanReadableBytes(totalSizeUpdatedFiles);
             datasetService.WriteToDownloadLogFile(downloadLog);
             datasetService.WriteToDownloadFile(updatedDatasetToDownload);
             datasetService.WriteToDownloadHistoryFile(updatedDatasetToDownload);

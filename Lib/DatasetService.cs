@@ -68,7 +68,7 @@ namespace Geonorge.MassivNedlasting
                 w.WriteLine("-------------------------------");
                 w.WriteLine();
 
-                w.WriteLine("UPDATED: " + downloadLog.Updated.Count());
+                w.WriteLine("UPDATED: " + downloadLog.Updated.Count() + " TOTAL SIZE: " + downloadLog.TotalSizeOfDownloadedFiles);
                 Log(downloadLog.Updated, w);
 
                 w.WriteLine();
@@ -80,7 +80,6 @@ namespace Geonorge.MassivNedlasting
 
                 w.WriteLine("FAILED: " + downloadLog.Faild.Count());
                 Log(downloadLog.Faild, w);
-
             }
         }
 

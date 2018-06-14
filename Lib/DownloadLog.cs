@@ -18,5 +18,7 @@ namespace Geonorge.Nedlaster
         public List<DatasetFileLog> NotUpdated { get; set; }
         public List<DatasetFileLog> Faild { get; set; }
         public int TotalDatasetsToDownload { get; set; }
+        public string TotalSizeOfDownloadedFiles { get; set; }
+
     }
 }
