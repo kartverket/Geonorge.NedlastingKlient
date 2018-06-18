@@ -171,7 +171,7 @@
                                     <TextBlock VerticalAlignment="Center" Grid.Column="0" ToolTip="{Binding Title}"  Text="{Binding Title}">
                                         <materialDesign:PackIcon Margin="10 0 0 -2" ToolTip="{Binding Restrictions}" Grid.Column="2" Kind="Lock" Visibility="{Binding IsRestricted, Converter={StaticResource BoolToVisConverter}}"></materialDesign:PackIcon>
                                     </TextBlock>
-                                    <TextBlock VerticalAlignment="Center" Grid.Column="1" ToolTip="{Binding Category}" Text="{Binding Category}"/>
+                                    <TextBlock VerticalAlignment="Center" Grid.Column="1" ToolTip="{Binding EpsgName}" Text="{Binding Category}"/>
                                     <ToggleButton x:Name="BtnAddOrRemove" Grid.Column="2" Width="20" Height="20" BindingGroup="{Binding LbSelectedDatasetFiles}" IsChecked="{Binding SelectedForDownload}" Click="AddRemove_OnChecked"
                                         Style="{StaticResource MaterialDesignActionToggleButton}"
                                         ToolTip="Legg til/Fjern">
@@ -250,7 +250,7 @@
                                 <materialDesign:PackIcon Margin="10 0 0 -2" ToolTip="{Binding Restrictions}" Grid.Column="2" Kind="Lock" Visibility="{Binding IsRestricted, Converter={StaticResource BoolToVisConverter}}"></materialDesign:PackIcon>
                             </TextBlock>
 
-                            <TextBlock VerticalAlignment="Center" Grid.Column="2" Text="{Binding Category}"/>
+                            <TextBlock VerticalAlignment="Center" Grid.Column="2" ToolTip="{Binding EpsgName}" Text="{Binding Category}"/>
                             <TextBlock VerticalAlignment="Center" Grid.Column="3" Text="{Binding LastUpdated}"/>
                             <Button x:Name="BtnAddOrRemove" Margin="10 0" Grid.Column="4" BindingGroup="{Binding LbSelectedFiles}" Click="RemoveFromDownloadList_Click"
                                 Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"

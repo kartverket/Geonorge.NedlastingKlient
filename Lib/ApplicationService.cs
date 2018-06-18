@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using Geonorge.MassivNedlasting.Gui;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+
 
 namespace Geonorge.MassivNedlasting
 {
@@ -20,6 +23,17 @@ namespace Geonorge.MassivNedlasting
             DirectoryInfo appDirectory = GetAppDirectory();
 
             return Path.Combine(appDirectory.FullName, "download.json");
+        }
+
+        /// <summary>
+        /// Returns path to the file containing the list of projections in epsg-registry - https://register.geonorge.no/register/epsg-koder
+        /// </summary>
+        /// <returns></returns>
+        public static string GetProjectionFilePath()
+        {
+            DirectoryInfo appDirectory = GetAppDirectory();
+
+            return Path.Combine(appDirectory.FullName, "projections.json");
         }
 
         /// <summary>
@@ -43,6 +57,7 @@ namespace Geonorge.MassivNedlasting
 
             return Path.Combine(logAppDirectory.FullName, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ".txt");
         }
+
 
         public static string GetUserName()
         {

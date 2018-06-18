@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
+using System.Threading.Tasks;
+using Geonorge.MassivNedlasting.Gui;
 using Geonorge.Nedlaster;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
 
 namespace Geonorge.MassivNedlasting
 {
@@ -20,12 +22,56 @@ namespace Geonorge.MassivNedlasting
             return new AtomFeedParser().ParseDatasets(getFeedTask.Result);
         }
 
-        public List<DatasetFileViewModel> GetDatasetFiles(Dataset dataset)
+        public List<DatasetFileViewModel> GetDatasetFiles(Dataset dataset, List<Projections> propotions)
         {
             var getFeedTask = HttpClient.GetStringAsync(dataset.Url);
             List<DatasetFile> datasetFiles = new AtomFeedParser().ParseDatasetFiles(getFeedTask.Result, dataset).OrderBy(d => d.Title).ToList();
 
-            return ConvertToViewModel(datasetFiles);
+            return ConvertToViewModel(datasetFiles, propotions);
+        }
+
+        public List<Projections> FetchProjections()
+        {
+            List<Projections> projections = new List<Projections>();
+
+            var url = "https://register.geonorge.no/api/register/epsg-koder.json";
+            var c = new System.Net.WebClient { Encoding = System.Text.Encoding.UTF8 };
+
+            var json = c.DownloadString(url);
+
+            dynamic data = JObject.Parse(json);
+            if (data != null)
+            {
+                var result = data["containeditems"]; ;
+                foreach (var item in result)
+                {
+                    projections.Add(new Projections(item));
+                }
+                Task.Run(() => WriteToProjectionFile(projections));
+            }
+            return projections;
+        }
+
+        /// <summary>
+        /// Returns a list of projections. 
+        /// </summary>
+        /// <returns></returns>
+        public List<Projections> ReadFromProjectionFile()
+        {
+            try
+            {
+                using (var r = new StreamReader(ApplicationService.GetProjectionFilePath()))
+                {
+                    var json = r.ReadToEnd();
+                    var selecedFiles = JsonConvert.DeserializeObject<List<Projections>>(json);
+                    r.Close();
+                    return selecedFiles;
+                }
+            }
+            catch (Exception)
+            {
+                return new List<Projections>();
+            }
         }
 
         public DatasetFile GetDatasetFile(DatasetFile originalDatasetFile)
@@ -197,21 +243,43 @@ namespace Geonorge.MassivNedlasting
             }
         }
 
-        public List<DatasetFileViewModel> GetSelectedFilesAsViewModel()
+        public List<DatasetFileViewModel> GetSelectedFilesAsViewModel(List<Projections> propotions)
         {
             List<DatasetFile> selectedFiles = GetSelectedFiles();
-            return ConvertToViewModel(selectedFiles, true);
+            return ConvertToViewModel(selectedFiles, propotions, true);
         }
 
-        private List<DatasetFileViewModel> ConvertToViewModel(List<DatasetFile> datasetFiles, bool selectedForDownload = false)
+        private List<DatasetFileViewModel> ConvertToViewModel(List<DatasetFile> datasetFiles, List<Projections> projections, bool selectedForDownload = false)
         {
             var selectedFilesViewModel = new List<DatasetFileViewModel>();
             foreach (var selectedFile in datasetFiles)
             {
-                DatasetFileViewModel selectedFileViewModel = new DatasetFileViewModel(selectedFile, selectedForDownload);
+                string epsgName = GetEpsgName(projections, selectedFile);
+                DatasetFileViewModel selectedFileViewModel = new DatasetFileViewModel(selectedFile, epsgName, selectedForDownload);
                 selectedFilesViewModel.Add(selectedFileViewModel);
             }
             return selectedFilesViewModel;
+        }
+
+        private static string GetEpsgName(List<Projections> projections, DatasetFile selectedFile)
+        {
+            var projection = projections.FirstOrDefault(p => p.Epsg == selectedFile.Projection);
+            return projection != null ? projection.Name : selectedFile.Projection;
+        }
+
+        public void WriteToProjectionFile(List<Projections> projections)
+        {
+            var serializer = new JsonSerializer();
+
+            serializer.Converters.Add(new JavaScriptDateTimeConverter());
+            serializer.NullValueHandling = NullValueHandling.Ignore;
+
+            using (var outputFile = new StreamWriter(ApplicationService.GetProjectionFilePath(), false))
+            using (JsonWriter writer = new JsonTextWriter(outputFile))
+            {
+                serializer.Serialize(writer, projections);
+                writer.Close();
+            }
         }
     }
 }
