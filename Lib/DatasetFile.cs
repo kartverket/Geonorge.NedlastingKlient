@@ -74,6 +74,7 @@ namespace Geonorge.MassivNedlasting
         public string LastUpdated { get; set; }
         public string Organization { get; set; }
         public string Category { get; set; }
+        public string EpsgName { get; set; }
         public string DatasetId { get; set; }
         public string DatasetUrl { get; set; }
         public bool SelectedForDownload { get; set; }
@@ -85,7 +86,7 @@ namespace Geonorge.MassivNedlasting
             return DatasetId + "_" + Title + "_" + Category;
         }
 
-        public DatasetFileViewModel(DatasetFile datasetFile, bool selectedForDownload = false)
+        public DatasetFileViewModel(DatasetFile datasetFile, string epsgName, bool selectedForDownload = false)
         {
             Title = datasetFile.Title;
             Description = datasetFile.Description;
@@ -99,6 +100,7 @@ namespace Geonorge.MassivNedlasting
             SelectedForDownload = selectedForDownload;
             IsRestricted = datasetFile.IsRestricted();
             Restrictions = datasetFile.Restrictions;
+            EpsgName = epsgName;
         }
     }
 }

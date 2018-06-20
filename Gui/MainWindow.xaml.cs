@@ -19,6 +19,7 @@ namespace Geonorge.MassivNedlasting.Gui
     public partial class MainWindow
     {
         private readonly DatasetService _datasetService;
+        private List<Projections> _projections;
 
         private List<DatasetFileViewModel> _selectedDatasetFiles;
         //public ICommand ShowProgressDialogCommand { get; }
@@ -43,11 +44,19 @@ namespace Geonorge.MassivNedlasting.Gui
             {
                 MessageBox.Show("Klarer ikke hente datasett... Sjekk internett tilkoblingen din");
             }
-            
+
+            try
+            {
+                _projections = _datasetService.FetchProjections();
+            }
+            catch (Exception e)
+            {
+                _projections = _datasetService.ReadFromProjectionFile();
+            }
             var viewDatasets = (CollectionView) CollectionViewSource.GetDefaultView(LbDatasets.ItemsSource);
             if (viewDatasets != null) viewDatasets.Filter = UserDatasetFilter;
 
-            _selectedFiles = _datasetService.GetSelectedFilesAsViewModel();
+            _selectedFiles = _datasetService.GetSelectedFilesAsViewModel(_projections);
             LbSelectedFiles.ItemsSource = _selectedFiles;
 
             _selectedDatasetFiles = new List<DatasetFileViewModel>();
@@ -98,7 +107,7 @@ namespace Geonorge.MassivNedlasting.Gui
 
         private List<DatasetFileViewModel> GetFilesAsync(Dataset selctedDataset)
         {
-            var selectedDatasetFiles = _datasetService.GetDatasetFiles(selctedDataset);
+            var selectedDatasetFiles = _datasetService.GetDatasetFiles(selctedDataset, _projections);
 
             foreach (var selectedDatasetFile in _selectedFiles)
             foreach (var datasetFile in selectedDatasetFiles)
