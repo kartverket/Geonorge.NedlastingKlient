@@ -83,6 +83,7 @@ namespace Geonorge.Nedlaster
                         fileLog.Message = "Not necessary to download dataset.";
                         downloadLog.NotUpdated.Add(fileLog);
                         Console.WriteLine("Not necessary to download dataset.");
+                        localDataset.FilePath = downloadHistory.FilePath;
                         updatedDatasetToDownload.Add(localDataset);
                     }
                 }
