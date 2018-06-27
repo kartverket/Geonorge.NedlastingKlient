@@ -98,7 +98,7 @@ namespace Geonorge.Nedlaster
                 Console.WriteLine("-------------");
             }
 
-            //downloadLog.TotalSizeOfDownloadedFiles = HumanReadableBytes(totalSizeUpdatedFiles);
+            downloadLog.TotalSizeOfDownloadedFiles = HumanReadableBytes(totalSizeUpdatedFiles);
             datasetService.WriteToDownloadFile(updatedDatasetToDownload);
             datasetService.WriteToDownloadHistoryFile(updatedDatasetToDownload);
             datasetService.WriteToDownloadLogFile(downloadLog);

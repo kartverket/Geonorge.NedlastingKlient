@@ -115,10 +115,9 @@ namespace Geonorge.MassivNedlasting
                     w.WriteLine("-------------------------------");
                     w.WriteLine();
 
-                    if (downloadLog.TotalSizeOfDownloadedFiles != null)
-                    {
+                    
                     w.WriteLine("UPDATED: " + downloadLog.Updated.Count() + " TOTAL SIZE: " + downloadLog.TotalSizeOfDownloadedFiles);
-                    }
+                    
                     Log(downloadLog.Updated, w);
 
                     w.WriteLine();
