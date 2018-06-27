@@ -107,25 +107,35 @@ namespace Geonorge.MassivNedlasting
             var serializer = new JsonSerializer();
             serializer.Converters.Add(new JavaScriptDateTimeConverter());
             serializer.NullValueHandling = NullValueHandling.Ignore;
-
-            using (var w = new StreamWriter(ApplicationService.GetDownloadLogFilePath()))
+            try
             {
-                w.WriteLine("SELECTED FILES: " + downloadLog.TotalDatasetsToDownload);
-                w.WriteLine("-------------------------------");
-                w.WriteLine();
+                using (var w = new StreamWriter(ApplicationService.GetDownloadLogFilePath()))
+                {
+                    w.WriteLine("SELECTED FILES: " + downloadLog.TotalDatasetsToDownload);
+                    w.WriteLine("-------------------------------");
+                    w.WriteLine();
 
-                w.WriteLine("UPDATED: " + downloadLog.Updated.Count() + " TOTAL SIZE: " + downloadLog.TotalSizeOfDownloadedFiles);
-                Log(downloadLog.Updated, w);
+                    if (downloadLog.TotalSizeOfDownloadedFiles != null)
+                    {
+                    w.WriteLine("UPDATED: " + downloadLog.Updated.Count() + " TOTAL SIZE: " + downloadLog.TotalSizeOfDownloadedFiles);
+                    }
+                    Log(downloadLog.Updated, w);
 
-                w.WriteLine();
+                    w.WriteLine();
 
-                w.WriteLine("NOT UPDATED: " + downloadLog.NotUpdated.Count());
-                Log(downloadLog.NotUpdated, w);
+                    w.WriteLine("NOT UPDATED: " + downloadLog.NotUpdated.Count());
+                    Log(downloadLog.NotUpdated, w);
 
-                w.WriteLine();
+                    w.WriteLine();
 
-                w.WriteLine("FAILED: " + downloadLog.Faild.Count());
-                Log(downloadLog.Faild, w);
+                    w.WriteLine("FAILED: " + downloadLog.Faild.Count());
+                    Log(downloadLog.Faild, w);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
             }
         }
 
