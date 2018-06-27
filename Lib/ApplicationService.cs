@@ -54,10 +54,9 @@ namespace Geonorge.MassivNedlasting
         public static string GetDownloadLogFilePath()
         {
             DirectoryInfo logAppDirectory = GetLogAppDirectory();
+            var name = DateTime.Now.ToString();
 
-            string date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-
-            return Path.Combine(logAppDirectory.FullName, date + ".txt");
+            return Path.Combine(logAppDirectory.FullName, name + ".txt");
         }
 
 
@@ -89,9 +88,7 @@ namespace Geonorge.MassivNedlasting
         /// <returns></returns>
         public static DirectoryInfo GetLogAppDirectory()
         {
-            var appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-
-            var appDirectory = new DirectoryInfo(appDataPath + Path.DirectorySeparatorChar + "Log");
+            var appDirectory = new DirectoryInfo(GetAppDirectory().ToString() + Path.DirectorySeparatorChar + "Log");
 
             if (!appDirectory.Exists)
                 appDirectory.Create();
