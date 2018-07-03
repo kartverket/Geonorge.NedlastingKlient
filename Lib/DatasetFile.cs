@@ -95,12 +95,18 @@ namespace Geonorge.MassivNedlasting
             Organization = datasetFile.Organization;
             Category = datasetFile.Projection;
             DatasetId = datasetFile.DatasetId;
-            DatasetUrl = datasetFile.DatasetUrl;
+            DatasetUrl = FixDatasetUrl(datasetFile.DatasetUrl);
             Id = GetId();
             SelectedForDownload = selectedForDownload;
             IsRestricted = datasetFile.IsRestricted();
             Restrictions = datasetFile.Restrictions;
             EpsgName = epsgName;
+        }
+
+        private string FixDatasetUrl(string datasetUrl)
+        {
+            var url = datasetUrl.Replace(".fmw", ".xml").Replace("fmedatastreaming", "geonorge");
+            return url;
         }
     }
 }
