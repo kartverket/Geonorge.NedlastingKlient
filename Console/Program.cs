@@ -38,7 +38,6 @@ namespace Geonorge.Nedlaster
             DownloadLog downloadLog = new DownloadLog();
             downloadLog.TotalDatasetsToDownload = datasetToDownload.Count;
             var appSettings = ApplicationService.GetAppSettings();
-            long totalSizeUpdatedFiles = 0;
 
             var downloader = new FileDownloader();
             foreach (var localDataset in datasetToDownload)
@@ -64,17 +63,25 @@ namespace Geonorge.Nedlaster
                         Console.WriteLine("Starting download process.");
                         downloader.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) =>
                         {
-                            fileLog.HumanReadableSize = HumanReadableBytes(totalFileSize.Value);
-                            totalSizeUpdatedFiles += totalFileSize.Value;
                             Console.CursorLeft = 0;
                             Console.Write($"{progressPercentage}% ({HumanReadableBytes(totalBytesDownloaded)}/{HumanReadableBytes(totalFileSize.Value)})                "); // add som extra whitespace to blank out previous updates
                         };
 
+
                         var downloadRequest = new DownloadRequest(localDataset.Url, downloadDirectory, localDataset.IsRestricted());
                         localDataset.FilePath = await downloader.StartDownload(downloadRequest, appSettings);
+
+                        if (localDataset.FilePath == null)
+                        {
+                            fileLog.Message = "Download failed: You need to authorize access before downloading file";
+                            downloadLog.Faild.Add(fileLog);
+                        }
+                        else
+                        {
+                            downloadLog.Updated.Add(fileLog);
+                        }
                         Console.WriteLine();
 
-                        downloadLog.Updated.Add(fileLog);
                         updatedDatasetToDownload.Add(localDataset);
 
                     }
@@ -98,7 +105,6 @@ namespace Geonorge.Nedlaster
                 Console.WriteLine("-------------");
             }
 
-            downloadLog.TotalSizeOfDownloadedFiles = HumanReadableBytes(totalSizeUpdatedFiles);
             datasetService.WriteToDownloadFile(updatedDatasetToDownload);
             datasetService.WriteToDownloadHistoryFile(updatedDatasetToDownload);
             datasetService.WriteToDownloadLogFile(downloadLog);

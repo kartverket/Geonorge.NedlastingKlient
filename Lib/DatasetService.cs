@@ -116,7 +116,7 @@ namespace Geonorge.MassivNedlasting
                     w.WriteLine();
 
                     
-                    w.WriteLine("UPDATED: " + downloadLog.Updated.Count() + " TOTAL SIZE: " + downloadLog.TotalSizeOfDownloadedFiles);
+                    w.WriteLine("UPDATED: " + downloadLog.Updated.Count());
                     
                     Log(downloadLog.Updated, w);
 
@@ -145,8 +145,8 @@ namespace Geonorge.MassivNedlasting
             {
                 w.Write(item.DatasetId + " - ");
                 w.Write(item.Name + " " + item.Projection);
-                if (item.HumanReadableSize != null) w.WriteLine(" - " + item.HumanReadableSize);
-                else { w.WriteLine(); }
+                //if (item.HumanReadableSize != null) w.WriteLine(" - " + item.HumanReadableSize);
+                w.WriteLine(); 
                 if (item.Message != null) w.WriteLine(" Message: " + item.Message);
                 w.WriteLine();
             }
