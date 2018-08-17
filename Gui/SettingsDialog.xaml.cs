@@ -10,6 +10,7 @@ namespace Geonorge.MassivNedlasting.Gui
     public partial class SettingsDialog
     {
         public string downloadDirectory;
+        public string logDirectory;
         public SettingsDialog()
         {
             InitializeComponent();
@@ -19,6 +20,7 @@ namespace Geonorge.MassivNedlasting.Gui
             txtUsername.Text = appSettings.Username;
             txtPassword.Password = ProtectionService.GetUnprotectedPassword(appSettings.Password);
             downloadDirectory = appSettings.DownloadDirectory;
+            logDirectory = appSettings.LogDirectory;
         }
 
         private void BtnDialogOk_Click(object sender, RoutedEventArgs e)
@@ -27,6 +29,7 @@ namespace Geonorge.MassivNedlasting.Gui
             appSettings.Password = ProtectionService.CreateProtectedPassword(txtPassword.Password);
             appSettings.Username = txtUsername.Text;
             appSettings.DownloadDirectory = FolderPickerDialogBox.DirectoryPath;
+            appSettings.LogDirectory = FolderPickerDialogBoxLog.DirectoryPath;
             ApplicationService.WriteToAppSettingsFile(appSettings);
 
             this.Close();

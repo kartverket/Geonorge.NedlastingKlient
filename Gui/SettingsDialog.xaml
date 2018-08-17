@@ -13,6 +13,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
 
@@ -27,7 +29,12 @@
             <gui:FolderPickerDialog x:Name="FolderPickerDialogBox" DirectoryPath="{Binding downloadDirectory}"/>
         </StackPanel>
 
-        <WrapPanel Grid.Row="6" HorizontalAlignment="Right" Margin="0,15,0,0">
+        <TextBlock Margin="0 10 0 0"  Grid.Row="6" Name="lblLogDirectory">Loggfiler:</TextBlock>
+        <StackPanel Grid.Row="7" Visibility="{Binding SelectionVisibility2}">
+            <gui:FolderPickerDialog x:Name="FolderPickerDialogBoxLog" DirectoryPath="{Binding logDirectory}"/>
+        </StackPanel>
+
+        <WrapPanel Grid.Row="8" HorizontalAlignment="Right" Margin="0,15,0,0">
             <Button IsDefault="True" Name="btnDialogOk" Click="BtnDialogOk_Click" MinWidth="60" Margin="0,0,10,0">_Ok</Button>
             <Button IsCancel="True" MinWidth="60">_Cancel</Button>
         </WrapPanel>

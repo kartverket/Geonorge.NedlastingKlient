@@ -53,10 +53,10 @@ namespace Geonorge.MassivNedlasting
         /// <returns></returns>
         public static string GetDownloadLogFilePath()
         {
-            DirectoryInfo logAppDirectory = GetLogAppDirectory();
+            var logDirectory = LogDirectory();
             var name = DateTime.Now.ToString("yyyy-dd-M--HH-mm-ss");
 
-            return Path.Combine(logAppDirectory.FullName, name + ".txt");
+            return Path.Combine(logDirectory, name + ".txt");
         }
 
 
@@ -140,6 +140,11 @@ namespace Geonorge.MassivNedlasting
         public static string DownloadDirectory()
         {
             return GetAppSettings().DownloadDirectory;
+        }
+
+        public static string LogDirectory()
+        {
+            return GetAppSettings().LogDirectory;
         }
     }
 }
