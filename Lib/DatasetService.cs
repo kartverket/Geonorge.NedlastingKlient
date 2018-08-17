@@ -143,8 +143,8 @@ namespace Geonorge.MassivNedlasting
             w.WriteLine("-------------------------------");
             foreach (var item in datasetFileLogs.OrderBy(d => d.DatasetId))
             {
-                w.Write(item.DatasetId + " - ");
-                w.Write(item.Name + " " + item.Projection);
+                w.Write(item.DatasetId + ";");
+                w.Write(item.Name.Replace(",",";") + ";" + item.Projection);
                 //if (item.HumanReadableSize != null) w.WriteLine(" - " + item.HumanReadableSize);
                 w.WriteLine(); 
                 if (item.Message != null) w.WriteLine(" Message: " + item.Message);
