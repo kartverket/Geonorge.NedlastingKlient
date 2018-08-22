@@ -26,12 +26,12 @@
 
         <TextBlock Margin="0 10 0 0"  Grid.Row="4" Name="lblDownloadDirectory">Nedlastingsmappe:</TextBlock>
         <StackPanel Grid.Row="5" Visibility="{Binding SelectionVisibility}">
-            <gui:FolderPickerDialog x:Name="FolderPickerDialogBox" DirectoryPath="{Binding downloadDirectory}"/>
+            <gui:FolderPickerDialog x:Name="FolderPickerDialogBox" DirectoryPath="{Binding DownloadDirectory, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
         </StackPanel>
 
         <TextBlock Margin="0 10 0 0"  Grid.Row="6" Name="lblLogDirectory">Loggfiler:</TextBlock>
         <StackPanel Grid.Row="7" Visibility="{Binding SelectionVisibility2}">
-            <gui:FolderPickerDialog x:Name="FolderPickerDialogBoxLog" DirectoryPath="{Binding logDirectory}"/>
+            <gui:FolderPickerDialog x:Name="FolderPickerDialogBoxLog" DirectoryPath="{Binding LogDirectory, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
         </StackPanel>
 
         <WrapPanel Grid.Row="8" HorizontalAlignment="Right" Margin="0,15,0,0">

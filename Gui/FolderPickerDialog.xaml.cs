@@ -9,7 +9,7 @@ namespace Geonorge.MassivNedlasting.Gui
     {
 
         public static readonly DependencyProperty DirectoryPathProperty = DependencyProperty.Register("DirectoryPath", typeof(string), typeof(FolderPickerDialog),
-            new FrameworkPropertyMetadata(ApplicationService.DownloadDirectory(), FrameworkPropertyMetadataOptions.AffectsRender));
+            new FrameworkPropertyMetadata());
 
         public string DirectoryPath { get { return (string)GetValue(DirectoryPathProperty) ?? string.Empty; } set { SetValue(DirectoryPathProperty, value); } }
 

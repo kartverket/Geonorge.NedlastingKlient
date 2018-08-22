@@ -9,18 +9,29 @@ namespace Geonorge.MassivNedlasting.Gui
     /// </summary>
     public partial class SettingsDialog
     {
-        public string downloadDirectory;
-        public string logDirectory;
+
+        public static readonly DependencyProperty DownloadDirectoryPathProperty = DependencyProperty.Register("DownloadDirectoryPath", typeof(string), typeof(SettingsDialog),
+            new FrameworkPropertyMetadata());
+
+
+        public static readonly DependencyProperty LogDirectoryPathProperty = DependencyProperty.Register("LogDirectoryPath", typeof(string), typeof(SettingsDialog),
+            new FrameworkPropertyMetadata());
+
+        public string DownloadDirectory { get { return (string)GetValue(DownloadDirectoryPathProperty) ?? string.Empty; } set { SetValue(DownloadDirectoryPathProperty, value); } }
+        public string LogDirectory { get { return (string)GetValue(LogDirectoryPathProperty) ?? string.Empty; } set { SetValue(LogDirectoryPathProperty, value); } }
+
+
         public SettingsDialog()
         {
-            InitializeComponent();
-
             AppSettings appSettings = ApplicationService.GetAppSettings();
+            DownloadDirectory = appSettings.DownloadDirectory;
+            LogDirectory = appSettings.LogDirectory;
+
+            InitializeComponent();
 
             txtUsername.Text = appSettings.Username;
             txtPassword.Password = ProtectionService.GetUnprotectedPassword(appSettings.Password);
-            downloadDirectory = appSettings.DownloadDirectory;
-            logDirectory = appSettings.LogDirectory;
+            
         }
 
         private void BtnDialogOk_Click(object sender, RoutedEventArgs e)
