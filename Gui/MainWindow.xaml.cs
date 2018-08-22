@@ -296,7 +296,8 @@ namespace Geonorge.MassivNedlasting.Gui
 
         private void BtnHelp_OnClick(object sender, RoutedEventArgs e)
         {
-            Process.Start("https://www.geonorge.no/");
+            var helpDialog = new HelpDialog();
+            helpDialog.ShowDialog();
         }
 
         private void BtnSave_OnClick(object sender, RoutedEventArgs e)

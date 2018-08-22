@@ -1,0 +1,29 @@
+﻿<Window x:Class="Geonorge.MassivNedlasting.Gui.HelpDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Geonorge.MassivNedlasting.Gui"
+        mc:Ignorable="d"
+        Title="Hjelp" SizeToContent="WidthAndHeight" Icon="Content/geonorge.ico" WindowStartupLocation="CenterScreen">
+
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Name="lblVersion" Grid.Row="0" Text="Versjon:"/>
+        <TextBlock Name="txtVersion" Grid.Row="1" MinWidth="250" Text="{Binding versionNumber}"/>
+
+        <TextBlock Name="lblHelpPage" Grid.Row="2" MinWidth="250" Text="Informasjon"/>
+        <TextBlock Name="txtHelpPage" Grid.Row="3" MinWidth="250" Text="">
+            <Hyperlink NavigateUri="https://www.geonorge.no/verktoy/APIer-og-grensesnitt/massivnedlastingsklient/">
+                https://www.geonorge.no/verktoy/APIer-og-grensesnitt/massivnedlastingsklient/
+            </Hyperlink>
+        </TextBlock>
+
+</Grid>
+</Window>
