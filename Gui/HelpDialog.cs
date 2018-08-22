@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -28,6 +29,11 @@ namespace Geonorge.MassivNedlasting.Gui
             InitializeComponent();
             Version version = Assembly.GetExecutingAssembly().GetName().Version;
             txtVersion.Text = version.ToString();
+        }
+
+        private void Hyperlink_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start("https://www.geonorge.no/verktoy/APIer-og-grensesnitt/massivnedlastingsklient/");
         }
     }
 }

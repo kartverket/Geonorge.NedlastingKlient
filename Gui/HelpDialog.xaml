@@ -22,7 +22,7 @@
 
         <TextBlock Margin="2" Name="lblHelpPage" Grid.Row="2" MinWidth="250" Text="Informasjonsside:"/>
         <TextBlock Margin="2 5" Name="txtHelpPage" Grid.Row="3" MinWidth="250" Text="">
-            <Hyperlink NavigateUri="https://www.geonorge.no/verktoy/APIer-og-grensesnitt/massivnedlastingsklient/">
+            <Hyperlink Click="Hyperlink_Click" NavigateUri="https://www.geonorge.no/verktoy/APIer-og-grensesnitt/massivnedlastingsklient/">
                 https://www.geonorge.no/verktoy/APIer-og-grensesnitt/massivnedlastingsklient/
             </Hyperlink>
         </TextBlock>
