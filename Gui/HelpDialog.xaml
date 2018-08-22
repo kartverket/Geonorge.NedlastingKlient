@@ -15,11 +15,13 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Name="lblVersion" Grid.Row="0" Text="Versjon:"/>
-        <TextBlock Name="txtVersion" Grid.Row="1" MinWidth="250" Text="{Binding versionNumber}"/>
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0 0 0 10">
+            <TextBlock Margin="2" Name="lblVersion" Text="Versjon:"/>
+            <TextBlock Margin="10 2 0 0" Name="txtVersion" MinWidth="250" Text="{Binding versionNumber}">test</TextBlock>
+        </StackPanel>
 
-        <TextBlock Name="lblHelpPage" Grid.Row="2" MinWidth="250" Text="Informasjon"/>
-        <TextBlock Name="txtHelpPage" Grid.Row="3" MinWidth="250" Text="">
+        <TextBlock Margin="2" Name="lblHelpPage" Grid.Row="2" MinWidth="250" Text="Informasjonsside:"/>
+        <TextBlock Margin="2 5" Name="txtHelpPage" Grid.Row="3" MinWidth="250" Text="">
             <Hyperlink NavigateUri="https://www.geonorge.no/verktoy/APIer-og-grensesnitt/massivnedlastingsklient/">
                 https://www.geonorge.no/verktoy/APIer-og-grensesnitt/massivnedlastingsklient/
             </Hyperlink>
