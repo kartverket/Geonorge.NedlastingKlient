@@ -28,9 +28,14 @@ namespace Geonorge.Nedlaster
 
             using (var response = await Client.GetAsync(downloadRequest.DownloadUrl, HttpCompletionOption.ResponseHeadersRead))
             {
-                if (!response.IsSuccessStatusCode)
+                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                {
+                    throw new Exception("Download failed: You need to authorize access before downloading file");
+                }
+                else if (!response.IsSuccessStatusCode)
                 {
                     Console.WriteLine("Download failed - response from server was: " + response.StatusCode + " - " + response.ReasonPhrase);
+                    throw new Exception("Download failed - response from server was: " + response.StatusCode + " - " + response.ReasonPhrase);
                 }
                 else
                 {

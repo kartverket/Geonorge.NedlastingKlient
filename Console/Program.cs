@@ -71,15 +71,8 @@ namespace Geonorge.Nedlaster
                         var downloadRequest = new DownloadRequest(localDataset.Url, downloadDirectory, localDataset.IsRestricted());
                         localDataset.FilePath = await downloader.StartDownload(downloadRequest, appSettings);
 
-                        if (localDataset.FilePath == null)
-                        {
-                            fileLog.Message = "Download failed: You need to authorize access before downloading file";
-                            downloadLog.Faild.Add(fileLog);
-                        }
-                        else
-                        {
-                            downloadLog.Updated.Add(fileLog);
-                        }
+                        downloadLog.Updated.Add(fileLog);
+
                         Console.WriteLine();
 
                         updatedDatasetToDownload.Add(localDataset);
