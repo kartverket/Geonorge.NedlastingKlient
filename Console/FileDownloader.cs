@@ -34,8 +34,9 @@ namespace Geonorge.Nedlaster
                 }
                 else if (!response.IsSuccessStatusCode)
                 {
-                    Console.WriteLine("Download failed - response from server was: " + response.StatusCode + " - " + response.ReasonPhrase);
-                    throw new Exception("Download failed - response from server was: " + response.StatusCode + " - " + response.ReasonPhrase);
+                    var message = $"Download failed for url: {downloadRequest.DownloadUrl}, - response from server was: {response.StatusCode} - {response.ReasonPhrase}";
+                    Console.WriteLine(message);
+                    throw new Exception(message);
                 }
                 else
                 {
