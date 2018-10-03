@@ -54,7 +54,7 @@ namespace Geonorge.MassivNedlasting
         public static string GetDownloadLogFilePath()
         {
             var logDirectory = LogDirectory();
-            var name = DateTime.Now.ToString("yyyy-dd-M--HH-mm-ss");
+            var name = DateTime.Now.ToString("yyyy-M-dd--HH-mm-ss");
 
             return Path.Combine(logDirectory, name + ".txt");
         }
