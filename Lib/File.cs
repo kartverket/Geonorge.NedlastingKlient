@@ -4,14 +4,14 @@ using System.IO;
 namespace Geonorge.MassivNedlasting
 {
 
-    public class DatasetFile
+    public class File
     {
         private DatasetFileViewModel datasetFileViewModel;
         private const string NorwayDigitalRestricted = "norway digital restricted";
         private const string Restricted = "restricted";
         private const string NoRestrictions = "norway digital restricted";
 
-        public DatasetFile(DatasetFileViewModel datasetFileViewModel)
+        public File(DatasetFileViewModel datasetFileViewModel)
         {
             Title = datasetFileViewModel.Title;
             Description = datasetFileViewModel.Description;
@@ -24,7 +24,7 @@ namespace Geonorge.MassivNedlasting
             Restrictions = datasetFileViewModel.Restrictions;
         }
 
-        public DatasetFile()
+        public File()
         {
         }
 
@@ -86,7 +86,7 @@ namespace Geonorge.MassivNedlasting
             return DatasetId + "_" + Title + "_" + Category;
         }
 
-        public DatasetFileViewModel(DatasetFile datasetFile, string epsgName, bool selectedForDownload = false)
+        public DatasetFileViewModel(File datasetFile, string epsgName, bool selectedForDownload = false)
         {
             Title = datasetFile.Title;
             Description = datasetFile.Description;
