@@ -36,9 +36,9 @@ namespace Geonorge.MassivNedlasting
             return datasets;
         }
 
-        internal File ParseDatasetFile(string xml, File originalDatasetFile)
+        internal DatasetFile ParseDatasetFile(string xml, DatasetFile originalDatasetFile)
         {
-            var datasetFileFromFeed = new File();
+            var datasetFileFromFeed = new DatasetFile();
 
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(xml);
@@ -96,9 +96,9 @@ namespace Geonorge.MassivNedlasting
             return null;
         }
 
-        public List<File> ParseDatasetFiles(string xml, Dataset dataset)
+        public List<DatasetFile> ParseDatasetFiles(string xml, Dataset dataset)
         {
-            var datasetFiles = new List<File>();
+            var datasetFiles = new List<DatasetFile>();
 
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(xml);
@@ -113,7 +113,7 @@ namespace Geonorge.MassivNedlasting
 
             foreach (XmlNode childrenNode in nodes)
             {
-                var datasetFile = new File();
+                var datasetFile = new DatasetFile();
                 datasetFile.Title = childrenNode.SelectSingleNode("a:title", nsmgr).InnerXml;
                 datasetFile.Description = childrenNode.SelectSingleNode("a:category", nsmgr).InnerXml;
                 datasetFile.Url = childrenNode.SelectSingleNode("a:link", nsmgr).Attributes[1].Value;

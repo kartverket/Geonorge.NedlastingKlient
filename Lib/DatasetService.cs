@@ -25,7 +25,7 @@ namespace Geonorge.MassivNedlasting
         public List<DatasetFileViewModel> GetDatasetFiles(Dataset dataset, List<Projections> propotions)
         {
             var getFeedTask = HttpClient.GetStringAsync(dataset.Url);
-            List<File> datasetFiles = new AtomFeedParser().ParseDatasetFiles(getFeedTask.Result, dataset).OrderBy(d => d.Title).ToList();
+            List<DatasetFile> datasetFiles = new AtomFeedParser().ParseDatasetFiles(getFeedTask.Result, dataset).OrderBy(d => d.Title).ToList();
 
             return ConvertToViewModel(datasetFiles, propotions);
         }
@@ -74,7 +74,7 @@ namespace Geonorge.MassivNedlasting
             }
         }
 
-        public File GetDatasetFile(File originalDatasetFile)
+        public DatasetFile GetDatasetFile(DatasetFile originalDatasetFile)
         {
             var getFeedTask = HttpClient.GetStringAsync(originalDatasetFile.DatasetUrl);
             return new AtomFeedParser().ParseDatasetFile(getFeedTask.Result, originalDatasetFile);
@@ -86,7 +86,7 @@ namespace Geonorge.MassivNedlasting
         /// <param name="datasetFilesViewModel"></param>
         public void WriteToDownloadFile(List<DatasetFileViewModel> datasetFilesViewModel)
         {
-            List<File> datasetFiles = ConvertToModel(datasetFilesViewModel);
+            List<DatasetFile> datasetFiles = ConvertToModel(datasetFilesViewModel);
             var serializer = new JsonSerializer();
             serializer.Converters.Add(new JavaScriptDateTimeConverter());
             serializer.NullValueHandling = NullValueHandling.Ignore;
@@ -155,7 +155,7 @@ namespace Geonorge.MassivNedlasting
         /// <summary>
         /// Writes the information about the selected files to the local download list. 
         /// </summary>
-        public void WriteToDownloadFile(List<File> datasetFiles)
+        public void WriteToDownloadFile(List<DatasetFile> datasetFiles)
         {
             var serializer = new JsonSerializer();
             serializer.Converters.Add(new JavaScriptDateTimeConverter());
@@ -173,7 +173,7 @@ namespace Geonorge.MassivNedlasting
         /// Writes the information about the selected files to the local download list. 
         /// </summary>
         /// <param name="datasetFilesViewModel"></param>
-        public void WriteToDownloadHistoryFile(List<File> datasetFilesToDownload)
+        public void WriteToDownloadHistoryFile(List<DatasetFile> datasetFilesToDownload)
         {
             var downloadHistory = new List<DownloadHistory>();
             foreach (var datasetFile in datasetFilesToDownload)
@@ -193,12 +193,12 @@ namespace Geonorge.MassivNedlasting
             }
         }
 
-        private List<File> ConvertToModel(List<DatasetFileViewModel> datasetFilesViewModel)
+        private List<DatasetFile> ConvertToModel(List<DatasetFileViewModel> datasetFilesViewModel)
         {
-            var datasetFiles = new List<File>();
+            var datasetFiles = new List<DatasetFile>();
             foreach (var datasetFileViewModel in datasetFilesViewModel)
             {
-                var datasetFile = new File(datasetFileViewModel);
+                var datasetFile = new DatasetFile(datasetFileViewModel);
                 datasetFiles.Add(datasetFile);
             }
             return datasetFiles;
@@ -208,14 +208,14 @@ namespace Geonorge.MassivNedlasting
         /// Returns a list of dataset files to download. 
         /// </summary>
         /// <returns></returns>
-        public List<File> GetSelectedFiles()
+        public List<DatasetFile> GetSelectedFiles()
         {
             try
             {
                 using (var r = new StreamReader(ApplicationService.GetDownloadFilePath()))
                 {
                     var json = r.ReadToEnd();
-                    var selecedFiles = JsonConvert.DeserializeObject<List<File>>(json);
+                    var selecedFiles = JsonConvert.DeserializeObject<List<DatasetFile>>(json);
                     r.Close();
                     return selecedFiles;
                 }
@@ -223,7 +223,7 @@ namespace Geonorge.MassivNedlasting
             catch (Exception)
             {
                 // TODO error handling
-                return new List<File>();
+                return new List<DatasetFile>();
             }
         }
 
@@ -254,11 +254,11 @@ namespace Geonorge.MassivNedlasting
 
         public List<DatasetFileViewModel> GetSelectedFilesAsViewModel(List<Projections> propotions)
         {
-            List<File> selectedFiles = GetSelectedFiles();
+            List<DatasetFile> selectedFiles = GetSelectedFiles();
             return ConvertToViewModel(selectedFiles, propotions, true);
         }
 
-        private List<DatasetFileViewModel> ConvertToViewModel(List<File> datasetFiles, List<Projections> projections, bool selectedForDownload = false)
+        private List<DatasetFileViewModel> ConvertToViewModel(List<DatasetFile> datasetFiles, List<Projections> projections, bool selectedForDownload = false)
         {
             var selectedFilesViewModel = new List<DatasetFileViewModel>();
             foreach (var selectedFile in datasetFiles)
@@ -270,7 +270,7 @@ namespace Geonorge.MassivNedlasting
             return selectedFilesViewModel;
         }
 
-        private static string GetEpsgName(List<Projections> projections, File selectedFile)
+        private static string GetEpsgName(List<Projections> projections, DatasetFile selectedFile)
         {
             var projection = projections.FirstOrDefault(p => p.Epsg == selectedFile.Projection);
             return projection != null ? projection.Name : selectedFile.Projection;

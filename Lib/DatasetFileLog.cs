@@ -5,9 +5,9 @@ namespace Geonorge.Nedlaster
 {
     public class DatasetFileLog
     {
-        private File localDataset;
+        private DatasetFile localDataset;
 
-        public DatasetFileLog(File localDataset)
+        public DatasetFileLog(DatasetFile localDataset)
         {
             DatasetId = localDataset.DatasetId;
             Name = localDataset.Title;

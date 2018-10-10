@@ -14,14 +14,14 @@ namespace Geonorge.MassivNedlasting.Test
         [Fact]
         public void ShouldParseAtomFeed()
         {
-            List<Dataset> result = new AtomFeedParser().ParseDatasets(System.IO.File.ReadAllText("Tjenestefeed.xml"));
+            List<Dataset> result = new AtomFeedParser().ParseDatasets(File.ReadAllText("Tjenestefeed.xml"));
             result.Count.Should().Be(3);
         }
 
         [Fact]
         public void ShouldParseDatasetFileAtomFeed()
         {
-            List<File> result = new AtomFeedParser().ParseDatasetFiles(System.IO.File.ReadAllText("AdministrativeEnheterFylker_AtomFeedGEOJSON.fmw.xml"), NewDataset());
+            List<DatasetFile> result = new AtomFeedParser().ParseDatasetFiles(File.ReadAllText("AdministrativeEnheterFylker_AtomFeedGEOJSON.fmw.xml"), NewDataset());
             result.Count.Should().Be(10);
         }
 

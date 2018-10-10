@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Geonorge.MassivNedlasting;
-using File = Geonorge.MassivNedlasting.File;
 
 namespace Geonorge.Nedlaster
 {
@@ -33,9 +32,9 @@ namespace Geonorge.Nedlaster
         private static async Task StartDownloadAsync()
         {
             var datasetService = new DatasetService();
-            List<File> datasetToDownload = datasetService.GetSelectedFiles();
+            List<DatasetFile> datasetToDownload = datasetService.GetSelectedFiles();
 
-            List<File> updatedDatasetToDownload = new List<File>();
+            List<DatasetFile> updatedDatasetToDownload = new List<DatasetFile>();
             DownloadLog downloadLog = new DownloadLog();
             downloadLog.TotalDatasetsToDownload = datasetToDownload.Count;
             var appSettings = ApplicationService.GetAppSettings();
@@ -51,7 +50,7 @@ namespace Geonorge.Nedlaster
 
                     DirectoryInfo downloadDirectory = GetDownloadDirectory(appSettings, localDataset);
 
-                    File datasetFromFeed = datasetService.GetDatasetFile(localDataset);
+                    DatasetFile datasetFromFeed = datasetService.GetDatasetFile(localDataset);
 
                     DownloadHistory downloadHistory = datasetService.GetFileDownloaHistory(datasetFromFeed.Url);
 
@@ -122,7 +121,7 @@ namespace Geonorge.Nedlaster
             return args != null && args.Any() && args.First() == "-background";
         }
 
-        private static DirectoryInfo GetDownloadDirectory(AppSettings appSettings, File dataset)
+        private static DirectoryInfo GetDownloadDirectory(AppSettings appSettings, DatasetFile dataset)
         {
             var downloadDirectory = new DirectoryInfo(Path.Combine(appSettings.DownloadDirectory, dataset.DatasetId));
             if (!downloadDirectory.Exists)
@@ -133,7 +132,7 @@ namespace Geonorge.Nedlaster
             return downloadDirectory;
         }
 
-        private static bool NewDatasetAvailable(DownloadHistory downloadHistory, File datasetFromFeed, DirectoryInfo downloadDirectory)
+        private static bool NewDatasetAvailable(DownloadHistory downloadHistory, DatasetFile datasetFromFeed, DirectoryInfo downloadDirectory)
         {
             if (downloadHistory == null) return true;
             if (!LocalFileExists(downloadHistory, downloadDirectory, datasetFromFeed)) return true;
@@ -145,7 +144,7 @@ namespace Geonorge.Nedlaster
             return updatedDatasetAvailable;
         }
 
-        private static bool LocalFileExists(DownloadHistory downloadHistory, DirectoryInfo downloadDirectory, File dataset)
+        private static bool LocalFileExists(DownloadHistory downloadHistory, DirectoryInfo downloadDirectory, DatasetFile dataset)
         {
             if (downloadHistory.FilePath != null)
             {
@@ -158,7 +157,7 @@ namespace Geonorge.Nedlaster
             }
         }
 
-        private static bool LocalFileExists(DirectoryInfo downloadDirectory, File dataset)
+        private static bool LocalFileExists(DirectoryInfo downloadDirectory, DatasetFile dataset)
         {
             if (!dataset.HasLocalFileName())
                 return false;
