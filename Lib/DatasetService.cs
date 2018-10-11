@@ -169,6 +169,20 @@ namespace Geonorge.MassivNedlasting
             }
         }
 
+        public void WriteToDownloadFile(List<DownloadViewModel> selectedFilesForDownload)
+        {
+            var serializer = new JsonSerializer();
+            serializer.Converters.Add(new JavaScriptDateTimeConverter());
+            serializer.NullValueHandling = NullValueHandling.Ignore;
+
+            using (var outputFile = new StreamWriter(ApplicationService.GetDownloadFilePath(), false))
+            using (JsonWriter writer = new JsonTextWriter(outputFile))
+            {
+                serializer.Serialize(writer, selectedFilesForDownload);
+                writer.Close();
+            }
+        }
+
         /// <summary>
         /// Writes the information about the selected files to the local download list. 
         /// </summary>
@@ -204,20 +218,43 @@ namespace Geonorge.MassivNedlasting
             return datasetFiles;
         }
 
+        ///// <summary>
+        ///// Returns a list of dataset files to download. 
+        ///// </summary>
+        ///// <returns></returns>
+        //public List<DatasetFile> GetSelectedFiles()
+        //{
+        //    try
+        //    {
+        //        using (var r = new StreamReader(ApplicationService.GetDownloadFilePath()))
+        //        {
+        //            var json = r.ReadToEnd();
+        //            var selecedFiles = JsonConvert.DeserializeObject<List<DatasetFile>>(json);
+        //            r.Close();
+        //            return selecedFiles;
+        //        }
+        //    }
+        //    catch (Exception)
+        //    {
+        //        // TODO error handling
+        //        return new List<DatasetFile>();
+        //    }
+        //}
+
         /// <summary>
         /// Returns a list of dataset files to download. 
         /// </summary>
         /// <returns></returns>
-        public List<DatasetFile> GetSelectedFiles()
+        public List<DatasetFile> GetSelectedDatasetFiles()
         {
             try
             {
                 using (var r = new StreamReader(ApplicationService.GetDownloadFilePath()))
                 {
                     var json = r.ReadToEnd();
-                    var selecedFiles = JsonConvert.DeserializeObject<List<DatasetFile>>(json);
+                    var selecedForDownload = JsonConvert.DeserializeObject<List<DatasetFile>>(json);
                     r.Close();
-                    return selecedFiles;
+                    return selecedForDownload;
                 }
             }
             catch (Exception)
@@ -226,6 +263,49 @@ namespace Geonorge.MassivNedlasting
                 return new List<DatasetFile>();
             }
         }
+
+        /// <summary>
+        /// Returns a list of dataset files to download. 
+        /// </summary>
+        /// <returns></returns>
+        public List<Download> GetSelectedFilesToDownload()
+        {
+            try
+            {
+                using (var r = new StreamReader(ApplicationService.GetDownloadFilePath()))
+                {
+                    var json = r.ReadToEnd();
+                    var selecedForDownload = JsonConvert.DeserializeObject<List<Download>>(json);
+                    r.Close();
+                    selecedForDownload = RemoveDuplicatesIterative(selecedForDownload);
+                    return selecedForDownload;
+                }
+            }
+            catch (Exception)
+            {
+                // TODO error handling
+                return new List<Download>();
+            }
+        }
+
+        public static List<Download> RemoveDuplicatesIterative(List<Download> items)
+        {
+            // Use HashSet to maintain table of duplicates encountered.
+            var result = new List<Download>();
+            var set = new HashSet<string>();
+            for (int i = 0; i < items.Count; i++)
+            {
+                // If not duplicate, add to result.
+                if (!set.Contains(items[i].DatasetId))
+                {
+                    result.Add(items[i]);
+                    // Record as a future duplicate.
+                    set.Add(items[i].DatasetId);
+                }
+            }
+            return result;
+        }
+
 
         /// <summary>
         /// Returns a list of downloded datasets. 
@@ -252,9 +332,15 @@ namespace Geonorge.MassivNedlasting
             }
         }
 
-        public List<DatasetFileViewModel> GetSelectedFilesAsViewModel(List<Projections> propotions)
+        //public List<DatasetFileViewModel> GetSelectedFilesAsViewModel(List<Projections> propotions)
+        //{
+        //    List<DatasetFile> selectedFiles = GetSelectedFiles();
+        //    return ConvertToViewModel(selectedFiles, propotions, true);
+        //}
+
+        public List<DownloadViewModel> GetSelectedFilesToDownloadAsViewModel(List<Projections> propotions)
         {
-            List<DatasetFile> selectedFiles = GetSelectedFiles();
+            List<Download> selectedFiles = GetSelectedFilesToDownload();
             return ConvertToViewModel(selectedFiles, propotions, true);
         }
 
@@ -270,11 +356,35 @@ namespace Geonorge.MassivNedlasting
             return selectedFilesViewModel;
         }
 
-        private static string GetEpsgName(List<Projections> projections, DatasetFile selectedFile)
+        private List<DownloadViewModel> ConvertToViewModel(List<Download> datasetFilesToDownload, List<Projections> projections, bool selectedForDownload = false)
         {
-            var projection = projections.FirstOrDefault(p => p.Epsg == selectedFile.Projection);
-            return projection != null ? projection.Name : selectedFile.Projection;
+            var selectedFilesViewModel = new List<DownloadViewModel>();
+            foreach (var dataset in datasetFilesToDownload)
+            {
+                // TODO old --> new version... 
+                if (!dataset.Files.Any())
+                {
+                    dataset.Files = ConvertToNewVersionOfDownloadFile(dataset, projections, selectedForDownload);
+                }
+                DownloadViewModel selectedFileViewModel = new DownloadViewModel(dataset, projections, selectedForDownload);
+                selectedFilesViewModel.Add(selectedFileViewModel);
+            }
+            return selectedFilesViewModel;
         }
+
+        private List<DatasetFile> ConvertToNewVersionOfDownloadFile(Download dataset, List<Projections> projections, bool selectedForDownload)
+        {
+            var datasetFiles = GetSelectedDatasetFiles();
+            foreach (var file in datasetFiles)
+            {
+                if (file.DatasetId == dataset.DatasetId)
+                {
+                    dataset.Files.Add(file);
+                }
+            }
+            return dataset.Files;
+        }
+
 
         public void WriteToProjectionFile(List<Projections> projections)
         {
@@ -289,6 +399,12 @@ namespace Geonorge.MassivNedlasting
                 serializer.Serialize(writer, projections);
                 writer.Close();
             }
+        }
+
+        private static string GetEpsgName(List<Projections> projections, DatasetFile selectedFile)
+        {
+            var projection = projections.FirstOrDefault(p => p.Epsg == selectedFile.Projection);
+            return projection != null ? projection.Name : selectedFile.Projection;
         }
     }
 }

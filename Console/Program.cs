@@ -32,7 +32,7 @@ namespace Geonorge.Nedlaster
         private static async Task StartDownloadAsync()
         {
             var datasetService = new DatasetService();
-            List<DatasetFile> datasetToDownload = datasetService.GetSelectedFiles();
+            List<DatasetFile> datasetToDownload = datasetService.GetSelectedDatasetFiles();
 
             List<DatasetFile> updatedDatasetToDownload = new List<DatasetFile>();
             DownloadLog downloadLog = new DownloadLog();

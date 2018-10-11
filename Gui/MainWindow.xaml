@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local="clr-namespace:Geonorge.MassivNedlasting;assembly=Geonorge.MassivNedlasting.Lib"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
@@ -147,7 +148,6 @@
                                     </Grid.ColumnDefinitions>
                                     <TextBlock VerticalAlignment="Center" ToolTip="{Binding Title}" Margin="0 0 10 3"  Grid.Column="0" Text="{Binding Title}"/>
                                     <TextBlock VerticalAlignment="Center" Grid.Column="1" ToolTip="{Binding Organization}" Text="{Binding Organization}"/>
-
                                 </Grid>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
@@ -210,8 +210,7 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Column="0" Orientation="Horizontal" >
-                    <TextBlock ToolTip="Navn på datasett" Margin="48 0 0 0" Width="350" VerticalAlignment="Center" Text="Datasett navn"></TextBlock>
-                    <TextBlock ToolTip="Filnavn" Width="250" VerticalAlignment="Center" Text="Filnavn"></TextBlock>
+                    <TextBlock Margin="70 0 0 0" ToolTip="Filnavn" Width="250" VerticalAlignment="Center" Text="Filnavn"></TextBlock>
                     <TextBlock ToolTip="Projeksjon" Width="150" VerticalAlignment="Center" Text="Projeksjon"></TextBlock>
                     <TextBlock ToolTip="Sist oppdatert" Width="150" VerticalAlignment="Center" Text="Sist oppdatert"></TextBlock>
                     <Button x:Name="BtnRemoveAll" Margin="10 0" BindingGroup="{Binding LbSelectedFiles}" Click="BtnRemoveAll_OnClick"
@@ -229,49 +228,43 @@
             </Grid>
 
             <!-- Liste over filer valgt for nedlasting-->
-            <ListBox x:Name="LbSelectedFiles" 
-                    BorderThickness="0" ItemsSource="{Binding LbSelectedFiles}"
-                    ScrollViewer.CanContentScroll="True" 
-                    ScrollViewer.VerticalScrollBarVisibility="Auto"
-                    MaxHeight="400" HorizontalAlignment="Left"
-                    Margin="40 0 0 0">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="350"/>
-                                <ColumnDefinition Width="250"/>
-                                <ColumnDefinition Width="150"/>
-                                <ColumnDefinition Width="150"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock VerticalAlignment="Center" Grid.Column="0" Text="{Binding DatasetId}"/>
-                            <TextBlock VerticalAlignment="Center" Grid.Column="1" ToolTip="{Binding Title}"  Text="{Binding Title}">
-                                <materialDesign:PackIcon Margin="10 0 0 -2" ToolTip="{Binding Restrictions}" Grid.Column="2" Kind="Lock" Visibility="{Binding IsRestricted, Converter={StaticResource BoolToVisConverter}}"></materialDesign:PackIcon>
-                            </TextBlock>
 
-                            <TextBlock VerticalAlignment="Center" Grid.Column="2" ToolTip="{Binding EpsgName}" Text="{Binding Category}"/>
-                            <TextBlock VerticalAlignment="Center" Grid.Column="3" Text="{Binding LastUpdated}"/>
-                            <Button x:Name="BtnAddOrRemove" Margin="10 0" Grid.Column="4" BindingGroup="{Binding LbSelectedFiles}" Click="RemoveFromDownloadList_Click"
+            <TreeView Name ="LbSelectedFilesForDownload" ItemsSource="{Binding Downloads}" Margin="10" Height="200">
+                <TreeView.ItemTemplate>
+                    <HierarchicalDataTemplate ItemsSource="{Binding Files}" DataType="{x:Type local:DatasetFileViewModel}">
+                        <TextBlock Text="{Binding DatasetId}"></TextBlock>
+                        <HierarchicalDataTemplate.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="250"/>
+                                        <ColumnDefinition Width="150"/>
+                                        <ColumnDefinition Width="150"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock VerticalAlignment="Center" Grid.Column="0" ToolTip="{Binding Title}"  Text="{Binding Title}">
+                                <materialDesign:PackIcon Margin="10 0 0 -2" ToolTip="{Binding Restrictions}" Grid.Column="2" Kind="Lock" Visibility="{Binding IsRestricted, Converter={StaticResource BoolToVisConverter}}"></materialDesign:PackIcon>
+                                    </TextBlock>
+
+                                    <TextBlock VerticalAlignment="Center" Grid.Column="1" ToolTip="{Binding EpsgName}" Text="{Binding Category}"/>
+                                    <TextBlock VerticalAlignment="Center" Grid.Column="2" Text="{Binding LastUpdated}"/>
+                                    <Button x:Name="BtnAddOrRemove" Margin="10 0" Grid.Column="4" BindingGroup="{Binding LbSelectedFiles}" Click="RemoveFromDownloadList_Click"
                                 Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
                                 ToolTip="Fjern"
                                     Height="20"
                                     Width="20">
-                                <materialDesign:PackIcon
+                                        <materialDesign:PackIcon
                                     Kind="Minus"
                                     Height="18"
                                     Width="18" />
-                            </Button>
-                        </Grid>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+                                    </Button>
+                                </Grid>
+                            </DataTemplate>
+                        </HierarchicalDataTemplate.ItemTemplate>
+                    </HierarchicalDataTemplate>
+                </TreeView.ItemTemplate>
+            </TreeView>
 
-            <!--<StackPanel Margin="0 20 40 20" Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Width="Auto" Content="Lagre" x:Name="BtnSave" Margin="0 0 10 0" HorizontalAlignment="Right" Click="SaveList_Click"/>
-                <Button Width="Auto" Content="Start nedlasting" x:Name="BtnDownload" Margin="0 0" HorizontalAlignment="Right" Click="BtnDownload_OnClick"/>
-            </StackPanel>-->
-
-</StackPanel>
+        </StackPanel>
     </ScrollViewer>
 </Window>

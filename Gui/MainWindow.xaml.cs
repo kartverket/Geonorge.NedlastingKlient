@@ -20,11 +20,10 @@ namespace Geonorge.MassivNedlasting.Gui
     {
         private readonly DatasetService _datasetService;
         private List<Projections> _projections;
-
+        private Dataset _selectedDataset;
         private List<DatasetFileViewModel> _selectedDatasetFiles;
-        //public ICommand ShowProgressDialogCommand { get; }
-
-        private List<DatasetFileViewModel> _selectedFiles;
+        //private List<DatasetFileViewModel> _selectedFiles;
+        private List<DownloadViewModel> _selectedFilesForDownload;
         public bool LoggedIn;
 
         public MainWindow()
@@ -56,8 +55,8 @@ namespace Geonorge.MassivNedlasting.Gui
             var viewDatasets = (CollectionView) CollectionViewSource.GetDefaultView(LbDatasets.ItemsSource);
             if (viewDatasets != null) viewDatasets.Filter = UserDatasetFilter;
 
-            _selectedFiles = _datasetService.GetSelectedFilesAsViewModel(_projections);
-            LbSelectedFiles.ItemsSource = _selectedFiles;
+            _selectedFilesForDownload = _datasetService.GetSelectedFilesToDownloadAsViewModel(_projections);
+            LbSelectedFilesForDownload.ItemsSource = _selectedFilesForDownload;
 
             _selectedDatasetFiles = new List<DatasetFileViewModel>();
         }
@@ -90,6 +89,7 @@ namespace Geonorge.MassivNedlasting.Gui
                     var selectedDataset = (Dataset) listBoxItem.SelectedItems[0];
                     if (selectedDataset != null)
                     {
+                        _selectedDataset = selectedDataset;
                         progressBar.IsIndeterminate = true;
 
                         LbSelectedDatasetFiles.ItemsSource = await Task.Run(() => GetFilesAsync(selectedDataset));
@@ -109,13 +109,20 @@ namespace Geonorge.MassivNedlasting.Gui
         {
             var selectedDatasetFiles = _datasetService.GetDatasetFiles(selctedDataset, _projections);
 
-            foreach (var selectedDatasetFile in _selectedFiles)
-            foreach (var datasetFile in selectedDatasetFiles)
-                if (selectedDatasetFile.Id == datasetFile.Id)
+            foreach (var dataset in _selectedFilesForDownload)
+            {
+                foreach (var selectedDownloadFile in dataset.Files)
                 {
-                    datasetFile.SelectedForDownload = true;
-                    break;
+                    foreach (var datasetFile in selectedDatasetFiles)
+                        if (selectedDownloadFile.Id == datasetFile.Id)
+                        {
+                            datasetFile.SelectedForDownload = true;
+                            break;
+                        }
                 }
+            }
+
+            
 
             if (selectedDatasetFiles.Count == 0) MessageBox.Show("Ingen filer for dette datasettet");
             _selectedDatasetFiles = selectedDatasetFiles;
@@ -143,7 +150,8 @@ namespace Geonorge.MassivNedlasting.Gui
         {
             if (selectedFile != null)
             {
-                _selectedFiles.Add(selectedFile);
+                var downloadViewModel = new DownloadViewModel(_selectedDataset, selectedFile);
+                _selectedFilesForDownload.Add(downloadViewModel);
                 BindNewList();
             }
             else
@@ -156,7 +164,11 @@ namespace Geonorge.MassivNedlasting.Gui
         {
             if (selectedFile != null)
             {
-                _selectedFiles.RemoveAll(f => f.Id == selectedFile.Id);
+                foreach (var dataset in _selectedFilesForDownload)
+                {
+                    dataset.Files.RemoveAll(f => f.Id == selectedFile.Id);
+                }
+                //_selectedFilesForDownload.RemoveAll(f => f.Id == selectedFile.Id);
                 BindNewList();
             }
             else
@@ -167,8 +179,8 @@ namespace Geonorge.MassivNedlasting.Gui
 
         private void BindNewList()
         {
-            LbSelectedFiles.ItemsSource = null;
-            LbSelectedFiles.ItemsSource = _selectedFiles;
+            LbSelectedFilesForDownload.ItemsSource = null;
+            LbSelectedFilesForDownload.ItemsSource = _selectedFilesForDownload;
             LbSelectedDatasetFiles.ItemsSource = null;
             LbSelectedDatasetFiles.ItemsSource = _selectedDatasetFiles;
         }
@@ -179,7 +191,13 @@ namespace Geonorge.MassivNedlasting.Gui
             var selectedDatasetFile = (DatasetFileViewModel) btn.DataContext;
             UpdateSelectedDatasetFiles(selectedDatasetFile);
 
-            _selectedFiles.Remove(selectedDatasetFile);
+            foreach (var dataset in _selectedFilesForDownload)
+            {
+                if (dataset.DatasetId == selectedDatasetFile.DatasetId)
+                {
+                    dataset.Files.Remove(selectedDatasetFile);
+                }
+            }
             BindNewList();
         }
 
@@ -202,7 +220,7 @@ namespace Geonorge.MassivNedlasting.Gui
 
         private void SaveDownloadList()
         {
-            _datasetService.WriteToDownloadFile(_selectedFiles);
+            _datasetService.WriteToDownloadFile(_selectedFilesForDownload);
         }
 
         private void BtnSelectAll_OnClick(object sender, RoutedEventArgs e)
@@ -234,14 +252,14 @@ namespace Geonorge.MassivNedlasting.Gui
 
         private void BtnRemoveAll_OnClick(object sender, RoutedEventArgs e)
         {
-            if (_selectedFiles.Any())
+            if (_selectedFilesForDownload.Any())
             {
                 var result = MessageBox.Show("Er du sikker på at du vil slette alle", "Slett alle",
                     MessageBoxButton.YesNo);
 
                 if (result == MessageBoxResult.Yes)
                 {
-                    _selectedFiles = new List<DatasetFileViewModel>();
+                    _selectedFilesForDownload = new List<DownloadViewModel>();
                     foreach (var datasetfile in _selectedDatasetFiles) datasetfile.SelectedForDownload = false;
                     BindNewList();
                 }
