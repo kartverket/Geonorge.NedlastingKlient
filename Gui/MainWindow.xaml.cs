@@ -150,8 +150,22 @@ namespace Geonorge.MassivNedlasting.Gui
         {
             if (selectedFile != null)
             {
-                var downloadViewModel = new DownloadViewModel(_selectedDataset, selectedFile);
-                _selectedFilesForDownload.Add(downloadViewModel);
+                var datasetExists = false;
+                foreach (var dataset in _selectedFilesForDownload)
+                {
+                    if ((dataset.DatasetId == selectedFile.DatasetId) || (dataset.DatasetTitle == selectedFile.DatasetId))
+                    {
+                        dataset.Files.Add(selectedFile);
+                        datasetExists = true;
+                        break;
+                    }
+                }
+
+                if (!datasetExists)
+                {
+                    var downloadViewModel = new DownloadViewModel(_selectedDataset, selectedFile);
+                    _selectedFilesForDownload.Add(downloadViewModel);
+                }
                 BindNewList();
             }
             else
@@ -168,7 +182,6 @@ namespace Geonorge.MassivNedlasting.Gui
                 {
                     dataset.Files.RemoveAll(f => f.Id == selectedFile.Id);
                 }
-                //_selectedFilesForDownload.RemoveAll(f => f.Id == selectedFile.Id);
                 BindNewList();
             }
             else
@@ -191,13 +204,19 @@ namespace Geonorge.MassivNedlasting.Gui
             var selectedDatasetFile = (DatasetFileViewModel) btn.DataContext;
             UpdateSelectedDatasetFiles(selectedDatasetFile);
 
-            foreach (var dataset in _selectedFilesForDownload)
+            foreach (var download in _selectedFilesForDownload)
             {
-                if (dataset.DatasetId == selectedDatasetFile.DatasetId)
+                if (download.DatasetTitle == selectedDatasetFile.DatasetId)
                 {
-                    dataset.Files.Remove(selectedDatasetFile);
+                    download.Files.Remove(selectedDatasetFile);
+                    if (!download.Files.Any())
+                    {
+                        _selectedFilesForDownload.Remove(download);
+                    }
+                    break;
                 }
             }
+
             BindNewList();
         }
 

@@ -296,11 +296,11 @@ namespace Geonorge.MassivNedlasting
             for (int i = 0; i < items.Count; i++)
             {
                 // If not duplicate, add to result.
-                if (!set.Contains(items[i].DatasetId))
+                if (!set.Contains(items[i].DatasetTitle)) // TODO, bytte med id.
                 {
                     result.Add(items[i]);
                     // Record as a future duplicate.
-                    set.Add(items[i].DatasetId);
+                    set.Add(items[i].DatasetTitle); // TODO, bytte med id.
                 }
             }
             return result;
@@ -377,7 +377,8 @@ namespace Geonorge.MassivNedlasting
             var datasetFiles = GetSelectedDatasetFiles();
             foreach (var file in datasetFiles)
             {
-                if (file.DatasetId == dataset.DatasetId)
+                // TODO gamle dewnload filer har ikke dataset uuid.. 
+                if ((file.DatasetId == dataset.DatasetTitle) || (file.DatasetId == dataset.DatasetId))
                 {
                     dataset.Files.Add(file);
                 }

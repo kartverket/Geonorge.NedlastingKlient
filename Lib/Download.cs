@@ -41,6 +41,12 @@ namespace Geonorge.MassivNedlasting
             DatasetUrl = download.DatasetUrl;
             DatasetTitle = download.DatasetTitle;
             DatasetId = download.DatasetId;
+            if (DatasetTitle == null)
+            {
+                DatasetTitle = download.DatasetId;
+            }
+
+
             Subscribe = download.Subscribe;
             Files = GetFiles(download, projections, selectedForDownload);
         }
