@@ -19,6 +19,27 @@ namespace Geonorge.MassivNedlasting
         {
             Files = new List<DatasetFile>();
         }
+
+        public Download(DownloadViewModel downloadViewModel)
+        {
+            DatasetUrl = downloadViewModel.DatasetUrl;
+            DatasetTitle = downloadViewModel.DatasetTitle;
+            DatasetId = downloadViewModel.DatasetId;
+            Subscribe = downloadViewModel.Subscribe;
+            Files = GetFiles(downloadViewModel.Files);
+        }
+
+        private List<DatasetFile> GetFiles(List<DatasetFileViewModel> datasetFilesViewModel)
+        {
+            var datasetFiles = new List<DatasetFile>();
+            foreach (var datasetFileViewModel in datasetFilesViewModel)
+            {
+                DatasetFile datasetFile = new DatasetFile(datasetFileViewModel);
+                datasetFiles.Add(datasetFile);
+            }
+
+            return datasetFiles;
+        }
     }
 
   

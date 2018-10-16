@@ -21,7 +21,8 @@ namespace Geonorge.MassivNedlasting.Test
         [Fact]
         public void ShouldParseDatasetFileAtomFeed()
         {
-            List<DatasetFile> result = new AtomFeedParser().ParseDatasetFiles(File.ReadAllText("AdministrativeEnheterFylker_AtomFeedGEOJSON.fmw.xml"), NewDataset());
+            var dataset = NewDataset();
+            List<DatasetFile> result = new AtomFeedParser().ParseDatasetFiles(File.ReadAllText("AdministrativeEnheterFylker_AtomFeedGEOJSON.fmw.xml"), dataset.Title, dataset.Url);
             result.Count.Should().Be(10);
         }
 
