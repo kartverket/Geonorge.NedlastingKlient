@@ -13,7 +13,7 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         mc:Ignorable="d"
-        WindowStartupLocation="CenterScreen" WindowState="Maximized"    
+        WindowStartupLocation="CenterScreen" MinWidth="1250" WindowState="Maximized"    
         Title="Geonorge - massiv nedlasting" Icon="Content/geonorge.ico"
         Closing="ClosingWindow">
 
@@ -102,7 +102,7 @@
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
                     <TextBlock ToolTip="Filnavn" Margin="8 0 0 0" Width="350" VerticalAlignment="Center" Text="Navn"></TextBlock>
                     <TextBlock ToolTip="Projeksjon" Width="150" VerticalAlignment="Center" Text="Projeksjon"></TextBlock>
-                    <ToggleButton x:Name="BtnSelectAll" Width="20" Height="20"  Click="BtnSelectAll_OnClick"
+                    <ToggleButton x:Name="BtnSelectAll" Width="20" Height="20" Margin="0 10 10 10"  Click="BtnSelectAll_OnClick"
                                   Style="{StaticResource MaterialDesignActionToggleButton}"
                                   ToolTip="Velg/fjern alle">
                         <ToggleButton.Content>
@@ -117,6 +117,25 @@
                                 Height="18"
                                 Width="18"/>
                         </materialDesign:ToggleButtonAssist.OnContent>
+                    </ToggleButton>
+                    <ToggleButton Name ="ToggleSubscribeSelectedDatasetFiles"
+                        Click="BtnSubscribe_OnClick"
+                        Style="{StaticResource MaterialDesignSwitchToggleButton}"
+                        ToolTip="Abonner på datasett">
+                            
+
+                        <materialDesign:PackIcon
+                            Kind="Rss"
+                            Height="21"
+                            Width="21">
+                        </materialDesign:PackIcon>
+                        <materialDesign:ToggleButtonAssist.OnContent>
+                            <materialDesign:PackIcon
+                                Kind="Rss" 
+                                Height="21"
+                                Width="21"/>
+                        </materialDesign:ToggleButtonAssist.OnContent>
+
                     </ToggleButton>
                 </StackPanel>
             </Grid>

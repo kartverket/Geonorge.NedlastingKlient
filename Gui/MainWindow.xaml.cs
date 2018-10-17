@@ -22,7 +22,6 @@ namespace Geonorge.MassivNedlasting.Gui
         private List<Projections> _projections;
         private Dataset _selectedDataset;
         private List<DatasetFileViewModel> _selectedDatasetFiles;
-        //private List<DatasetFileViewModel> _selectedFiles;
         private List<DownloadViewModel> _selectedFilesForDownload;
         public bool LoggedIn;
 
@@ -32,6 +31,7 @@ namespace Geonorge.MassivNedlasting.Gui
 
             BtnSelectAll.Visibility = Visibility.Hidden;
             BtnSelectAll.IsChecked = false;
+            ToggleSubscribeSelectedDatasetFiles.Visibility = Visibility.Hidden;
 
             _datasetService = new DatasetService();
 
@@ -52,7 +52,7 @@ namespace Geonorge.MassivNedlasting.Gui
             {
                 _projections = _datasetService.ReadFromProjectionFile();
             }
-            var viewDatasets = (CollectionView) CollectionViewSource.GetDefaultView(LbDatasets.ItemsSource);
+            var viewDatasets = (CollectionView)CollectionViewSource.GetDefaultView(LbDatasets.ItemsSource);
             if (viewDatasets != null) viewDatasets.Filter = UserDatasetFilter;
 
             _selectedFilesForDownload = _datasetService.GetSelectedFilesToDownloadAsViewModel(_projections);
@@ -86,23 +86,39 @@ namespace Geonorge.MassivNedlasting.Gui
             {
                 if (listBoxItem.SelectedItems.Count > 0)
                 {
-                    var selectedDataset = (Dataset) listBoxItem.SelectedItems[0];
+                    var selectedDataset = (Dataset)listBoxItem.SelectedItems[0];
                     if (selectedDataset != null)
                     {
+                        var subscribeOnDataset = SubscribeOnSelectedDataset(selectedDataset.Title);
                         _selectedDataset = selectedDataset;
                         progressBar.IsIndeterminate = true;
 
                         LbSelectedDatasetFiles.ItemsSource = await Task.Run(() => GetFilesAsync(selectedDataset));
                         progressBar.IsIndeterminate = false;
                         var viewDatasetFiles =
-                            (CollectionView) CollectionViewSource.GetDefaultView(LbSelectedDatasetFiles.ItemsSource);
+                            (CollectionView)CollectionViewSource.GetDefaultView(LbSelectedDatasetFiles.ItemsSource);
                         if (viewDatasetFiles != null) viewDatasetFiles.Filter = UserDatasetFileFilter;
+                        ToggleSubscribeSelectedDatasetFiles.IsChecked = subscribeOnDataset;
                     }
                 }
 
                 BtnSelectAll.Visibility = Visibility.Visible;
+                ToggleSubscribeSelectedDatasetFiles.Visibility = Visibility.Visible;
                 BtnSelectAll.IsChecked = false;
             }
+        }
+
+        private bool SubscribeOnSelectedDataset(string selectedDatasetTitle)
+        {
+            foreach (var download in _selectedFilesForDownload)
+            {
+                if (download.DatasetTitle == selectedDatasetTitle)
+                {
+                    return download.Subscribe;
+                }
+            }
+
+            return false;
         }
 
         private List<DatasetFileViewModel> GetFilesAsync(Dataset selctedDataset)
@@ -122,7 +138,7 @@ namespace Geonorge.MassivNedlasting.Gui
                 }
             }
 
-            
+
 
             if (selectedDatasetFiles.Count == 0) MessageBox.Show("Ingen filer for dette datasettet");
             _selectedDatasetFiles = selectedDatasetFiles;
@@ -131,8 +147,8 @@ namespace Geonorge.MassivNedlasting.Gui
 
         private void AddRemove_OnChecked(object sender, RoutedEventArgs e)
         {
-            var btn = (ToggleButton) sender;
-            var datasetFile = (DatasetFileViewModel) btn.DataContext;
+            var btn = (ToggleButton)sender;
+            var datasetFile = (DatasetFileViewModel)btn.DataContext;
 
             if (btn.IsChecked == true)
             {
@@ -200,8 +216,8 @@ namespace Geonorge.MassivNedlasting.Gui
 
         private void RemoveFromDownloadList_Click(object sender, RoutedEventArgs e)
         {
-            var btn = (Button) sender;
-            var selectedDatasetFile = (DatasetFileViewModel) btn.DataContext;
+            var btn = (Button)sender;
+            var selectedDatasetFile = (DatasetFileViewModel)btn.DataContext;
             UpdateSelectedDatasetFiles(selectedDatasetFile);
 
             foreach (var download in _selectedFilesForDownload)
@@ -247,7 +263,6 @@ namespace Geonorge.MassivNedlasting.Gui
             if (LbSelectedDatasetFiles.Items.IsEmpty) return;
             if (BtnSelectAll.IsChecked == true)
             {
-
                 foreach (DatasetFileViewModel datasetFile in LbSelectedDatasetFiles.Items)
                     if (!datasetFile.SelectedForDownload)
                     {
@@ -340,6 +355,41 @@ namespace Geonorge.MassivNedlasting.Gui
         private void BtnSave_OnClick(object sender, RoutedEventArgs e)
         {
             SaveDownloadList();
+        }
+
+        private void BtnSubscribe_OnClick(object sender, RoutedEventArgs e)
+        {
+            var btn = (ToggleButton)sender;
+            if (btn == null) return;
+
+            var subscribe = btn.IsChecked.Value;
+
+            var existsInList = false;
+
+            foreach (var download in _selectedFilesForDownload)
+            {
+                if (download.DatasetTitle == _selectedDataset.Title)
+                {
+                    existsInList = true;
+                    download.Subscribe = subscribe;
+                    break;
+                }
+            }
+
+            if (!existsInList && subscribe)
+            {
+                var download = new DownloadViewModel(_selectedDataset, subscribe);
+                foreach (DatasetFileViewModel datasetFile in LbSelectedDatasetFiles.Items)
+                {
+                    download.Files.Add(datasetFile);
+                    if (!datasetFile.SelectedForDownload)
+                    {
+                        datasetFile.SelectedForDownload = true;
+                        AddToList(datasetFile);
+                    }
+                }
+
+            }
         }
     }
 }

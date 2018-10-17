@@ -81,7 +81,14 @@ namespace Geonorge.MassivNedlasting
             Files = AddSelectedFile(selectedFile);
         }
 
-
+        public DownloadViewModel(Dataset selectedDataset, bool subscribe)
+        {
+            DatasetUrl = selectedDataset.Url;
+            DatasetId = selectedDataset.Uuid;
+            DatasetTitle = selectedDataset.Title;
+            Files = new List<DatasetFileViewModel>();
+            Subscribe = subscribe;
+        }
 
 
         // ****************
