@@ -17,45 +17,31 @@ namespace Geonorge.Nedlaster
             StartDownloadAsync().Wait();
         }
 
-        private static void DeleteOldLogs()
-        {
-            string[] files = Directory.GetFiles(ApplicationService.GetLogAppDirectory().ToString());
-
-            foreach (string file in files)
-            {
-                FileInfo fi = new FileInfo(file);
-                if (fi.LastAccessTime < DateTime.Now.AddMonths(-1))
-                    fi.Delete();
-            }
-        }
-
         private static async Task StartDownloadAsync()
         {
             var datasetService = new DatasetService();
-            List<Download> datasetToDownload = datasetService.GetSelectedFilesToDownload();
-
-            List<Download> updatedDatasetToDownload = new List<Download>();
-            DownloadLog downloadLog = new DownloadLog();
-            downloadLog.TotalDatasetsToDownload = datasetToDownload.Count;
-            var appSettings = ApplicationService.GetAppSettings();
-
+            var updatedDatasetToDownload = new List<Download>();
+            var downloadLog = new DownloadLog();
             var downloader = new FileDownloader();
+            var appSettings = ApplicationService.GetAppSettings();
+            var datasetToDownload = datasetService.GetSelectedFilesToDownload();
+
+            downloadLog.TotalDatasetsToDownload = datasetToDownload.Count;
+
             foreach (var localDataset in datasetToDownload)
             {
                 var updatedDatasetFileToDownload = new List<DatasetFile>();
-                // Abonnere på dataset?
+
                 if (localDataset.Subscribe)
                 {
                     var datasetFilesFromFeed = datasetService.GetDatasetFiles(localDataset);
 
-                    localDataset.Files = RemoveFiles(datasetFilesFromFeed, localDataset.Files);
+                    localDataset.Files = RemoveFiles(datasetFilesFromFeed, localDataset.Files, appSettings);
                     localDataset.Files = AddFiles(datasetFilesFromFeed, localDataset.Files);
                 }
 
-                // Last ned alle valgte filer for datasettet. 
                 foreach (var datasetFile in localDataset.Files)
                 {
-                    
                     var fileLog = new DatasetFileLog(datasetFile);
 
                     try
@@ -68,17 +54,14 @@ namespace Geonorge.Nedlaster
                         bool newDatasetAvailable = NewDatasetAvailable(downloadHistory, datasetFromFeed, downloadDirectory);
 
                         if (newDatasetAvailable)
-                            Console.WriteLine("Updated version of dataset is available.");
-
-                        if (newDatasetAvailable)
                         {
+                            Console.WriteLine("Updated version of dataset is available.");
                             Console.WriteLine("Starting download process.");
                             downloader.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) =>
                             {
                                 Console.CursorLeft = 0;
                                 Console.Write($"{progressPercentage}% ({HumanReadableBytes(totalBytesDownloaded)}/{HumanReadableBytes(totalFileSize.Value)})                "); // add som extra whitespace to blank out previous updates
                             };
-
 
                             var downloadRequest = new DownloadRequest(datasetFile.Url, downloadDirectory, datasetFile.IsRestricted());
                             datasetFile.FilePath = await downloader.StartDownload(downloadRequest, appSettings);
@@ -132,7 +115,7 @@ namespace Geonorge.Nedlaster
             return localDatasetFiles;
         }
 
-        private static List<DatasetFile> RemoveFiles(List<DatasetFile> datasetFilesFromFeed, List<DatasetFile> datasetFiles)
+        private static List<DatasetFile> RemoveFiles(List<DatasetFile> datasetFilesFromFeed, List<DatasetFile> datasetFiles, AppSettings appSettings)
         {
             var exists = false;
             var removeFiles = new List<DatasetFile>();
@@ -151,6 +134,10 @@ namespace Geonorge.Nedlaster
             }
             foreach (var fileToRemove in removeFiles)
             {
+                DirectoryInfo downloadDirectory = GetDownloadDirectory(appSettings, fileToRemove);
+                string filePath = downloadDirectory + "\\" + fileToRemove.FilePath;
+
+                File.Delete(filePath);
                 datasetFiles.Remove(fileToRemove);
                 // TODO delete local file...
             }
@@ -171,10 +158,6 @@ namespace Geonorge.Nedlaster
             return String.Format("{0:0.##} {1}", len, sizes[order]);
         }
 
-        private static bool IsRunningAsBackgroundTask(string[] args)
-        {
-            return args != null && args.Any() && args.First() == "-background";
-        }
 
         private static DirectoryInfo GetDownloadDirectory(AppSettings appSettings, DatasetFile dataset)
         {
@@ -220,6 +203,18 @@ namespace Geonorge.Nedlaster
             var filePath = new FileInfo(Path.Combine(downloadDirectory.FullName, dataset.LocalFileName()));
 
             return filePath.Exists;
+        }
+
+        private static void DeleteOldLogs()
+        {
+            string[] files = Directory.GetFiles(ApplicationService.GetLogAppDirectory().ToString());
+
+            foreach (string file in files)
+            {
+                FileInfo fi = new FileInfo(file);
+                if (fi.LastAccessTime < DateTime.Now.AddMonths(-1))
+                    fi.Delete();
+            }
         }
 
     }

@@ -22,12 +22,10 @@ namespace Geonorge.MassivNedlasting
             return new AtomFeedParser().ParseDatasets(getFeedTask.Result);
         }
 
-        public List<DatasetFileViewModel> GetDatasetFiles(Dataset dataset, List<Projections> propotions)
+        public DatasetFile GetDatasetFile(DatasetFile originalDatasetFile)
         {
-            var getFeedTask = HttpClient.GetStringAsync(dataset.Url);
-            List<DatasetFile> datasetFiles = new AtomFeedParser().ParseDatasetFiles(getFeedTask.Result, dataset.Title, dataset.Url).OrderBy(d => d.Title).ToList();
-
-            return ConvertToViewModel(datasetFiles, propotions);
+            var getFeedTask = HttpClient.GetStringAsync(originalDatasetFile.DatasetUrl);
+            return new AtomFeedParser().ParseDatasetFile(getFeedTask.Result, originalDatasetFile);
         }
 
         public List<DatasetFile> GetDatasetFiles(Download download)
@@ -36,6 +34,14 @@ namespace Geonorge.MassivNedlasting
             List<DatasetFile> datasetFiles = new AtomFeedParser().ParseDatasetFiles(getFeedTask.Result, download.DatasetTitle, download.DatasetUrl).OrderBy(d => d.Title).ToList();
 
             return datasetFiles;
+        }
+
+        public List<DatasetFileViewModel> GetDatasetFiles(Dataset dataset, List<Projections> propotions)
+        {
+            var getFeedTask = HttpClient.GetStringAsync(dataset.Url);
+            List<DatasetFile> datasetFiles = new AtomFeedParser().ParseDatasetFiles(getFeedTask.Result, dataset.Title, dataset.Url).OrderBy(d => d.Title).ToList();
+
+            return ConvertToViewModel(datasetFiles, propotions);
         }
 
         public List<Projections> FetchProjections()
@@ -82,12 +88,6 @@ namespace Geonorge.MassivNedlasting
             }
         }
 
-        public DatasetFile GetDatasetFile(DatasetFile originalDatasetFile)
-        {
-            var getFeedTask = HttpClient.GetStringAsync(originalDatasetFile.DatasetUrl);
-            return new AtomFeedParser().ParseDatasetFile(getFeedTask.Result, originalDatasetFile);
-        }
-
 
         /// <summary>
         /// Writes the information about the selected files to the local download list. 
@@ -125,20 +125,6 @@ namespace Geonorge.MassivNedlasting
             {
                 Console.WriteLine(e);
                 throw;
-            }
-        }
-
-        private void Log(List<DatasetFileLog> datasetFileLogs, TextWriter w)
-        {
-            w.WriteLine("-------------------------------");
-            foreach (var item in datasetFileLogs.OrderBy(d => d.DatasetId))
-            {
-                w.Write(item.DatasetId + ";");
-                w.Write(item.Name.Replace(",",";") + ";" + item.Projection);
-                //if (item.HumanReadableSize != null) w.WriteLine(" - " + item.HumanReadableSize);
-                w.WriteLine(); 
-                if (item.Message != null) w.WriteLine(" Message: " + item.Message);
-                w.WriteLine();
             }
         }
 
@@ -195,7 +181,20 @@ namespace Geonorge.MassivNedlasting
             }
         }
 
-       
+
+        private void Log(List<DatasetFileLog> datasetFileLogs, TextWriter w)
+        {
+            w.WriteLine("-------------------------------");
+            foreach (var item in datasetFileLogs.OrderBy(d => d.DatasetId))
+            {
+                w.Write(item.DatasetId + ";");
+                w.Write(item.Name.Replace(",", ";") + ";" + item.Projection);
+                w.WriteLine();
+                if (item.Message != null) w.WriteLine(" Message: " + item.Message);
+                w.WriteLine();
+            }
+        }
+
         private List<Download> ConvertToModel(List<DownloadViewModel> selectedFilesForDownload)
         {
             var downloads = new List<Download>();
@@ -280,16 +279,13 @@ namespace Geonorge.MassivNedlasting
 
         public static List<Download> RemoveDuplicatesIterative(List<Download> items)
         {
-            // Use HashSet to maintain table of duplicates encountered.
             var result = new List<Download>();
             var set = new HashSet<string>();
             for (int i = 0; i < items.Count; i++)
             {
-                // If not duplicate, add to result.
                 if (!set.Contains(items[i].DatasetTitle)) // TODO, bytte med id.
                 {
                     result.Add(items[i]);
-                    // Record as a future duplicate.
                     set.Add(items[i].DatasetTitle); // TODO, bytte med id.
                 }
             }
@@ -321,8 +317,6 @@ namespace Geonorge.MassivNedlasting
 
             }
         }
-
-        
 
         public List<DownloadViewModel> GetSelectedFilesToDownloadAsViewModel(List<Projections> propotions)
         {
