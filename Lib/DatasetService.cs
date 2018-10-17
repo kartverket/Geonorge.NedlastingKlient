@@ -257,20 +257,21 @@ namespace Geonorge.MassivNedlasting
         }
 
         
-        private List<Download> ConvertToNewVersionOfDownloadFile(List<Download> selecedForDownload)
+        private List<Download> ConvertToNewVersionOfDownloadFile(List<Download> downloads)
         {
             var newListOfDatasetForDownload = new List<Download>();
-            foreach (var dataset in selecedForDownload)
+            var datasetFilesSelectedForDownload = GetSelectedDatasetFiles();
+            foreach (var download in downloads)
             {
-                if (!dataset.Files.Any())
+                if (!download.Files.Any())
                 {
-                    dataset.Files = ConvertToNewVersionOfDownloadFile(dataset);
-                    newListOfDatasetForDownload.Add(dataset);
+                    download.Files = ConvertToNewVersionOfDownloadFile(download, datasetFilesSelectedForDownload);
+                    newListOfDatasetForDownload.Add(download);
                 }
                 else
                 {
                     // if dataset file hase items, it is the new version of download file. 
-                    return selecedForDownload;
+                    return downloads;
                 }
             }
 
@@ -283,10 +284,10 @@ namespace Geonorge.MassivNedlasting
             var set = new HashSet<string>();
             for (int i = 0; i < items.Count; i++)
             {
-                if (!set.Contains(items[i].DatasetTitle)) // TODO, bytte med id.
+                if (!set.Contains(items[i].DatasetId)) // TODO, bytte med id.
                 {
                     result.Add(items[i]);
-                    set.Add(items[i].DatasetTitle); // TODO, bytte med id.
+                    set.Add(items[i].DatasetId); // TODO, bytte med id.
                 }
             }
             return result;
@@ -347,10 +348,9 @@ namespace Geonorge.MassivNedlasting
             return selectedFilesViewModel;
         }
 
-        private List<DatasetFile> ConvertToNewVersionOfDownloadFile(Download dataset)
+        private List<DatasetFile> ConvertToNewVersionOfDownloadFile(Download dataset, List<DatasetFile> datasetFilesSelectedForDownload)
         {
-            var datasetFiles = GetSelectedDatasetFiles();
-            foreach (var file in datasetFiles)
+            foreach (var file in datasetFilesSelectedForDownload)
             {
                 // TODO gamle dewnload filer har ikke dataset uuid.. 
                 if ((file.DatasetId == dataset.DatasetTitle) || (file.DatasetId == dataset.DatasetId))
