@@ -96,7 +96,7 @@ namespace Geonorge.MassivNedlasting
             return null;
         }
 
-        public List<DatasetFile> ParseDatasetFiles(string xml, Dataset dataset)
+        public List<DatasetFile> ParseDatasetFiles(string xml, string datasetTitle, string datasetUrl)
         {
             var datasetFiles = new List<DatasetFile>();
 
@@ -121,8 +121,8 @@ namespace Geonorge.MassivNedlasting
                 datasetFile.Organization = childrenNode.SelectSingleNode("a:author/a:name", nsmgr).InnerXml;
                 datasetFile.Projection = GetProjection(childrenNode.SelectNodes("a:category", nsmgr));
                 datasetFile.Restrictions = GetRestrictions(childrenNode.SelectNodes("a:category", nsmgr));
-                datasetFile.DatasetId = dataset.Title;
-                datasetFile.DatasetUrl = dataset.Url;
+                datasetFile.DatasetId = datasetTitle;
+                datasetFile.DatasetUrl = datasetUrl;
 
                 datasetFiles.Add(datasetFile);
             }

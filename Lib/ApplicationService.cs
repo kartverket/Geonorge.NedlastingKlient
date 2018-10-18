@@ -100,9 +100,30 @@ namespace Geonorge.MassivNedlasting
         {
             var appSettingsFileInfo = new FileInfo(GetAppSettingsFilePath());
             if (!appSettingsFileInfo.Exists)
+            {
                 WriteToAppSettingsFile(new AppSettings() { DownloadDirectory = GetDefaultDownloadDirectory() });
+                WriteToAppSettingsFile(new AppSettings() { LogDirectory = GetDefaultLogDirectory() });
+            }
 
-            return JsonConvert.DeserializeObject<AppSettings>(File.ReadAllText(GetAppSettingsFilePath()));
+            SetDefaultIfSettingsNotSet();
+
+            return JsonConvert.DeserializeObject<AppSettings>(System.IO.File.ReadAllText(GetAppSettingsFilePath())); ;
+        }
+
+        private static void SetDefaultIfSettingsNotSet()
+        {
+            AppSettings appSetting = JsonConvert.DeserializeObject<AppSettings>(System.IO.File.ReadAllText(GetAppSettingsFilePath()));
+
+            var logDirectorySettingsIsSet = appSetting.LogDirectory != null;
+            var downloadDirectorySettingsIsSet = appSetting.DownloadDirectory != null;
+
+            if (!logDirectorySettingsIsSet || !downloadDirectorySettingsIsSet)
+            {
+                var logDirectorySettings = appSetting.LogDirectory ?? GetDefaultLogDirectory();
+                var downloadDirectorySettings = appSetting.DownloadDirectory ?? GetDefaultDownloadDirectory();
+
+                WriteToAppSettingsFile(new AppSettings { DownloadDirectory = downloadDirectorySettings, LogDirectory = logDirectorySettings });
+            }
         }
 
         private static string GetDefaultDownloadDirectory()
@@ -116,6 +137,17 @@ namespace Geonorge.MassivNedlasting
             return downloadDirectory.FullName;
         }
 
+        private static string GetDefaultLogDirectory()
+        {
+            string myDocuments = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+            DirectoryInfo logDirectory = new DirectoryInfo(Path.Combine(myDocuments, "Log"));
+            if (!logDirectory.Exists)
+                logDirectory.Create();
+
+            return logDirectory.FullName;
+        }
+
         public static void WriteToAppSettingsFile(AppSettings appSettings)
         {
             var serializer = new JsonSerializer();
@@ -123,6 +155,22 @@ namespace Geonorge.MassivNedlasting
             serializer.NullValueHandling = NullValueHandling.Ignore;
 
             using (var outputFile = new StreamWriter(GetAppSettingsFilePath(), false))
+            {
+                using (JsonWriter writer = new JsonTextWriter(outputFile))
+                {
+                    serializer.Serialize(writer, appSettings);
+                    writer.Close();
+                }
+            }
+        }
+
+        public static void WriteNewSettingToAppSettingsFile(AppSettings appSettings)
+        {
+            var serializer = new JsonSerializer();
+            serializer.Converters.Add(new JavaScriptDateTimeConverter());
+            serializer.NullValueHandling = NullValueHandling.Ignore;
+
+            using (var outputFile = new StreamWriter(GetAppSettingsFilePath(), true))
             {
                 using (JsonWriter writer = new JsonTextWriter(outputFile))
                 {

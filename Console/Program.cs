@@ -17,90 +17,132 @@ namespace Geonorge.Nedlaster
             StartDownloadAsync().Wait();
         }
 
-        private static void DeleteOldLogs()
-        {
-            string[] files = Directory.GetFiles(ApplicationService.GetLogAppDirectory().ToString());
-
-            foreach (string file in files)
-            {
-                FileInfo fi = new FileInfo(file);
-                if (fi.LastAccessTime < DateTime.Now.AddMonths(-1))
-                    fi.Delete();
-            }
-        }
-
         private static async Task StartDownloadAsync()
         {
             var datasetService = new DatasetService();
-            List<DatasetFile> datasetToDownload = datasetService.GetSelectedFiles();
-
-            List<DatasetFile> updatedDatasetToDownload = new List<DatasetFile>();
-            DownloadLog downloadLog = new DownloadLog();
-            downloadLog.TotalDatasetsToDownload = datasetToDownload.Count;
-            var appSettings = ApplicationService.GetAppSettings();
-
+            var updatedDatasetToDownload = new List<Download>();
+            var downloadLog = new DownloadLog();
             var downloader = new FileDownloader();
+            var appSettings = ApplicationService.GetAppSettings();
+            var datasetToDownload = datasetService.GetSelectedFilesToDownload();
+
+            downloadLog.TotalDatasetsToDownload = datasetToDownload.Count;
+
             foreach (var localDataset in datasetToDownload)
             {
-                var fileLog = new DatasetFileLog(localDataset);
+                var updatedDatasetFileToDownload = new List<DatasetFile>();
 
-                try
+                if (localDataset.Subscribe)
                 {
-                    Console.WriteLine(localDataset.DatasetId + " - " + localDataset.Title);
+                    var datasetFilesFromFeed = datasetService.GetDatasetFiles(localDataset);
 
-                    DirectoryInfo downloadDirectory = GetDownloadDirectory(appSettings, localDataset);
+                    localDataset.Files = RemoveFiles(datasetFilesFromFeed, localDataset.Files, appSettings);
+                    localDataset.Files = AddFiles(datasetFilesFromFeed, localDataset.Files);
+                }
 
-                    DatasetFile datasetFromFeed = datasetService.GetDatasetFile(localDataset);
+                foreach (var datasetFile in localDataset.Files)
+                {
+                    var fileLog = new DatasetFileLog(datasetFile);
 
-                    DownloadHistory downloadHistory = datasetService.GetFileDownloaHistory(datasetFromFeed.Url);
-
-                    bool newDatasetAvailable = NewDatasetAvailable(downloadHistory, datasetFromFeed, downloadDirectory);
-                    if (newDatasetAvailable)
-                        Console.WriteLine("Updated version of dataset is available.");
-
-                    if (newDatasetAvailable)
+                    try
                     {
-                        Console.WriteLine("Starting download process.");
-                        downloader.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) =>
+                        Console.WriteLine(datasetFile.DatasetId + " - " + datasetFile.Title);
+
+                        DirectoryInfo downloadDirectory = GetDownloadDirectory(appSettings, datasetFile);
+                        DatasetFile datasetFromFeed = datasetService.GetDatasetFile(datasetFile);
+                        DownloadHistory downloadHistory = datasetService.GetFileDownloaHistory(datasetFile.Url);
+                        bool newDatasetAvailable = NewDatasetAvailable(downloadHistory, datasetFromFeed, downloadDirectory);
+
+                        if (newDatasetAvailable)
                         {
-                            Console.CursorLeft = 0;
-                            Console.Write($"{progressPercentage}% ({HumanReadableBytes(totalBytesDownloaded)}/{HumanReadableBytes(totalFileSize.Value)})                "); // add som extra whitespace to blank out previous updates
-                        };
+                            Console.WriteLine("Updated version of dataset is available.");
+                            Console.WriteLine("Starting download process.");
+                            downloader.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) =>
+                            {
+                                Console.CursorLeft = 0;
+                                Console.Write($"{progressPercentage}% ({HumanReadableBytes(totalBytesDownloaded)}/{HumanReadableBytes(totalFileSize.Value)})                "); // add som extra whitespace to blank out previous updates
+                            };
 
+                            var downloadRequest = new DownloadRequest(datasetFile.Url, downloadDirectory, datasetFile.IsRestricted());
+                            datasetFile.FilePath = await downloader.StartDownload(downloadRequest, appSettings);
 
-                        var downloadRequest = new DownloadRequest(localDataset.Url, downloadDirectory, localDataset.IsRestricted());
-                        localDataset.FilePath = await downloader.StartDownload(downloadRequest, appSettings);
+                            downloadLog.Updated.Add(fileLog);
 
-                        downloadLog.Updated.Add(fileLog);
+                            Console.WriteLine();
 
-                        Console.WriteLine();
+                            updatedDatasetFileToDownload.Add(datasetFile);
 
-                        updatedDatasetToDownload.Add(localDataset);
-
+                        }
+                        else
+                        {
+                            fileLog.Message = "Not necessary to download dataset.";
+                            downloadLog.NotUpdated.Add(fileLog);
+                            Console.WriteLine("Not necessary to download dataset.");
+                            datasetFile.FilePath = downloadHistory.FilePath;
+                            updatedDatasetFileToDownload.Add(datasetFile);
+                        }
                     }
-                    else
+
+                    catch (Exception e)
                     {
-                        fileLog.Message = "Not necessary to download dataset.";
-                        downloadLog.NotUpdated.Add(fileLog);
-                        Console.WriteLine("Not necessary to download dataset.");
-                        localDataset.FilePath = downloadHistory.FilePath;
-                        updatedDatasetToDownload.Add(localDataset);
+                        updatedDatasetFileToDownload.Add(datasetFile);
+                        fileLog.Message = "Error while downloading dataset: " + e.Message;
+                        downloadLog.Faild.Add(fileLog);
+                        Console.WriteLine("Error while downloading dataset: " + e.Message);
                     }
-                }
-                catch (Exception e)
-                {
-                    updatedDatasetToDownload.Add(localDataset);
-                    fileLog.Message = "Error while downloading dataset: " + e.Message;
-                    downloadLog.Faild.Add(fileLog);
-                    Console.WriteLine("Error while downloading dataset: " + e.Message);
-                }
 
-                Console.WriteLine("-------------");
+                    Console.WriteLine("-------------");
+                }
+                updatedDatasetToDownload.Add(localDataset);
             }
 
             datasetService.WriteToDownloadFile(updatedDatasetToDownload);
             datasetService.WriteToDownloadHistoryFile(updatedDatasetToDownload);
             datasetService.WriteToDownloadLogFile(downloadLog);
+        }
+
+        private static List<DatasetFile> AddFiles(List<DatasetFile> datasetFilesFromFeed, List<DatasetFile> localDatasetFiles)
+        {
+            var datasetFiles = localDatasetFiles.ToList();
+            foreach (var datasetFileFromFeed in datasetFilesFromFeed)
+            {
+                var datasetFile = datasetFiles.Find(d => datasetFileFromFeed.Title == d.Title && datasetFileFromFeed.DatasetId == d.DatasetId && datasetFileFromFeed.Projection == d.Projection);
+                if (datasetFile == null)
+                {
+                    localDatasetFiles.Add(datasetFileFromFeed);
+                }
+            }
+            return localDatasetFiles;
+        }
+
+        private static List<DatasetFile> RemoveFiles(List<DatasetFile> datasetFilesFromFeed, List<DatasetFile> datasetFiles, AppSettings appSettings)
+        {
+            var exists = false;
+            var removeFiles = new List<DatasetFile>();
+
+            foreach (var file in datasetFiles)
+            {
+                if (datasetFilesFromFeed.Any(fileFromFeed => fileFromFeed.Title == file.Title && fileFromFeed.DatasetId == file.DatasetId && fileFromFeed.Projection == file.Projection))
+                {
+                    exists = true;
+                }
+                if (!exists)
+                {
+                    removeFiles.Add(file);
+                }
+                exists = false;
+            }
+            foreach (var fileToRemove in removeFiles)
+            {
+                DirectoryInfo downloadDirectory = GetDownloadDirectory(appSettings, fileToRemove);
+                string filePath = downloadDirectory + "\\" + fileToRemove.FilePath;
+
+                File.Delete(filePath);
+                datasetFiles.Remove(fileToRemove);
+                // TODO delete local file...
+            }
+
+            return datasetFiles;
         }
 
         private static string HumanReadableBytes(long bytes)
@@ -116,10 +158,6 @@ namespace Geonorge.Nedlaster
             return String.Format("{0:0.##} {1}", len, sizes[order]);
         }
 
-        private static bool IsRunningAsBackgroundTask(string[] args)
-        {
-            return args != null && args.Any() && args.First() == "-background";
-        }
 
         private static DirectoryInfo GetDownloadDirectory(AppSettings appSettings, DatasetFile dataset)
         {
@@ -165,6 +203,18 @@ namespace Geonorge.Nedlaster
             var filePath = new FileInfo(Path.Combine(downloadDirectory.FullName, dataset.LocalFileName()));
 
             return filePath.Exists;
+        }
+
+        private static void DeleteOldLogs()
+        {
+            string[] files = Directory.GetFiles(ApplicationService.GetLogAppDirectory().ToString());
+
+            foreach (string file in files)
+            {
+                FileInfo fi = new FileInfo(file);
+                if (fi.LastAccessTime < DateTime.Now.AddMonths(-1))
+                    fi.Delete();
+            }
         }
 
     }
