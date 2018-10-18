@@ -32,6 +32,8 @@ namespace Geonorge.MassivNedlasting.Gui
             BtnSelectAll.Visibility = Visibility.Hidden;
             BtnSelectAll.IsChecked = false;
             ToggleSubscribeSelectedDatasetFiles.Visibility = Visibility.Hidden;
+            MenuSubscribe.Visibility = Visibility.Hidden;
+
 
             _datasetService = new DatasetService();
 
@@ -99,11 +101,13 @@ namespace Geonorge.MassivNedlasting.Gui
                             (CollectionView)CollectionViewSource.GetDefaultView(LbSelectedDatasetFiles.ItemsSource);
                         if (viewDatasetFiles != null) viewDatasetFiles.Filter = UserDatasetFileFilter;
                         ToggleSubscribeSelectedDatasetFiles.IsChecked = subscribeOnDataset;
+                        MenuSubscribe.Visibility = subscribeOnDataset ? Visibility.Visible : Visibility.Hidden;
                     }
                 }
 
                 BtnSelectAll.Visibility = Visibility.Visible;
                 ToggleSubscribeSelectedDatasetFiles.Visibility = Visibility.Visible;
+
                 BtnSelectAll.IsChecked = false;
             }
         }
@@ -182,6 +186,7 @@ namespace Geonorge.MassivNedlasting.Gui
                     var downloadViewModel = new DownloadViewModel(_selectedDataset, selectedFile);
                     _selectedFilesForDownload.Add(downloadViewModel);
                 }
+                
                 BindNewList();
             }
             else
@@ -372,6 +377,10 @@ namespace Geonorge.MassivNedlasting.Gui
                 {
                     existsInList = true;
                     download.Subscribe = subscribe;
+                    if (!download.Files.Any())
+                    {
+                        _selectedFilesForDownload.Remove(download);
+                    }
                     break;
                 }
             }
@@ -379,17 +388,12 @@ namespace Geonorge.MassivNedlasting.Gui
             if (!existsInList && subscribe)
             {
                 var download = new DownloadViewModel(_selectedDataset, subscribe);
-                foreach (DatasetFileViewModel datasetFile in LbSelectedDatasetFiles.Items)
-                {
-                    download.Files.Add(datasetFile);
-                    if (!datasetFile.SelectedForDownload)
-                    {
-                        datasetFile.SelectedForDownload = true;
-                        AddToList(datasetFile);
-                    }
-                }
-
+                _selectedFilesForDownload.Add(download);
             }
+
+            MenuSubscribe.Visibility = subscribe ? Visibility.Visible : Visibility.Hidden;
+
+            BindNewList();
         }
     }
 }
