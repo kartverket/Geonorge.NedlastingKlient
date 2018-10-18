@@ -121,9 +121,7 @@
                     <ToggleButton Name ="ToggleSubscribeSelectedDatasetFiles"
                         Click="BtnSubscribe_OnClick"
                         Style="{StaticResource MaterialDesignSwitchToggleButton}"
-                        ToolTip="Abonner på datasett">
-                            
-
+                        ToolTip="Abonner på datasett. &#013;Automatisk legger til nye filer og sletter nedlastede filer &#013;dersom de ikke lenger finnes i datasettet">
                         <materialDesign:PackIcon
                             Kind="Rss"
                             Height="21"
@@ -135,7 +133,6 @@
                                 Height="21"
                                 Width="21"/>
                         </materialDesign:ToggleButtonAssist.OnContent>
-
                     </ToggleButton>
                 </StackPanel>
             </Grid>
