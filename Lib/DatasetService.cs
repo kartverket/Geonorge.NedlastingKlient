@@ -263,7 +263,7 @@ namespace Geonorge.MassivNedlasting
             var datasetFilesSelectedForDownload = GetSelectedDatasetFiles();
             foreach (var download in downloads)
             {
-                if (!download.Files.Any())
+                if (!download.Files.Any() && !download.Subscribe)
                 {
                     download.Files = ConvertToNewVersionOfDownloadFile(download, datasetFilesSelectedForDownload);
                     newListOfDatasetForDownload.Add(download);

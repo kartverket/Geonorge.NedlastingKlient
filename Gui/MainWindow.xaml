@@ -121,7 +121,7 @@
                     <ToggleButton Name ="ToggleSubscribeSelectedDatasetFiles"
                         Click="BtnSubscribe_OnClick"
                         Style="{StaticResource MaterialDesignSwitchToggleButton}"
-                        ToolTip="Abonner på datasett. &#013;Automatisk legger til nye filer og sletter nedlastede filer &#013;dersom de ikke lenger finnes i datasettet">
+                        ToolTip="Abonner på datasett">
                         <materialDesign:PackIcon
                             Kind="Rss"
                             Height="21"
@@ -134,6 +134,13 @@
                                 Width="21"/>
                         </materialDesign:ToggleButtonAssist.OnContent>
                     </ToggleButton>
+                    <materialDesign:PopupBox Name="MenuSubscribe" Padding="20 20 20 20"  MaxWidth="100" DockPanel.Dock="Right" PlacementMode="BottomAndAlignRightEdges" StaysOpen="True">
+                        <StackPanel>
+                            <Label>Automatisk legge til/slette datasett filer</Label>
+                            <CheckBox Name="BtnAutoDeleteFiles" Style="{StaticResource MaterialDesignCheckBox}" Click="BtnAutoDeleteFiles_OnClick">Slette utgåtte filer</CheckBox>
+                            <CheckBox Name="BtnAutoAddFiles" Style="{StaticResource MaterialDesignCheckBox}" Click="BtnAutoAddFiles_OnClick">Legge til nye filer</CheckBox>
+                        </StackPanel>
+                    </materialDesign:PopupBox>
                 </StackPanel>
             </Grid>
 
@@ -248,7 +255,9 @@
             <TreeView Name ="LbSelectedFilesForDownload" ItemsSource="{Binding Downloads}" Margin="10" Height="300">
                 <TreeView.ItemTemplate>
                     <HierarchicalDataTemplate ItemsSource="{Binding Files}" DataType="{x:Type local:DatasetFileViewModel}">
-                        <TextBlock Text="{Binding DatasetTitle}"></TextBlock>
+                        <TextBlock Text="{Binding DatasetTitle}">
+                            <materialDesign:PackIcon Margin="10 0 0 -2" ToolTip="Abonnerer på datasettet" Kind="Rss" Visibility="{Binding Subscribe, Converter={StaticResource BoolToVisConverter}}"></materialDesign:PackIcon>
+                        </TextBlock>
                         <HierarchicalDataTemplate.ItemTemplate>
                             <DataTemplate>
                                 <Grid>

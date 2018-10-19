@@ -10,6 +10,8 @@ namespace Geonorge.MassivNedlasting
         public string DatasetTitle { get; set; }
         public string DatasetId { get; set; }
         public bool Subscribe  { get; set; }
+        public bool AutoDeleteFiles { get; set; }
+        public bool AutoAddFiles { get; set; }
         public List<DatasetFile> Files { get; set; }
 
         public Download()
@@ -23,6 +25,8 @@ namespace Geonorge.MassivNedlasting
             DatasetTitle = downloadViewModel.DatasetTitle;
             DatasetId = downloadViewModel.DatasetId;
             Subscribe = downloadViewModel.Subscribe;
+            AutoAddFiles = downloadViewModel.AutoAddFiles;
+            AutoDeleteFiles = downloadViewModel.AutoDeleteFiles;
             Files = GetFiles(downloadViewModel.Files);
         }
 
@@ -47,6 +51,8 @@ namespace Geonorge.MassivNedlasting
         public string DatasetId { get; set; }
         public string DatasetTitle { get; set; }
         public bool Subscribe { get; set; }
+        public bool AutoDeleteFiles { get; set; }
+        public bool AutoAddFiles { get; set; }
         public List<DatasetFileViewModel> Files { get; set; }
 
         public DownloadViewModel()
@@ -66,6 +72,8 @@ namespace Geonorge.MassivNedlasting
 
 
             Subscribe = download.Subscribe;
+            AutoDeleteFiles = download.AutoDeleteFiles;
+            AutoAddFiles = download.AutoAddFiles;
             Files = GetFiles(download, projections, selectedForDownload);
         }
 
@@ -75,6 +83,8 @@ namespace Geonorge.MassivNedlasting
             DatasetId = selectedDataset.Uuid;
             DatasetTitle = selectedDataset.Title;
             Subscribe = false; // TODO
+            AutoDeleteFiles = false; // TODO
+            AutoAddFiles = false; // TODO
             Files = AddSelectedFile(selectedFile);
         }
 
@@ -85,6 +95,11 @@ namespace Geonorge.MassivNedlasting
             DatasetTitle = selectedDataset.Title;
             Files = new List<DatasetFileViewModel>();
             Subscribe = subscribe;
+            if (subscribe)
+            {
+                AutoAddFiles = true;
+                AutoDeleteFiles = true;
+            }
         }
 
 

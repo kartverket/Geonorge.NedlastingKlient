@@ -36,8 +36,15 @@ namespace Geonorge.Nedlaster
                 {
                     var datasetFilesFromFeed = datasetService.GetDatasetFiles(localDataset);
 
-                    localDataset.Files = RemoveFiles(datasetFilesFromFeed, localDataset.Files, appSettings);
-                    localDataset.Files = AddFiles(datasetFilesFromFeed, localDataset.Files);
+                    if (localDataset.AutoDeleteFiles)
+                    {
+                        localDataset.Files = RemoveFiles(datasetFilesFromFeed, localDataset.Files, appSettings);
+                    }
+
+                    if (localDataset.AutoAddFiles)
+                    {
+                        localDataset.Files = AddFiles(datasetFilesFromFeed, localDataset.Files);
+                    }
                 }
 
                 foreach (var datasetFile in localDataset.Files)
