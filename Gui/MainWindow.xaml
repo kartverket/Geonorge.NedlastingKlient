@@ -137,8 +137,8 @@
                     <materialDesign:PopupBox Name="MenuSubscribe" Padding="20 20 20 20"  MaxWidth="100" DockPanel.Dock="Right" PlacementMode="BottomAndAlignRightEdges" StaysOpen="True">
                         <StackPanel>
                             <Label>Automatisk legge til/slette datasett filer</Label>
-                            <CheckBox Style="{StaticResource MaterialDesignCheckBox}">Slette utgåtte filer</CheckBox>
-                            <CheckBox Style="{StaticResource MaterialDesignCheckBox}">Legge til nye filer</CheckBox>
+                            <CheckBox Name="BtnAutoDeleteFiles" Style="{StaticResource MaterialDesignCheckBox}" Click="BtnAutoDeleteFiles_OnClick">Slette utgåtte filer</CheckBox>
+                            <CheckBox Name="BtnAutoAddFiles" Style="{StaticResource MaterialDesignCheckBox}" Click="BtnAutoAddFiles_OnClick">Legge til nye filer</CheckBox>
                         </StackPanel>
                     </materialDesign:PopupBox>
                 </StackPanel>
