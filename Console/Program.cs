@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Geonorge.MassivNedlasting;
 
@@ -25,6 +26,7 @@ namespace Geonorge.Nedlaster
             var downloader = new FileDownloader();
             var appSettings = ApplicationService.GetAppSettings();
             var datasetToDownload = datasetService.GetSelectedFilesToDownload();
+            var downloadUsage = appSettings.DownloadUsage;
 
             downloadLog.TotalDatasetsToDownload = datasetToDownload.Count;
 
@@ -77,6 +79,7 @@ namespace Geonorge.Nedlaster
 
                             Console.WriteLine();
 
+                            downloadUsage?.Entries.Add(new DownloadUsageEntries(datasetFile));
                             updatedDatasetFileToDownload.Add(datasetFile);
 
                         }
@@ -103,10 +106,13 @@ namespace Geonorge.Nedlaster
                 updatedDatasetToDownload.Add(localDataset);
             }
 
+            datasetService.SendDownloadUsage(downloadUsage);
             datasetService.WriteToDownloadFile(updatedDatasetToDownload);
             datasetService.WriteToDownloadHistoryFile(updatedDatasetToDownload);
             datasetService.WriteToDownloadLogFile(downloadLog);
         }
+
+        
 
         private static List<DatasetFile> AddFiles(List<DatasetFile> datasetFilesFromFeed, List<DatasetFile> localDatasetFiles)
         {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Geonorge.MassivNedlasting.Gui;
 using Geonorge.Nedlaster;
@@ -105,9 +106,9 @@ namespace Geonorge.MassivNedlasting
                     w.WriteLine("-------------------------------");
                     w.WriteLine();
 
-                    
+
                     w.WriteLine("UPDATED: " + downloadLog.Updated.Count());
-                    
+
                     Log(downloadLog.Updated, w);
 
                     w.WriteLine();
@@ -152,7 +153,7 @@ namespace Geonorge.MassivNedlasting
             WriteToDownloadFile(selectedFilesToDownload);
         }
 
-        
+
 
         /// <summary>
         /// Writes the information about the selected files to the local download list. 
@@ -256,7 +257,7 @@ namespace Geonorge.MassivNedlasting
             }
         }
 
-        
+
         private List<Download> ConvertToNewVersionOfDownloadFile(List<Download> downloads)
         {
             var newListOfDatasetForDownload = new List<Download>();
@@ -381,6 +382,19 @@ namespace Geonorge.MassivNedlasting
         {
             var projection = projections.FirstOrDefault(p => p.Epsg == selectedFile.Projection);
             return projection != null ? projection.Name : selectedFile.Projection;
+        }
+
+        public void SendDownloadUsage(DownloadUsage downloadUsage)
+        {
+            if (downloadUsage != null)
+            {
+                var json = JsonConvert.SerializeObject(downloadUsage);
+                var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+                HttpClient hc = new HttpClient();
+                hc.DefaultRequestHeaders.Add("Authorization", "Bearer tu7Szvs2Lej8yVXtiu3IVogke3TaN5GmSmNmLuSZDTvYtSYzrSG9VUgW9LE4XHiRfrbZmEqN42WwP7uLzfUAhSZnzR3ZBiF9JvI7VHwEyz7vaUdaa5BAxpDUqx2QDUu8"); // TODO test
+                var respons = hc.PostAsync("https://nedlasting.dev.geonorge.no/api/internal/download-usage", stringContent);
+            }
         }
     }
 }
