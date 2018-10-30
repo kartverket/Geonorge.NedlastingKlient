@@ -62,7 +62,11 @@ namespace Geonorge.MassivNedlasting
             if (!selectedPurposes.Any()) return;
             foreach (var selectedPurpose in selectedPurposes)
             {
-                IsSelected = selectedPurpose == item;
+                if (selectedPurpose == item)
+                {
+                    IsSelected = true;
+                    break;
+                }
             }
         }
 
