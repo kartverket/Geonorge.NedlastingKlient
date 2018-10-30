@@ -67,6 +67,51 @@ namespace Geonorge.MassivNedlasting
             return projections;
         }
 
+        public List<string> FetchDownloadUsageGroups()
+        {
+            List<string> groups = new List<string>();
+
+            var url = "https://register.geonorge.no/api/metadata-kodelister/brukergrupper.json";
+            var c = new System.Net.WebClient { Encoding = Encoding.UTF8 };
+
+            var json = c.DownloadString(url);
+
+            dynamic data = JObject.Parse(json);
+            if (data != null)
+            {
+                var result = data["containeditems"]; ;
+                foreach (var item in result)
+                {
+                    groups.Add(item.label.ToString());
+                }
+                Task.Run(() => WriteToUsageGroupFile(groups));
+            }
+            return groups;
+        }
+
+        public List<string> FetchDownloadUsagePurposes()
+        {
+            List<string> purposes = new List<string>();
+
+            var url = "https://register.geonorge.no/api/metadata-kodelister/formal.json";
+            var c = new System.Net.WebClient { Encoding = Encoding.UTF8 };
+
+            var json = c.DownloadString(url);
+
+            dynamic data = JObject.Parse(json);
+            if (data != null)
+            {
+                var result = data["containeditems"]; ;
+                foreach (var item in result)
+                {
+                    purposes.Add(item.label.ToString());
+                }
+                Task.Run(() => WriteToUsageGroupFile(purposes));
+            }
+            return purposes;
+        }
+
+
         /// <summary>
         /// Returns a list of projections. 
         /// </summary>
@@ -86,6 +131,50 @@ namespace Geonorge.MassivNedlasting
             catch (Exception)
             {
                 return new List<Projections>();
+            }
+        }
+
+        /// <summary>
+        /// Returns a list of projections. 
+        /// </summary>
+        /// <returns></returns>
+        public List<string> ReadFromDownloadUsageGroup()
+        {
+            try
+            {
+                using (var r = new StreamReader(ApplicationService.GetUserGroupsFilePath()))
+                {
+                    var json = r.ReadToEnd();
+                    var userGroups = JsonConvert.DeserializeObject<List<string>>(json);
+                    r.Close();
+                    return userGroups;
+                }
+            }
+            catch (Exception)
+            {
+                return new List<string>();
+            }
+        }
+
+        /// <summary>
+        /// Returns a list of projections. 
+        /// </summary>
+        /// <returns></returns>
+        public List<string> ReadFromDownloadUsagePurposes()
+        {
+            try
+            {
+                using (var r = new StreamReader(ApplicationService.GetPurposesFilePath()))
+                {
+                    var json = r.ReadToEnd();
+                    var upurposes = JsonConvert.DeserializeObject<List<string>>(json);
+                    r.Close();
+                    return upurposes;
+                }
+            }
+            catch (Exception)
+            {
+                return new List<string>();
             }
         }
 
@@ -374,6 +463,21 @@ namespace Geonorge.MassivNedlasting
             using (JsonWriter writer = new JsonTextWriter(outputFile))
             {
                 serializer.Serialize(writer, projections);
+                writer.Close();
+            }
+        }
+
+        public void WriteToUsageGroupFile(List<string> userGroups)
+        {
+            var serializer = new JsonSerializer();
+
+            serializer.Converters.Add(new JavaScriptDateTimeConverter());
+            serializer.NullValueHandling = NullValueHandling.Ignore;
+
+            using (var outputFile = new StreamWriter(ApplicationService.GetUserGroupsFilePath(), false))
+            using (JsonWriter writer = new JsonTextWriter(outputFile))
+            {
+                serializer.Serialize(writer, userGroups);
                 writer.Close();
             }
         }
