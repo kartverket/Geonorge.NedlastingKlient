@@ -77,18 +77,33 @@ namespace Geonorge.MassivNedlasting.Gui
         private void BtnDialogOk_Click(object sender, RoutedEventArgs e)
         {
             _appSettings.DownloadUsage = new DownloadUsage();
+            bool purposeIsSelected = false;
+            bool groupIsSelected = false;
+
             foreach (var purpose in _downloadUsagePurposesViewModel)
             {
                 if (purpose.IsSelected)
                 {
+                    purposeIsSelected = true;
                     _appSettings.DownloadUsage.Purpose.Add(purpose.Purpose);
                 }
             }
 
-            _appSettings.DownloadUsage.Group = cmbDownloadUsageGroups.SelectedItem.ToString();
-            ApplicationService.WriteToAppSettingsFile(_appSettings);
+            if (cmbDownloadUsageGroups.SelectedItem != null)
+            {
+                groupIsSelected = true;
+                _appSettings.DownloadUsage.Group = cmbDownloadUsageGroups.SelectedItem.ToString();
+            }
 
-            this.Close();
+            if (purposeIsSelected && groupIsSelected)
+            {
+                ApplicationService.WriteToAppSettingsFile(_appSettings);
+                Close();
+            }
+            else
+            {
+                MessageBox.Show("Du må angi brukergruppe og formål.");
+            }
         }
     }
 
