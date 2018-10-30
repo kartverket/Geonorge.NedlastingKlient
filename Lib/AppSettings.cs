@@ -5,6 +5,8 @@
     /// </summary>
     public class AppSettings
     {
+        public const string StatisticsToken = "";
+
         /// <summary>
         /// Where the downloaded files will be written.
         /// </summary>
