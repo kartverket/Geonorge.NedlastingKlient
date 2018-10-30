@@ -4,39 +4,47 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:gui="clr-namespace:Geonorge.MassivNedlasting.Gui"
         Title="Innstillinger" SizeToContent="WidthAndHeight" Icon="Content/geonorge.ico" WindowStartupLocation="CenterScreen">
-    <Grid Margin="15">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+    <StackPanel Margin="15">
 
+        <TextBlock Name="lblUsername" Style="{StaticResource MaterialDesignBody2TextBlock}">Brukernavn:</TextBlock>
+        <TextBox Name="txtUsername" MinWidth="250"></TextBox>
 
-        <TextBlock Name="lblUsername" Grid.Row="0">Brukernavn:</TextBlock>
-        <TextBox Name="txtUsername" Grid.Row="1" MinWidth="250"></TextBox>
+        <TextBlock Margin="0 20 0 0" Name="lblPassword" Style="{StaticResource MaterialDesignBody2TextBlock}">Passord:</TextBlock>
+        <PasswordBox Name="txtPassword" MinWidth="250"></PasswordBox>
 
-        <TextBlock Margin="0 10 0 0" Name="lblPassword" Grid.Row="2" >Passord:</TextBlock>
-        <PasswordBox Name="txtPassword" Grid.Row="3" MinWidth="250"></PasswordBox>
-
-        <TextBlock Margin="0 10 0 0"  Grid.Row="4" Name="lblDownloadDirectory">Nedlastingsmappe:</TextBlock>
-        <StackPanel Grid.Row="5" Visibility="{Binding SelectionVisibility}">
+        <TextBlock Margin="0 20 0 0" Name="lblDownloadDirectory" Style="{StaticResource MaterialDesignBody2TextBlock}">Nedlastingsmappe:</TextBlock>
+        <StackPanel Visibility="{Binding SelectionVisibility}">
             <gui:FolderPickerDialog x:Name="FolderPickerDialogBox" DirectoryPath="{Binding DownloadDirectory, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
         </StackPanel>
 
-        <TextBlock Margin="0 10 0 0"  Grid.Row="6" Name="lblLogDirectory">Loggfiler:</TextBlock>
-        <StackPanel Grid.Row="7" Visibility="{Binding SelectionVisibility2}">
+        <TextBlock Margin="0 20 0 0" Name="lblLogDirectory" Style="{StaticResource MaterialDesignBody2TextBlock}">Loggfiler:</TextBlock>
+        <StackPanel Visibility="{Binding SelectionVisibility2}">
             <gui:FolderPickerDialog x:Name="FolderPickerDialogBoxLog" DirectoryPath="{Binding LogDirectory, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
         </StackPanel>
 
-        <WrapPanel Grid.Row="8" HorizontalAlignment="Right" Margin="0,15,0,0">
+        <StackPanel Name="DownloadeUsage">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Margin="0 20 0 0">Nedlasting brukergruppe og formål</TextBlock>
+                <Button  Style="{StaticResource MaterialDesignFlatButton}" Click="ButtonBase_OnClick"  VerticalAlignment="Bottom" Margin="20 12 0 0">Edit</Button>
+            </StackPanel>
+
+            <StackPanel>
+                <TextBlock FontWeight="Bold" Margin="0 10 0 0">Brukergruppe</TextBlock>
+                <TextBlock Name="DownloadUsageGroup"/>
+            </StackPanel>
+
+            <StackPanel>
+                <TextBlock FontWeight="Bold" Margin="0 10 0 0">Formål</TextBlock>
+                <ItemsControl Name="DownloadUsagePurpose" />
+            </StackPanel>
+        </StackPanel>
+
+        
+
+
+        <WrapPanel HorizontalAlignment="Right" Margin="0,15,0,0">
             <Button IsDefault="True" Name="btnDialogOk" Click="BtnDialogOk_Click" MinWidth="60" Margin="0,0,10,0">_Ok</Button>
             <Button IsCancel="True" MinWidth="60">_Cancel</Button>
         </WrapPanel>
-    </Grid>
+    </StackPanel>
 </Window>
