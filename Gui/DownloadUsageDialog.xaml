@@ -8,7 +8,7 @@
         <TextBlock>TODO - Informasjon om hvorfor det skal registreres brukergruppe og formål...</TextBlock>
 
         <TextBlock FontWeight="Bold" Margin="0 10 0 0">Brukergruppe:</TextBlock>
-        <ComboBox Name="cmbDownloadUsageGroups" Margin="0 10 0 0"/>
+        <ComboBox  materialDesign:HintAssist.Hint="Brukergruppe" Name="cmbDownloadUsageGroups" Margin="0 10 0 0"/>
         <TextBlock FontWeight="Bold"  Margin="0 10 0 0">Formål:</TextBlock>
         <!--<ListBox Name="lbPurposes" Margin="0 10 0 0" SelectionMode="Multiple" />-->
         <!-- piece together your own items control to create some nice stuff that will make everyone think you are cool. and rightly so, because you are cool.  you might even be a hipster for all I know -->
