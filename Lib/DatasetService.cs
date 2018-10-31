@@ -49,7 +49,7 @@ namespace Geonorge.MassivNedlasting
         {
             List<Projections> projections = new List<Projections>();
 
-            var url = "https://register.geonorge.no/api/register/epsg-koder.json";
+            var url = "https://register.geonorge.no/api/epsg-koder.json";
             var c = new System.Net.WebClient { Encoding = System.Text.Encoding.UTF8 };
 
             var json = c.DownloadString(url);
@@ -106,7 +106,7 @@ namespace Geonorge.MassivNedlasting
                 {
                     purposes.Add(item.label.ToString());
                 }
-                Task.Run(() => WriteToUsageGroupFile(purposes));
+                Task.Run(() => WriteToUsagePurposeFile(purposes));
             }
             return purposes;
         }
@@ -123,12 +123,12 @@ namespace Geonorge.MassivNedlasting
                 using (var r = new StreamReader(ApplicationService.GetProjectionFilePath()))
                 {
                     var json = r.ReadToEnd();
-                    var selecedFiles = JsonConvert.DeserializeObject<List<Projections>>(json);
+                    var propotions = JsonConvert.DeserializeObject<List<Projections>>(json);
                     r.Close();
-                    return selecedFiles;
+                    return propotions;
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return new List<Projections>();
             }
@@ -315,7 +315,6 @@ namespace Geonorge.MassivNedlasting
             }
             catch (Exception)
             {
-                // TODO error handling
                 return new List<DatasetFile>();
             }
         }
@@ -368,7 +367,7 @@ namespace Geonorge.MassivNedlasting
             return newListOfDatasetForDownload;
         }
 
-        public static List<Download> RemoveDuplicatesIterative(List<Download> items)
+        public List<Download> RemoveDuplicatesIterative(List<Download> items)
         {
             var result = new List<Download>();
             var set = new HashSet<string>();
@@ -482,6 +481,23 @@ namespace Geonorge.MassivNedlasting
             }
         }
 
+        public void WriteToUsagePurposeFile(List<string> userPurposes)
+        {
+            var serializer = new JsonSerializer();
+
+            serializer.Converters.Add(new JavaScriptDateTimeConverter());
+            serializer.NullValueHandling = NullValueHandling.Ignore;
+
+            using (var outputFile = new StreamWriter(ApplicationService.GetPurposesFilePath(), false))
+            using (JsonWriter writer = new JsonTextWriter(outputFile))
+            {
+                serializer.Serialize(writer, userPurposes);
+                writer.Close();
+            }
+        }
+
+
+        
         private static string GetEpsgName(List<Projections> projections, DatasetFile selectedFile)
         {
             var projection = projections.FirstOrDefault(p => p.Epsg == selectedFile.Projection);
