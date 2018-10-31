@@ -511,8 +511,10 @@ namespace Geonorge.MassivNedlasting
                 var json = JsonConvert.SerializeObject(downloadUsage);
                 var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
 
+                string token = !string.IsNullOrWhiteSpace(AppSettings.StatisticsToken) ? AppSettings.StatisticsToken : AppSettings.TestStatisticsToken;
+
                 HttpClient hc = new HttpClient();
-                hc.DefaultRequestHeaders.Add("Authorization", "Bearer tu7Szvs2Lej8yVXtiu3IVogke3TaN5GmSmNmLuSZDTvYtSYzrSG9VUgW9LE4XHiRfrbZmEqN42WwP7uLzfUAhSZnzR3ZBiF9JvI7VHwEyz7vaUdaa5BAxpDUqx2QDUu8"); // TODO test
+                hc.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
                 var respons = hc.PostAsync("https://nedlasting.dev.geonorge.no/api/internal/download-usage", stringContent);
             }
         }
