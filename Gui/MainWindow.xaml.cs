@@ -34,7 +34,6 @@ namespace Geonorge.MassivNedlasting.Gui
             ToggleSubscribeSelectedDatasetFiles.Visibility = Visibility.Hidden;
             MenuSubscribe.Visibility = Visibility.Hidden;
 
-
             _datasetService = new DatasetService();
 
             try
@@ -59,8 +58,19 @@ namespace Geonorge.MassivNedlasting.Gui
 
             _selectedFilesForDownload = _datasetService.GetSelectedFilesToDownloadAsViewModel(_projections);
             LbSelectedFilesForDownload.ItemsSource = _selectedFilesForDownload;
-
             _selectedDatasetFiles = new List<DatasetFileViewModel>();
+
+            SetDownloadUsage();
+        }
+
+        private void SetDownloadUsage()
+        {
+            var appSettings = ApplicationService.GetAppSettings();
+            if (!appSettings.DownloadUsageIsSet())
+            {
+                var downloadUsageDialog = new DownloadUsageDialog();
+                downloadUsageDialog.ShowDialog();
+            }
         }
 
         private bool UserDatasetFilter(object item)
@@ -192,7 +202,7 @@ namespace Geonorge.MassivNedlasting.Gui
                     var downloadViewModel = new DownloadViewModel(_selectedDataset, selectedFile);
                     _selectedFilesForDownload.Add(downloadViewModel);
                 }
-                
+
                 BindNewList();
             }
             else

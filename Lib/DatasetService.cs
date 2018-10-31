@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Geonorge.MassivNedlasting.Gui;
 using Geonorge.Nedlaster;
@@ -48,7 +49,7 @@ namespace Geonorge.MassivNedlasting
         {
             List<Projections> projections = new List<Projections>();
 
-            var url = "https://register.geonorge.no/api/register/epsg-koder.json";
+            var url = "https://register.geonorge.no/api/epsg-koder.json";
             var c = new System.Net.WebClient { Encoding = System.Text.Encoding.UTF8 };
 
             var json = c.DownloadString(url);
@@ -66,6 +67,51 @@ namespace Geonorge.MassivNedlasting
             return projections;
         }
 
+        public List<string> FetchDownloadUsageGroups()
+        {
+            List<string> groups = new List<string>();
+
+            var url = "https://register.geonorge.no/api/metadata-kodelister/brukergrupper.json";
+            var c = new System.Net.WebClient { Encoding = Encoding.UTF8 };
+
+            var json = c.DownloadString(url);
+
+            dynamic data = JObject.Parse(json);
+            if (data != null)
+            {
+                var result = data["containeditems"]; ;
+                foreach (var item in result)
+                {
+                    groups.Add(item.label.ToString());
+                }
+                Task.Run(() => WriteToUsageGroupFile(groups));
+            }
+            return groups;
+        }
+
+        public List<string> FetchDownloadUsagePurposes()
+        {
+            List<string> purposes = new List<string>();
+
+            var url = "https://register.geonorge.no/api/metadata-kodelister/formal.json";
+            var c = new System.Net.WebClient { Encoding = Encoding.UTF8 };
+
+            var json = c.DownloadString(url);
+
+            dynamic data = JObject.Parse(json);
+            if (data != null)
+            {
+                var result = data["containeditems"]; ;
+                foreach (var item in result)
+                {
+                    purposes.Add(item.label.ToString());
+                }
+                Task.Run(() => WriteToUsagePurposeFile(purposes));
+            }
+            return purposes;
+        }
+
+
         /// <summary>
         /// Returns a list of projections. 
         /// </summary>
@@ -77,14 +123,58 @@ namespace Geonorge.MassivNedlasting
                 using (var r = new StreamReader(ApplicationService.GetProjectionFilePath()))
                 {
                     var json = r.ReadToEnd();
-                    var selecedFiles = JsonConvert.DeserializeObject<List<Projections>>(json);
+                    var propotions = JsonConvert.DeserializeObject<List<Projections>>(json);
                     r.Close();
-                    return selecedFiles;
+                    return propotions;
+                }
+            }
+            catch (Exception e)
+            {
+                return new List<Projections>();
+            }
+        }
+
+        /// <summary>
+        /// Returns a list of projections. 
+        /// </summary>
+        /// <returns></returns>
+        public List<string> ReadFromDownloadUsageGroup()
+        {
+            try
+            {
+                using (var r = new StreamReader(ApplicationService.GetUserGroupsFilePath()))
+                {
+                    var json = r.ReadToEnd();
+                    var userGroups = JsonConvert.DeserializeObject<List<string>>(json);
+                    r.Close();
+                    return userGroups;
                 }
             }
             catch (Exception)
             {
-                return new List<Projections>();
+                return new List<string>();
+            }
+        }
+
+        /// <summary>
+        /// Returns a list of projections. 
+        /// </summary>
+        /// <returns></returns>
+        public List<string> ReadFromDownloadUsagePurposes()
+        {
+            try
+            {
+                using (var r = new StreamReader(ApplicationService.GetPurposesFilePath()))
+                {
+                    var json = r.ReadToEnd();
+                    var upurposes = JsonConvert.DeserializeObject<List<string>>(json);
+                    r.Close();
+                    return upurposes;
+                }
+            }
+            catch (Exception)
+            {
+                return new List<string>();
             }
         }
 
@@ -105,9 +195,9 @@ namespace Geonorge.MassivNedlasting
                     w.WriteLine("-------------------------------");
                     w.WriteLine();
 
-                    
+
                     w.WriteLine("UPDATED: " + downloadLog.Updated.Count());
-                    
+
                     Log(downloadLog.Updated, w);
 
                     w.WriteLine();
@@ -152,7 +242,7 @@ namespace Geonorge.MassivNedlasting
             WriteToDownloadFile(selectedFilesToDownload);
         }
 
-        
+
 
         /// <summary>
         /// Writes the information about the selected files to the local download list. 
@@ -225,7 +315,6 @@ namespace Geonorge.MassivNedlasting
             }
             catch (Exception)
             {
-                // TODO error handling
                 return new List<DatasetFile>();
             }
         }
@@ -256,7 +345,7 @@ namespace Geonorge.MassivNedlasting
             }
         }
 
-        
+
         private List<Download> ConvertToNewVersionOfDownloadFile(List<Download> downloads)
         {
             var newListOfDatasetForDownload = new List<Download>();
@@ -278,7 +367,7 @@ namespace Geonorge.MassivNedlasting
             return newListOfDatasetForDownload;
         }
 
-        public static List<Download> RemoveDuplicatesIterative(List<Download> items)
+        public List<Download> RemoveDuplicatesIterative(List<Download> items)
         {
             var result = new List<Download>();
             var set = new HashSet<string>();
@@ -377,10 +466,57 @@ namespace Geonorge.MassivNedlasting
             }
         }
 
+        public void WriteToUsageGroupFile(List<string> userGroups)
+        {
+            var serializer = new JsonSerializer();
+
+            serializer.Converters.Add(new JavaScriptDateTimeConverter());
+            serializer.NullValueHandling = NullValueHandling.Ignore;
+
+            using (var outputFile = new StreamWriter(ApplicationService.GetUserGroupsFilePath(), false))
+            using (JsonWriter writer = new JsonTextWriter(outputFile))
+            {
+                serializer.Serialize(writer, userGroups);
+                writer.Close();
+            }
+        }
+
+        public void WriteToUsagePurposeFile(List<string> userPurposes)
+        {
+            var serializer = new JsonSerializer();
+
+            serializer.Converters.Add(new JavaScriptDateTimeConverter());
+            serializer.NullValueHandling = NullValueHandling.Ignore;
+
+            using (var outputFile = new StreamWriter(ApplicationService.GetPurposesFilePath(), false))
+            using (JsonWriter writer = new JsonTextWriter(outputFile))
+            {
+                serializer.Serialize(writer, userPurposes);
+                writer.Close();
+            }
+        }
+
+
+        
         private static string GetEpsgName(List<Projections> projections, DatasetFile selectedFile)
         {
             var projection = projections.FirstOrDefault(p => p.Epsg == selectedFile.Projection);
             return projection != null ? projection.Name : selectedFile.Projection;
+        }
+
+        public void SendDownloadUsage(DownloadUsage downloadUsage)
+        {
+            if (downloadUsage != null)
+            {
+                var json = JsonConvert.SerializeObject(downloadUsage);
+                var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+
+                string token = !string.IsNullOrWhiteSpace(AppSettings.StatisticsToken) ? AppSettings.StatisticsToken : AppSettings.TestStatisticsToken;
+
+                HttpClient hc = new HttpClient();
+                hc.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+                var respons = hc.PostAsync("https://nedlasting.dev.geonorge.no/api/internal/download-usage", stringContent);
+            }
         }
     }
 }

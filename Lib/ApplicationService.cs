@@ -37,6 +37,28 @@ namespace Geonorge.MassivNedlasting
         }
 
         /// <summary>
+        /// Returns path to the file containing the list of user group in metadata codelist registry "Brukergruppe" - https://register.geonorge.no/metadata-kodelister/brukergrupper
+        /// </summary>
+        /// <returns></returns>
+        public static string GetUserGroupsFilePath()
+        {
+            DirectoryInfo appDirectory = GetAppDirectory();
+
+            return Path.Combine(appDirectory.FullName, "usergroup.json");
+        }
+
+        /// <summary>
+        /// Returns path to the file containing the list of user group in metadata codelist registry "Formål" - https://register.geonorge.no/metadata-kodelister/formal
+        /// </summary>
+        /// <returns></returns>
+        public static string GetPurposesFilePath()
+        {
+            DirectoryInfo appDirectory = GetAppDirectory();
+
+            return Path.Combine(appDirectory.FullName, "purposes.json");
+        }
+
+        /// <summary>
         /// Returns path to the file containing the list of downloaded datasets.
         /// </summary>
         /// <returns></returns>
