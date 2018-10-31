@@ -9,6 +9,11 @@
             Name = item["label"];
         }
 
+        public Projections()
+        {
+            
+        }
+
         public string Epsg { get; set; }
         public string Name { get; set; }
     }

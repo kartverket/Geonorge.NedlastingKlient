@@ -9,7 +9,6 @@ namespace Geonorge.MassivNedlasting.Gui
     /// </summary>
     public partial class SettingsDialog
     {
-
         public static readonly DependencyProperty DownloadDirectoryPathProperty = DependencyProperty.Register("DownloadDirectoryPath", typeof(string), typeof(SettingsDialog),
             new FrameworkPropertyMetadata());
 
@@ -31,12 +30,28 @@ namespace Geonorge.MassivNedlasting.Gui
 
             txtUsername.Text = appSettings.Username;
             txtPassword.Password = ProtectionService.GetUnprotectedPassword(appSettings.Password);
-            
+            GetDownloadUsage(appSettings);
+        }
+
+        private void GetDownloadUsage(AppSettings appSettings)
+        {
+            if (appSettings.DownloadUsage != null)
+            {
+                DownloadUsagePurpose.ItemsSource = appSettings.DownloadUsage.Purpose;
+                DownloadUsageGroup.Text = appSettings.DownloadUsage.Group;
+            }
+            else
+            {
+                DownloadUsagePurpose.ItemsSource = "Ikke satt";
+                DownloadUsageGroup.Text = "Ikke satt";
+                var downloadUsageDialog = new DownloadUsageDialog();
+                downloadUsageDialog.ShowDialog();
+            }
         }
 
         private void BtnDialogOk_Click(object sender, RoutedEventArgs e)
         {
-            AppSettings appSettings = new AppSettings();
+            AppSettings appSettings = ApplicationService.GetAppSettings();
             appSettings.Password = ProtectionService.CreateProtectedPassword(txtPassword.Password);
             appSettings.Username = txtUsername.Text;
             appSettings.DownloadDirectory = FolderPickerDialogBox.DirectoryPath;
@@ -46,6 +61,12 @@ namespace Geonorge.MassivNedlasting.Gui
             this.Close();
         }
 
+        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        {
+            var downloadUsageDialog = new DownloadUsageDialog();
+            downloadUsageDialog.ShowDialog();
+            GetDownloadUsage(ApplicationService.GetAppSettings());
+        }
     }
 
 }

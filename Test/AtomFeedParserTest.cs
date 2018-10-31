@@ -21,23 +21,9 @@ namespace Geonorge.MassivNedlasting.Test
         [Fact]
         public void ShouldParseDatasetFileAtomFeed()
         {
-            var dataset = NewDataset();
+            var dataset = Helper.NewDataset();
             List<DatasetFile> result = new AtomFeedParser().ParseDatasetFiles(File.ReadAllText("AdministrativeEnheterFylker_AtomFeedGEOJSON.fmw.xml"), dataset.Title, dataset.Url);
             result.Count.Should().Be(10);
-        }
-
-
-        private Dataset NewDataset()
-        {
-            var dataset = new Dataset();
-            dataset.Title = "Administrative enheter fylker GEOJSON-format";
-            dataset.Description = "Dataset description";
-            dataset.LastUpdated = "2018-01-10T13:47:55";
-            dataset.Organization = "Kartverket";
-            dataset.Url = "http://nedlasting.geonorge.no/fmedatastreaming/ATOM-feeds/AdministrativeEnheterFylker_AtomFeedGEOJSON.fmw";
-            dataset.Uuid = "6093c8a8-fa80-11e6-bc64-92361f002671";
-
-            return dataset;
         }
     }
 }
