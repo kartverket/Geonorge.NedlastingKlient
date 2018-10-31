@@ -506,7 +506,7 @@ namespace Geonorge.MassivNedlasting
 
         public void SendDownloadUsage(DownloadUsage downloadUsage)
         {
-            if (downloadUsage != null)
+            if (downloadUsage != null && downloadUsage.Entries.Any())
             {
                 var json = JsonConvert.SerializeObject(downloadUsage);
                 var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
