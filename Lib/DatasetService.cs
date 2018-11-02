@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -516,7 +516,7 @@ namespace Geonorge.MassivNedlasting
 
                 HttpClient hc = new HttpClient();
                 hc.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
-                var respons = hc.PostAsync(downloadUsageUrl, stringContent);
+                var respons = hc.PostAsync(downloadUsageUrl, stringContent).Result;
             }
         }
     }
