@@ -13,6 +13,8 @@ namespace Geonorge.MassivNedlasting
         public const string StatisticsToken = "";
         public const string TestStatisticsToken = "tu7Szvs2Lej8yVXtiu3IVogke3TaN5GmSmNmLuSZDTvYtSYzrSG9VUgW9LE4XHiRfrbZmEqN42WwP7uLzfUAhSZnzR3ZBiF9JvI7VHwEyz7vaUdaa5BAxpDUqx2QDUu8";
 
+        public const string NedlatingsApiDownloadUsage = "";
+        public const string NedlatingsApiDownloadUsageDev = "https://nedlasting.dev.geonorge.no/api/internal/download-usage";
         /// <summary>
         /// Where the downloaded files will be written.
         /// </summary>
