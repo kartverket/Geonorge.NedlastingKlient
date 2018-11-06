@@ -85,7 +85,7 @@ namespace Geonorge.Nedlaster
                         }
                         else
                         {
-                            fileLog.Message = "Not necessary to download dataset.";
+                            fileLog.Message = "Not necessary to download dataset." + datasetFromFeed.LastUpdated;
                             downloadLog.NotUpdated.Add(fileLog);
                             Console.WriteLine("Not necessary to download dataset.");
                             datasetFile.FilePath = downloadHistory.FilePath;
