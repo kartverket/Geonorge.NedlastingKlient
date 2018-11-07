@@ -9,6 +9,7 @@ namespace Geonorge.MassivNedlasting.Gui
     /// </summary>
     public partial class SettingsDialog
     {
+        private AppSettings _appSettings;
         public static readonly DependencyProperty DownloadDirectoryPathProperty = DependencyProperty.Register("DownloadDirectoryPath", typeof(string), typeof(SettingsDialog),
             new FrameworkPropertyMetadata());
 
@@ -22,15 +23,15 @@ namespace Geonorge.MassivNedlasting.Gui
 
         public SettingsDialog()
         {
-            AppSettings appSettings = ApplicationService.GetAppSettings();
-            DownloadDirectory = appSettings.DownloadDirectory;
-            LogDirectory = appSettings.LogDirectory;
+            _appSettings = ApplicationService.GetAppSettings();
+            DownloadDirectory = _appSettings.DownloadDirectory;
+            LogDirectory = _appSettings.LogDirectory;
 
             InitializeComponent();
 
-            txtUsername.Text = appSettings.Username;
-            txtPassword.Password = ProtectionService.GetUnprotectedPassword(appSettings.Password);
-            GetDownloadUsage(appSettings);
+            txtUsername.Text = _appSettings.Username;
+            txtPassword.Password = ProtectionService.GetUnprotectedPassword(_appSettings.Password);
+            GetDownloadUsage(_appSettings);
         }
 
         private void GetDownloadUsage(AppSettings appSettings)
@@ -51,7 +52,7 @@ namespace Geonorge.MassivNedlasting.Gui
 
         private void BtnDialogOk_Click(object sender, RoutedEventArgs e)
         {
-            AppSettings appSettings = ApplicationService.GetAppSettings();
+            AppSettings appSettings = _appSettings;
             appSettings.Password = ProtectionService.CreateProtectedPassword(txtPassword.Password);
             appSettings.Username = txtUsername.Text;
             appSettings.DownloadDirectory = FolderPickerDialogBox.DirectoryPath;
@@ -65,7 +66,7 @@ namespace Geonorge.MassivNedlasting.Gui
         {
             var downloadUsageDialog = new DownloadUsageDialog();
             downloadUsageDialog.ShowDialog();
-            GetDownloadUsage(ApplicationService.GetAppSettings());
+            GetDownloadUsage(_appSettings);
         }
     }
 

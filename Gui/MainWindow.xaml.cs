@@ -18,11 +18,13 @@ namespace Geonorge.MassivNedlasting.Gui
     /// </summary>
     public partial class MainWindow
     {
-        private readonly DatasetService _datasetService;
+        private AppSettings _appSettings;
+        private DatasetService _datasetService;
         private List<Projections> _projections;
         private Dataset _selectedDataset;
         private List<DatasetFileViewModel> _selectedDatasetFiles;
         private List<DownloadViewModel> _selectedFilesForDownload;
+        private string _selectedConfigFile = "";
         public bool LoggedIn;
 
         public MainWindow()
@@ -34,7 +36,8 @@ namespace Geonorge.MassivNedlasting.Gui
             ToggleSubscribeSelectedDatasetFiles.Visibility = Visibility.Hidden;
             MenuSubscribe.Visibility = Visibility.Hidden;
 
-            _datasetService = new DatasetService();
+            _appSettings = ApplicationService.GetAppSettings();
+            _datasetService = new DatasetService(_appSettings.LastOpendConfigFile);
 
             try
             {
@@ -56,17 +59,21 @@ namespace Geonorge.MassivNedlasting.Gui
             var viewDatasets = (CollectionView)CollectionViewSource.GetDefaultView(LbDatasets.ItemsSource);
             if (viewDatasets != null) viewDatasets.Filter = UserDatasetFilter;
 
+
             _selectedFilesForDownload = _datasetService.GetSelectedFilesToDownloadAsViewModel(_projections);
             LbSelectedFilesForDownload.ItemsSource = _selectedFilesForDownload;
             _selectedDatasetFiles = new List<DatasetFileViewModel>();
+
+            //cmbConfigFiles.ItemsSource = _appSettings.ConfigFiles;
+            cmbConfigFiles.ItemsSource = ApplicationService.NameConfigFiles();
+            cmbConfigFiles.SelectedItem = _appSettings.LastOpendConfigFile?.Name;
 
             SetDownloadUsage();
         }
 
         private void SetDownloadUsage()
         {
-            var appSettings = ApplicationService.GetAppSettings();
-            if (!appSettings.DownloadUsageIsSet())
+            if (!_appSettings.DownloadUsageIsSet())
             {
                 var downloadUsageDialog = new DownloadUsageDialog();
                 downloadUsageDialog.ShowDialog();
@@ -448,6 +455,19 @@ namespace Geonorge.MassivNedlasting.Gui
                     if (cbAdd.IsChecked != null) download.AutoAddFiles = cbAdd.IsChecked.Value;
                 }
             }
+        }
+
+        private void CmbConfigFiles_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var cmbConfig = (ComboBox) sender;
+            if (cmbConfig != null)
+            {
+                SaveDownloadList();
+                _datasetService = new DatasetService(ApplicationService.GetConfigByName(cmbConfig.SelectedItem.ToString()));
+                _selectedFilesForDownload = _datasetService.GetSelectedFilesToDownloadAsViewModel(_projections);
+                LbSelectedFilesForDownload.ItemsSource = _selectedFilesForDownload;
+            }
+
         }
     }
 }

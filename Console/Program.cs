@@ -113,7 +113,6 @@ namespace Geonorge.Nedlaster
         }
 
         
-
         private static List<DatasetFile> AddFiles(List<DatasetFile> datasetFilesFromFeed, List<DatasetFile> localDatasetFiles)
         {
             var datasetFiles = localDatasetFiles.ToList();

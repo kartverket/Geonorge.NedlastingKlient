@@ -26,6 +26,9 @@
             <DockPanel>
                 <Image HorizontalAlignment="Left" Margin="40 0 0 20" Source="Content/geonorge_logo_225px.gif"/>
                 <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right" Orientation="Horizontal" Margin="0 0 40 0">
+
+                    <ComboBox materialDesign:HintAssist.Hint="Config fil" IsEditable="True"
+                              Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="CmbConfigFiles_OnSelectionChanged" Name="cmbConfigFiles" Margin="0 0 50 0" MinWidth="150"/>
                     <Button Name="BtnSave" 
                             Margin="0 0 10 0"  Click="BtnSave_OnClick"
                             Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
@@ -62,6 +65,7 @@
                             Height="24"
                             Width="24" />
                     </Button>
+                    
                 </StackPanel>
             </DockPanel>
 

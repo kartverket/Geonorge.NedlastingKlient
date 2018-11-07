@@ -16,6 +16,17 @@ namespace Geonorge.MassivNedlasting
     public class DatasetService
     {
         private static readonly HttpClient HttpClient = new HttpClient();
+        private ConfigFile _configFile;
+
+        public DatasetService()
+        {
+
+        }
+
+        public DatasetService(ConfigFile configFile)
+        {
+            _configFile = configFile;
+        }
 
         public List<Dataset> GetDatasets()
         {
@@ -228,7 +239,7 @@ namespace Geonorge.MassivNedlasting
             serializer.Converters.Add(new JavaScriptDateTimeConverter());
             serializer.NullValueHandling = NullValueHandling.Ignore;
 
-            using (var outputFile = new StreamWriter(ApplicationService.GetDownloadFilePath(), false))
+            using (var outputFile = new StreamWriter(_configFile.FilePath, false))
             using (JsonWriter writer = new JsonTextWriter(outputFile))
             {
                 serializer.Serialize(writer, downloads);
@@ -305,7 +316,7 @@ namespace Geonorge.MassivNedlasting
         {
             try
             {
-                using (var r = new StreamReader(ApplicationService.GetDownloadFilePath()))
+                using (var r = new StreamReader(_configFile.FilePath))
                 {
                     var json = r.ReadToEnd();
                     var selecedForDownload = JsonConvert.DeserializeObject<List<DatasetFile>>(json);
@@ -323,11 +334,12 @@ namespace Geonorge.MassivNedlasting
         /// Returns a list of dataset files to download. 
         /// </summary>
         /// <returns></returns>
-        public List<Download> GetSelectedFilesToDownload()
+        public List<Download> GetSelectedFilesToDownload(ConfigFile configFile = null)
         {
             try
             {
-                using (var r = new StreamReader(ApplicationService.GetDownloadFilePath()))
+                var downloadFilePath = _configFile != null ? _configFile.FilePath : ApplicationService.GetDefaultDownloadFilePath();
+                using (var r = new StreamReader(downloadFilePath))
                 {
                     var json = r.ReadToEnd();
                     var selecedForDownload = JsonConvert.DeserializeObject<List<Download>>(json);
@@ -410,7 +422,7 @@ namespace Geonorge.MassivNedlasting
 
         public List<DownloadViewModel> GetSelectedFilesToDownloadAsViewModel(List<Projections> propotions)
         {
-            List<Download> selectedFiles = GetSelectedFilesToDownload();
+            List<Download> selectedFiles = GetSelectedFilesToDownload(_configFile);
             return ConvertToViewModel(selectedFiles, propotions, true);
         }
 
@@ -519,5 +531,7 @@ namespace Geonorge.MassivNedlasting
                 var respons = hc.PostAsync(downloadUsageUrl, stringContent).Result;
             }
         }
+
+        
     }
 }
