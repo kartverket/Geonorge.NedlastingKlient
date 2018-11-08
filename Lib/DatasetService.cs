@@ -338,7 +338,7 @@ namespace Geonorge.MassivNedlasting
         {
             try
             {
-                var downloadFilePath = _configFile != null ? _configFile.FilePath : ApplicationService.GetDefaultDownloadFilePath();
+                var downloadFilePath = _configFile != null ? _configFile.FilePath : ApplicationService.GetDownloadFilePath();
                 using (var r = new StreamReader(downloadFilePath))
                 {
                     var json = r.ReadToEnd();
@@ -528,10 +528,10 @@ namespace Geonorge.MassivNedlasting
 
                 HttpClient hc = new HttpClient();
                 hc.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+                
                 var respons = hc.PostAsync(downloadUsageUrl, stringContent).Result;
             }
         }
-
         
     }
 }

@@ -34,7 +34,8 @@ namespace Geonorge.MassivNedlasting.Gui
         {
             InitializeComponent();
 
-            _datasetService = new DatasetService();
+            _appSettings = ApplicationService.GetAppSettings();
+            _datasetService = new DatasetService(_appSettings.LastOpendConfigFile);
 
             try
             {
@@ -54,7 +55,6 @@ namespace Geonorge.MassivNedlasting.Gui
                 _downloadUsagePurposes = _datasetService.ReadFromDownloadUsagePurposes();
             }
 
-            _appSettings = ApplicationService.GetAppSettings();
 
             if (_appSettings.DownloadUsageIsSet())
             {

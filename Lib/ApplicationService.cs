@@ -17,19 +17,19 @@ namespace Geonorge.MassivNedlasting
     {
 
         /// <summary>
-        /// Returns path to the file containing the list of dataset to download.
+        /// Returns path to the file containing the list of dataset to download. Return default if file name is not set. 
         /// </summary>
         /// <returns></returns>
-        public static string GetDefaultDownloadFilePath(string configFile = null)
+        public static string GetDownloadFilePath(string fileName = null)
         {
             DirectoryInfo configDirectory = GetConfigAppDirectory();
 
-            if (string.IsNullOrWhiteSpace(configFile))
+            if (string.IsNullOrWhiteSpace(fileName))
             {
                 return Path.Combine(configDirectory.FullName, "default.json");
             }
 
-            return Path.Combine(configDirectory.FullName, configFile +".json");
+            return Path.Combine(configDirectory.FullName, fileName + ".json");
         }
 
         /// <summary>
