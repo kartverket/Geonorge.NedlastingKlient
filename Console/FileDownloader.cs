@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net.Http;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Geonorge.MassivNedlasting;
@@ -55,6 +56,8 @@ namespace Geonorge.Nedlaster
 
         private static void SetClientRequestHeaders(DownloadRequest downloadRequest, AppSettings appSettings)
         {
+            Client.DefaultRequestHeaders.UserAgent.ParseAdd($"GeonorgeNedlastingsklient/{Assembly.GetExecutingAssembly().GetName().Version.ToString()}");
+
             if (downloadRequest.MustAuthenticate)
             {
                 var byteArray = Encoding.ASCII.GetBytes(appSettings.Username + ":" + ProtectionService.GetUnprotectedPassword(appSettings.Password));

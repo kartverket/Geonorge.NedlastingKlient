@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Geonorge.MassivNedlasting.Gui;
@@ -16,6 +17,11 @@ namespace Geonorge.MassivNedlasting
     public class DatasetService
     {
         private static readonly HttpClient HttpClient = new HttpClient();
+
+        public DatasetService()
+        {
+            HttpClient.DefaultRequestHeaders.UserAgent.ParseAdd($"GeonorgeNedlastingsklient/{Assembly.GetExecutingAssembly().GetName().Version.ToString()}");
+        }
 
         public List<Dataset> GetDatasets()
         {
@@ -516,6 +522,7 @@ namespace Geonorge.MassivNedlasting
 
                 HttpClient hc = new HttpClient();
                 hc.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+                hc.DefaultRequestHeaders.UserAgent.ParseAdd($"GeonorgeNedlastingsklient/{Assembly.GetExecutingAssembly().GetName().Version.ToString()}");
                 var respons = hc.PostAsync(downloadUsageUrl, stringContent).Result;
             }
         }
