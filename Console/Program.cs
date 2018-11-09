@@ -10,23 +10,24 @@ namespace Geonorge.Nedlaster
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static void Main(string[] args, string configFile)
         {
             Console.WriteLine("Geonorge - nedlaster");
             Console.WriteLine("--------------------");
             DeleteOldLogs();
-            StartDownloadAsync().Wait();
+            StartDownloadAsync(configFile).Wait();
         }
 
-        private static async Task StartDownloadAsync()
+        private static async Task StartDownloadAsync(string configFileName)
         {
-            var datasetService = new DatasetService();
+            var appSettings = ApplicationService.GetAppSettings();
+            var configFile = appSettings.GetConfigByName(configFileName);
+            var datasetService = new DatasetService(configFile);
             var updatedDatasetToDownload = new List<Download>();
             var downloadLog = new DownloadLog();
             var downloader = new FileDownloader();
-            var appSettings = ApplicationService.GetAppSettings();
             var datasetToDownload = datasetService.GetSelectedFilesToDownload();
-            var downloadUsage = appSettings.DownloadUsage;
+            var downloadUsage = configFile.DownloadUsage;
 
             downloadLog.TotalDatasetsToDownload = datasetToDownload.Count;
 
@@ -40,7 +41,7 @@ namespace Geonorge.Nedlaster
 
                     if (localDataset.AutoDeleteFiles)
                     {
-                        localDataset.Files = RemoveFiles(datasetFilesFromFeed, localDataset.Files, appSettings);
+                        localDataset.Files = RemoveFiles(datasetFilesFromFeed, localDataset.Files, configFile);
                     }
 
                     if (localDataset.AutoAddFiles)
@@ -57,7 +58,7 @@ namespace Geonorge.Nedlaster
                     {
                         Console.WriteLine(datasetFile.DatasetId + " - " + datasetFile.Title);
 
-                        DirectoryInfo downloadDirectory = GetDownloadDirectory(appSettings, datasetFile);
+                        DirectoryInfo downloadDirectory = GetDownloadDirectory(configFile, datasetFile);
                         DatasetFile datasetFromFeed = datasetService.GetDatasetFile(datasetFile);
                         DownloadHistory downloadHistory = datasetService.GetFileDownloaHistory(datasetFile.Url);
                         bool newDatasetAvailable = NewDatasetAvailable(downloadHistory, datasetFromFeed, downloadDirectory);
@@ -127,7 +128,7 @@ namespace Geonorge.Nedlaster
             return localDatasetFiles;
         }
 
-        private static List<DatasetFile> RemoveFiles(List<DatasetFile> datasetFilesFromFeed, List<DatasetFile> datasetFiles, AppSettings appSettings)
+        private static List<DatasetFile> RemoveFiles(List<DatasetFile> datasetFilesFromFeed, List<DatasetFile> datasetFiles, ConfigFile configFile)
         {
             var exists = false;
             var removeFiles = new List<DatasetFile>();
@@ -146,7 +147,7 @@ namespace Geonorge.Nedlaster
             }
             foreach (var fileToRemove in removeFiles)
             {
-                DirectoryInfo downloadDirectory = GetDownloadDirectory(appSettings, fileToRemove);
+                DirectoryInfo downloadDirectory = GetDownloadDirectory(configFile, fileToRemove);
                 string filePath = downloadDirectory + "\\" + fileToRemove.FilePath;
 
                 File.Delete(filePath);
@@ -171,9 +172,9 @@ namespace Geonorge.Nedlaster
         }
 
 
-        private static DirectoryInfo GetDownloadDirectory(AppSettings appSettings, DatasetFile dataset)
+        private static DirectoryInfo GetDownloadDirectory(ConfigFile configFile, DatasetFile dataset)
         {
-            var downloadDirectory = new DirectoryInfo(Path.Combine(appSettings.DownloadDirectory, dataset.DatasetId));
+            var downloadDirectory = new DirectoryInfo(Path.Combine(configFile.DownloadDirectory, dataset.DatasetId));
             if (!downloadDirectory.Exists)
             {
                 Console.WriteLine($"Creating directory: {downloadDirectory}");

@@ -24,7 +24,7 @@ namespace Geonorge.MassivNedlasting.Gui
         private Dataset _selectedDataset;
         private List<DatasetFileViewModel> _selectedDatasetFiles;
         private List<DownloadViewModel> _selectedFilesForDownload;
-        private string _selectedConfigFile = "";
+        private ConfigFile _selectedConfigFile;
         public bool LoggedIn;
 
         public MainWindow()
@@ -38,6 +38,7 @@ namespace Geonorge.MassivNedlasting.Gui
 
             _appSettings = ApplicationService.GetAppSettings();
             _datasetService = new DatasetService(_appSettings.LastOpendConfigFile);
+            _selectedConfigFile = _appSettings.LastOpendConfigFile;
 
             try
             {
@@ -64,16 +65,15 @@ namespace Geonorge.MassivNedlasting.Gui
             LbSelectedFilesForDownload.ItemsSource = _selectedFilesForDownload;
             _selectedDatasetFiles = new List<DatasetFileViewModel>();
 
-            //cmbConfigFiles.ItemsSource = _appSettings.ConfigFiles;
             cmbConfigFiles.ItemsSource = ApplicationService.NameConfigFiles();
-            cmbConfigFiles.SelectedItem = _appSettings.LastOpendConfigFile?.Name;
+            cmbConfigFiles.SelectedItem = _selectedConfigFile.Name;
 
             SetDownloadUsage();
         }
 
         private void SetDownloadUsage()
         {
-            if (!_appSettings.DownloadUsageIsSet())
+            if (!_selectedConfigFile.DownloadUsageIsSet())
             {
                 var downloadUsageDialog = new DownloadUsageDialog();
                 downloadUsageDialog.ShowDialog();

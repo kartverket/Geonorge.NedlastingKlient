@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -11,9 +12,12 @@ namespace Geonorge.MassivNedlasting.Gui
     public partial class ConfigDialog
     {
         private AppSettings _appSettings;
+        private bool _editConfig = true;
+        private bool _newConfig = false;
+        private ConfigFile _selectedConfigFile;
+
         public static readonly DependencyProperty DownloadDirectoryPathProperty = DependencyProperty.Register("DownloadDirectoryPath", typeof(string), typeof(SettingsDialog),
             new FrameworkPropertyMetadata());
-
 
         public static readonly DependencyProperty LogDirectoryPathProperty = DependencyProperty.Register("LogDirectoryPath", typeof(string), typeof(SettingsDialog),
             new FrameworkPropertyMetadata());
@@ -25,49 +29,129 @@ namespace Geonorge.MassivNedlasting.Gui
         public ConfigDialog()
         {
             _appSettings = ApplicationService.GetAppSettings();
-            DownloadDirectory = _appSettings.DownloadDirectory;
-            LogDirectory = _appSettings.LogDirectory;
+            if (_appSettings.TempConfigFile != null)
+            {
+                _appSettings.TempConfigFile = null;
+                ApplicationService.WriteToAppSettingsFile(_appSettings);
+            }
+            _selectedConfigFile = _appSettings.LastOpendConfigFile;
+            _appSettings.TempConfigFile = null;
+
+            DownloadDirectory = _selectedConfigFile.DownloadDirectory;
+            LogDirectory = _selectedConfigFile.LogDirectory;
+
             InitializeComponent();
 
             ConfigFilesList.ItemsSource = ApplicationService.NameConfigFiles();
-            ConfigFilesList.SelectedItem = _appSettings.LastOpendConfigFile.Name;
-            ConfigNameTextBox.Text = _appSettings.LastOpendConfigFile.Name;
+            ConfigFilesList.SelectedItem = _selectedConfigFile.Name;
+            ConfigNameTextBox.Text = _selectedConfigFile.Name;
 
-            GetDownloadUsage(_appSettings);
+            GetDownloadUsage();
         }
 
-        private void GetDownloadUsage(AppSettings appSettings)
+        private void GetDownloadUsage()
         {
-            if (appSettings.DownloadUsage != null)
+            if (_selectedConfigFile.DownloadUsage == null)
             {
-                ShowDownloadUsage(appSettings);
+                var downloadUsageDialog = new DownloadUsageDialog();
+                downloadUsageDialog.ShowDialog();
+                _appSettings = ApplicationService.GetAppSettings();
+                _selectedConfigFile = _appSettings.LastOpendConfigFile;
+            }
+            ShowDownloadUsage();
+        }
+
+
+        private void BtnNewConfigFile_OnClick(object sender, RoutedEventArgs e)
+        {
+            _appSettings.TempConfigFile = new ConfigFile();
+            ApplicationService.WriteToAppSettingsFile(_appSettings);
+            _editConfig = false;
+            _newConfig = true;
+
+            _selectedConfigFile = new ConfigFile();
+            DownloadDirectory = string.Empty;
+            LogDirectory = string.Empty;
+            FolderPickerDialogBox.DirectoryPath = null;
+            FolderPickerDialogBoxLog.DirectoryPath = null;
+
+            HideDownloadUsage();
+        }
+
+        private void BtnEditDownloadUsage_OnClick(object sender, RoutedEventArgs e)
+        {
+            var downloadUsageDialog = new DownloadUsageDialog();
+            downloadUsageDialog.ShowDialog();
+            _appSettings = ApplicationService.GetAppSettings();
+            if (_newConfig && _appSettings.TempConfigFile != null)
+            {
+                _selectedConfigFile.DownloadUsage = _appSettings.TempConfigFile.DownloadUsage;
+                _appSettings.TempConfigFile = null;
+            }
+            else if (_editConfig)
+            {
+                _selectedConfigFile = _appSettings.LastOpendConfigFile;
+            }
+            GetDownloadUsage();
+        }
+
+        private void BtnDialogDelete_Click(object sender, RoutedEventArgs e)
+        {
+            if (_appSettings.ConfigFiles.Count > 1)
+            {
+                foreach (var configFile in _appSettings.ConfigFiles)
+                {
+                    if (_selectedConfigFile.Name == configFile.Name)
+                    {
+                        var remove = _appSettings.ConfigFiles.Remove(_selectedConfigFile);
+                        break;
+                    }
+                }
+                _appSettings.LastOpendConfigFile = _appSettings.ConfigFiles.FirstOrDefault();
+                ApplicationService.WriteToAppSettingsFile(_appSettings);
+                ShowSelectedConfigFile();
+            }
+            // Feilmelding, kunne ikke slette? evt disable slett knapp...
+        }
+
+        private void BtnDialogSave_Click(object sender, RoutedEventArgs e)
+        {
+            if (_editConfig)
+            {
+                foreach (var config in _appSettings.ConfigFiles)
+                {
+                    if (config == _selectedConfigFile)
+                    {
+                        // Endre navn? config.Name = _selectedConfigFile.Name;
+                        // Endre Filename? config.FilePath = ApplicationService.GetDownloadFilePath(_selectedConfigFile.Name)
+                        config.DownloadDirectory = _selectedConfigFile.DownloadDirectory;
+                        config.LogDirectory = _selectedConfigFile.LogDirectory;
+                        break;
+                    }
+                }
             }
             else
             {
-                HideDownloadUsage();
-
-                var downloadUsageDialog = new DownloadUsageDialog();
-                downloadUsageDialog.ShowDialog();
+                if (NewConfigFileIsValid())
+                {
+                    var configFile = NewConfigFile();
+                    _appSettings.ConfigFiles.Add(configFile);
+                    _appSettings.LastOpendConfigFile = configFile;
+                    _selectedConfigFile = configFile;
+                }
+                else
+                {
+                    return;
+                }
             }
+
+            _appSettings.TempConfigFile = null;
+            ApplicationService.WriteToAppSettingsFile(_appSettings);
+            ShowSelectedConfigFile();
+            //ConfigFilesList.ItemsSource = ApplicationService.NameConfigFiles();
+            //ConfigFilesList.SelectedItem = _selectedConfigFile.Name;
         }
 
-        private void BtnDialogOk_Click(object sender, RoutedEventArgs e)
-        {
-            //if (NewConfigFileIsValid())
-            //{
-            //    _appSettings.ConfigFiles.Add(NewConfigFile());
-            //    _appSettings.DownloadDirectory = FolderPickerDialogBox.DirectoryPath;
-            //    _appSettings.LogDirectory = FolderPickerDialogBoxLog.DirectoryPath;
-            //}
-            //else
-            //{
-            //    return;
-            //}
-
-            //ApplicationService.WriteToAppSettingsFile(_appSettings);
-
-            this.Close();
-        }
 
         private ConfigFile NewConfigFile()
         {
@@ -78,6 +162,36 @@ namespace Geonorge.MassivNedlasting.Gui
                 Name = ConfigNameTextBox.Text,
                 FilePath = ApplicationService.GetDownloadFilePath(ConfigNameTextBox.Text)
             };
+        }
+
+
+        private void ShowDownloadUsage()
+        {
+            DownloadUsageGroupLayout.Visibility = Visibility.Visible;
+            DownloadUsagePurposeLayout.Visibility = Visibility.Visible;
+            DownloadUsagePurpose.ItemsSource = _selectedConfigFile.DownloadUsage.Purpose;
+            DownloadUsageGroup.Text = _selectedConfigFile.DownloadUsage.Group;
+        }
+
+        private void HideDownloadUsage()
+        {
+            ConfigNameTextBox.Text = "";
+            DownloadUsageGroupLayout.Visibility = Visibility.Hidden;
+            DownloadUsageGroup.Text = "";
+            DownloadUsagePurposeLayout.Visibility = Visibility.Hidden;
+            DownloadUsagePurpose.ItemsSource = null;
+        }
+
+        private bool NameIsValid()
+        {
+            foreach (var config in _appSettings.ConfigFiles)
+            {
+                if (config.Name == ConfigNameTextBox.Text)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         private bool NewConfigFileIsValid()
@@ -115,79 +229,17 @@ namespace Geonorge.MassivNedlasting.Gui
             }
 
             return valid;
-
         }
 
-        private void BtnNewConfigFile_OnClick(object sender, RoutedEventArgs e)
+        private void ShowSelectedConfigFile()
         {
-            ApplicationService.WriteToAppSettingsFile(_appSettings);
-
-            DownloadDirectory = string.Empty;
-            LogDirectory = string.Empty;
-            FolderPickerDialogBox.DirectoryPath = null;
-            FolderPickerDialogBoxLog.DirectoryPath = null;
-            InitializeComponent();
-
-            HideDownloadUsage();
-        }
-
-        private void BtnEditDownloadUsage_OnClick(object sender, RoutedEventArgs e)
-        {
-            var downloadUsageDialog = new DownloadUsageDialog();
-            downloadUsageDialog.ShowDialog();
-            GetDownloadUsage(ApplicationService.GetAppSettings());
-        }
-
-        private void BtnDialogSave_Click(object sender, RoutedEventArgs e)
-        {
-            if (NewConfigFileIsValid())
-            {
-                var configFile = NewConfigFile();
-                _appSettings.ConfigFiles.Add(configFile);
-                _appSettings.DownloadDirectory = FolderPickerDialogBox.DirectoryPath;
-                _appSettings.LogDirectory = FolderPickerDialogBoxLog.DirectoryPath;
-                _appSettings.LastOpendConfigFile = configFile;
-            }
-            else
-            {
-                return;
-            }
-
-            ApplicationService.WriteToAppSettingsFile(_appSettings);
+            _selectedConfigFile = _appSettings.LastOpendConfigFile;
             ConfigFilesList.ItemsSource = ApplicationService.NameConfigFiles();
-            ConfigFilesList.SelectedItem = _appSettings.LastOpendConfigFile.Name;
+            DownloadDirectory = _selectedConfigFile.DownloadDirectory;
+            LogDirectory = _selectedConfigFile.LogDirectory;
+            ConfigFilesList.SelectedItem = _selectedConfigFile.Name;
+            ConfigNameTextBox.Text = _selectedConfigFile.Name;
+            GetDownloadUsage();
         }
-
-
-        private void ShowDownloadUsage(AppSettings appSettings)
-        {
-            DownloadUsageGroupLayout.Visibility = Visibility.Visible;
-            DownloadUsagePurposeLayout.Visibility = Visibility.Visible;
-            DownloadUsagePurpose.ItemsSource = appSettings.DownloadUsage.Purpose;
-            DownloadUsageGroup.Text = appSettings.DownloadUsage.Group;
-        }
-
-        private void HideDownloadUsage()
-        {
-            ConfigNameTextBox.Text = "";
-            DownloadUsageGroupLayout.Visibility = Visibility.Hidden;
-            DownloadUsageGroup.Text = "";
-            DownloadUsagePurposeLayout.Visibility = Visibility.Hidden;
-            DownloadUsagePurpose.ItemsSource = null;
-        }
-
-        private bool NameIsValid()
-        {
-            foreach (var config in _appSettings.ConfigFiles)
-            {
-                if (config.Name == ConfigNameTextBox.Text)
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
     }
-
 }

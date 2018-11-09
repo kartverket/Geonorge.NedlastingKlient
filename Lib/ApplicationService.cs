@@ -145,7 +145,10 @@ namespace Geonorge.MassivNedlasting
             var appSettingsFileInfo = new FileInfo(GetAppSettingsFilePath());
             if (!appSettingsFileInfo.Exists)
             {
-                WriteToAppSettingsFile(new AppSettings() { DownloadDirectory = GetDefaultDownloadDirectory(), LogDirectory = GetDefaultLogDirectory(), LastOpendConfigFile = ConfigFile.GetDefaultConfigFile()});
+                var defaultConfigFile = ConfigFile.GetDefaultConfigFile();
+                var configFiles = new List<ConfigFile> {defaultConfigFile};
+
+                WriteToAppSettingsFile(new AppSettings() { LastOpendConfigFile = ConfigFile.GetDefaultConfigFile(), ConfigFiles = configFiles});
             }
 
             SetDefaultIfSettingsNotSet();
@@ -157,11 +160,8 @@ namespace Geonorge.MassivNedlasting
         {
             AppSettings appSetting = JsonConvert.DeserializeObject<AppSettings>(File.ReadAllText(GetAppSettingsFilePath()));
 
-            if (!appSetting.LogDirectorySettingsIsSet() || !appSetting.DownloadDirectorySettingsIsSet()
-                || !appSetting.LastOpendConfigFileIsSet() || !appSetting.ConfigFiles.Any())
+            if (!appSetting.LastOpendConfigFileIsSet() || !appSetting.ConfigFiles.Any())
             {
-                appSetting.LogDirectory = appSetting.LogDirectory ?? GetDefaultLogDirectory();
-                appSetting.DownloadDirectory = appSetting.DownloadDirectory ?? GetDefaultDownloadDirectory();
                 appSetting.LastOpendConfigFile = appSetting.LastOpendConfigFile ?? ConfigFile.GetDefaultConfigFile();
                 appSetting.ConfigFiles = appSetting.ConfigFiles ?? new List<ConfigFile>{ConfigFile.GetDefaultConfigFile()};
 
@@ -230,12 +230,12 @@ namespace Geonorge.MassivNedlasting
 
         public static string DownloadDirectory()
         {
-            return GetAppSettings().DownloadDirectory;
+            return GetAppSettings().LastOpendConfigFile.DownloadDirectory;
         }
 
         public static string LogDirectory()
         {
-            return GetAppSettings().LogDirectory;
+            return GetAppSettings().LastOpendConfigFile.LogDirectory;
         }
 
         public static List<string> NameConfigFiles()

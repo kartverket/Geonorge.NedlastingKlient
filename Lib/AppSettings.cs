@@ -18,40 +18,34 @@ namespace Geonorge.MassivNedlasting
         /// <summary>
         /// Where the downloaded files will be written.
         /// </summary>
-        public string DownloadDirectory { get; set; }
-        public string LogDirectory { get; set; }
 
         public string Username { get; set; }
         public string Password { get; set; }
 
         public ConfigFile LastOpendConfigFile { get; set; }
+        public ConfigFile TempConfigFile { get; set; }
         public List<ConfigFile> ConfigFiles { get; set; }
-
-        public DownloadUsage DownloadUsage { get; set; }
 
         public AppSettings()
         {
             ConfigFiles = new List<ConfigFile>();
         }
 
-        public bool DownloadUsageIsSet()
-        {
-            return DownloadUsage != null && DownloadUsage.Group.Any() && DownloadUsage.Purpose != null;
-        }
-
-        public bool LogDirectorySettingsIsSet()
-        {
-            return LogDirectory != null;
-        }
-
-        public bool DownloadDirectorySettingsIsSet()
-        {
-            return DownloadDirectory != null;
-        }
-
         public bool LastOpendConfigFileIsSet()
         {
             return LastOpendConfigFile != null;
+        }
+
+        public ConfigFile GetConfigByName(string name)
+        {
+            foreach (var configFile in ConfigFiles)
+            {
+                if (configFile.Name == name)
+                {
+                    return configFile;
+                }
+            }
+            return null;
         }
     }
 

@@ -66,9 +66,9 @@
 
 
        <WrapPanel HorizontalAlignment="Right" Margin="20,15,20,20">
+            <Button IsDefault="True" Name="btnConfigDelete" Click="BtnDialogDelete_Click" MinWidth="60" Margin="0,0,10,0">_Slett</Button>
             <Button IsDefault="True" Name="btnConfigSave" Click="BtnDialogSave_Click" MinWidth="60" Margin="0,0,10,0">_Lagre</Button>
-            <Button IsDefault="True" Name="btnDialogOk" Click="BtnDialogOk_Click" MinWidth="60" Margin="0,0,10,0">_Ok</Button>
-            <Button IsCancel="True" MinWidth="60">_Cancel</Button>
+            <Button IsCancel="True" MinWidth="60">_Lukk</Button>
         </WrapPanel>
 
     </StackPanel>
