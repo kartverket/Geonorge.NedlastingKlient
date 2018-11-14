@@ -148,7 +148,7 @@ namespace Geonorge.MassivNedlasting
                 var defaultConfigFile = ConfigFile.GetDefaultConfigFile();
                 var configFiles = new List<ConfigFile> {defaultConfigFile};
 
-                WriteToAppSettingsFile(new AppSettings() { LastOpendConfigFile = ConfigFile.GetDefaultConfigFile(), ConfigFiles = configFiles});
+                WriteToAppSettingsFile(new AppSettings() { LastOpendConfigFile = defaultConfigFile, ConfigFiles = configFiles});
             }
 
             SetDefaultIfSettingsNotSet();
@@ -180,7 +180,7 @@ namespace Geonorge.MassivNedlasting
             return downloadDirectory.FullName;
         }
 
-        private static string GetDefaultLogDirectory()
+        public static string GetDefaultLogDirectory()
         {
             string myDocuments = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 

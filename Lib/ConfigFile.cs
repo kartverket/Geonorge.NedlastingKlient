@@ -9,6 +9,7 @@ namespace Geonorge.MassivNedlasting
     {
         public const string Default = "Default";
 
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public string FilePath { get; set; }
         public string DownloadDirectory { get; set; }
@@ -16,15 +17,20 @@ namespace Geonorge.MassivNedlasting
         public DownloadUsage DownloadUsage { get; set; }
 
 
+        public ConfigFile()
+        {
+            Id = Guid.NewGuid();
+        }
 
         public static ConfigFile GetDefaultConfigFile()
         {
             return new ConfigFile()
             {
+                Id = Guid.NewGuid(),
                 Name = Default,
                 FilePath = ApplicationService.GetDownloadFilePath(),
                 DownloadDirectory = ApplicationService.GetDefaultDownloadDirectory(),
-                LogDirectory = ApplicationService.GetDefaultDownloadDirectory(),
+                LogDirectory = ApplicationService.GetDefaultLogDirectory(),
             };
         }
 

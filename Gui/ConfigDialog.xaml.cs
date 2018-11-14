@@ -3,6 +3,8 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Forms.VisualStyles;
 
 namespace Geonorge.MassivNedlasting.Gui
 {
@@ -61,13 +63,22 @@ namespace Geonorge.MassivNedlasting.Gui
             ShowDownloadUsage();
         }
 
+        private void ConfigFilesList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var cmbConfig = (ComboBox)sender;
+            if (cmbConfig != null && !string.IsNullOrWhiteSpace(cmbConfig.Text) && cmbConfig.SelectedItem != null)
+            {
+                _appSettings.LastOpendConfigFile = _appSettings.GetConfigByName(cmbConfig.SelectedItem.ToString());
+                ShowSelectedConfigFile();
+            }
+        }
+
 
         private void BtnNewConfigFile_OnClick(object sender, RoutedEventArgs e)
         {
             _appSettings.TempConfigFile = new ConfigFile();
             ApplicationService.WriteToAppSettingsFile(_appSettings);
-            _editConfig = false;
-            _newConfig = true;
+            StatusNewConfigFile();
 
             _selectedConfigFile = new ConfigFile();
             DownloadDirectory = string.Empty;
@@ -80,13 +91,14 @@ namespace Geonorge.MassivNedlasting.Gui
 
         private void BtnEditDownloadUsage_OnClick(object sender, RoutedEventArgs e)
         {
+            ApplicationService.WriteToAppSettingsFile(_appSettings);
             var downloadUsageDialog = new DownloadUsageDialog();
             downloadUsageDialog.ShowDialog();
             _appSettings = ApplicationService.GetAppSettings();
             if (_newConfig && _appSettings.TempConfigFile != null)
             {
                 _selectedConfigFile.DownloadUsage = _appSettings.TempConfigFile.DownloadUsage;
-                _appSettings.TempConfigFile = null;
+                //_appSettings.TempConfigFile = null;
             }
             else if (_editConfig)
             {
@@ -101,7 +113,7 @@ namespace Geonorge.MassivNedlasting.Gui
             {
                 foreach (var configFile in _appSettings.ConfigFiles)
                 {
-                    if (_selectedConfigFile.Name == configFile.Name)
+                    if (_selectedConfigFile.Id == configFile.Id)
                     {
                         var remove = _appSettings.ConfigFiles.Remove(_selectedConfigFile);
                         break;
@@ -111,47 +123,59 @@ namespace Geonorge.MassivNedlasting.Gui
                 ApplicationService.WriteToAppSettingsFile(_appSettings);
                 ShowSelectedConfigFile();
             }
-            // Feilmelding, kunne ikke slette? evt disable slett knapp...
+            StatusEditConfigFile();
         }
 
         private void BtnDialogSave_Click(object sender, RoutedEventArgs e)
         {
-            if (_editConfig)
+            if (NewConfigFileIsValid())
             {
-                foreach (var config in _appSettings.ConfigFiles)
+                if (_editConfig)
                 {
-                    if (config == _selectedConfigFile)
+                    foreach (var config in _appSettings.ConfigFiles)
                     {
-                        // Endre navn? config.Name = _selectedConfigFile.Name;
-                        // Endre Filename? config.FilePath = ApplicationService.GetDownloadFilePath(_selectedConfigFile.Name)
-                        config.DownloadDirectory = _selectedConfigFile.DownloadDirectory;
-                        config.LogDirectory = _selectedConfigFile.LogDirectory;
-                        break;
+                        if (config.Id == _selectedConfigFile.Id)
+                        {
+                            config.Name = ConfigNameTextBox.Text;
+                            config.FilePath = ApplicationService.GetDownloadFilePath(config.Name);
+                            config.DownloadDirectory = _selectedConfigFile.DownloadDirectory;
+                            config.LogDirectory = _selectedConfigFile.LogDirectory;
+                            _appSettings.LastOpendConfigFile = config;
+                            break;
+                        }
                     }
                 }
-            }
-            else
-            {
-                if (NewConfigFileIsValid())
+                else
                 {
                     var configFile = NewConfigFile();
                     _appSettings.ConfigFiles.Add(configFile);
                     _appSettings.LastOpendConfigFile = configFile;
                     _selectedConfigFile = configFile;
+                    _appSettings.TempConfigFile = null;
                 }
-                else
-                {
-                    return;
-                }
+            }
+            else
+            {
+                return;
             }
 
             _appSettings.TempConfigFile = null;
             ApplicationService.WriteToAppSettingsFile(_appSettings);
             ShowSelectedConfigFile();
-            //ConfigFilesList.ItemsSource = ApplicationService.NameConfigFiles();
-            //ConfigFilesList.SelectedItem = _selectedConfigFile.Name;
+            StatusEditConfigFile();
         }
 
+        private void StatusEditConfigFile()
+        {
+            _editConfig = true;
+            _newConfig = false;
+        }
+
+        private void StatusNewConfigFile()
+        {
+            _editConfig = false;
+            _newConfig = true;
+        }
 
         private ConfigFile NewConfigFile()
         {
@@ -160,7 +184,8 @@ namespace Geonorge.MassivNedlasting.Gui
                 DownloadDirectory = FolderPickerDialogBox.DirectoryPath,
                 LogDirectory = FolderPickerDialogBoxLog.DirectoryPath,
                 Name = ConfigNameTextBox.Text,
-                FilePath = ApplicationService.GetDownloadFilePath(ConfigNameTextBox.Text)
+                FilePath = ApplicationService.GetDownloadFilePath(ConfigNameTextBox.Text),
+                DownloadUsage = _selectedConfigFile.DownloadUsage
             };
         }
 
@@ -186,7 +211,7 @@ namespace Geonorge.MassivNedlasting.Gui
         {
             foreach (var config in _appSettings.ConfigFiles)
             {
-                if (config.Name == ConfigNameTextBox.Text)
+                if (config.Name == ConfigNameTextBox.Text && config.Id != _selectedConfigFile.Id)
                 {
                     return false;
                 }
@@ -237,7 +262,10 @@ namespace Geonorge.MassivNedlasting.Gui
             ConfigFilesList.ItemsSource = ApplicationService.NameConfigFiles();
             DownloadDirectory = _selectedConfigFile.DownloadDirectory;
             LogDirectory = _selectedConfigFile.LogDirectory;
-            ConfigFilesList.SelectedItem = _selectedConfigFile.Name;
+            if (ConfigFilesList.SelectedItem != _selectedConfigFile.Name)
+            {
+                ConfigFilesList.SelectedItem = _selectedConfigFile.Name;
+            }
             ConfigNameTextBox.Text = _selectedConfigFile.Name;
             GetDownloadUsage();
         }

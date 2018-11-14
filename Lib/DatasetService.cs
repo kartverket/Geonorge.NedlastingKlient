@@ -385,10 +385,10 @@ namespace Geonorge.MassivNedlasting
             var set = new HashSet<string>();
             for (int i = 0; i < items.Count; i++)
             {
-                if (!set.Contains(items[i].DatasetId)) // TODO, bytte med id.
+                if (!set.Contains(items[i].DatasetTitle))
                 {
                     result.Add(items[i]);
-                    set.Add(items[i].DatasetId); // TODO, bytte med id.
+                    set.Add(items[i].DatasetTitle);
                 }
             }
             return result;

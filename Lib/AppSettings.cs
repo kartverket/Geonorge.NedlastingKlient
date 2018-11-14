@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -46,6 +47,17 @@ namespace Geonorge.MassivNedlasting
                 }
             }
             return null;
+        }
+
+        public List<string> NameConfigFiles()
+        {
+            var nameConfigFiles = new List<string>();
+            foreach (var configFile in ConfigFiles)
+            {
+                nameConfigFiles.Add(configFile.Name);
+            }
+
+            return nameConfigFiles;
         }
     }
 

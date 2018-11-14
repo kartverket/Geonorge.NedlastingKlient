@@ -3,8 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:gui="clr-namespace:Geonorge.MassivNedlasting.Gui"
-        MinWidth="550"
+        MinWidth="550" Height="Auto" MinHeight="500"
         Title="Config-fil" SizeToContent="WidthAndHeight" Icon="Content/geonorge.ico" WindowStartupLocation="CenterScreen">
+    
     <StackPanel Margin="0">
 
         <Grid Background="#dfdcda">
@@ -13,7 +14,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <ComboBox Grid.Column="0"  materialDesign:HintAssist.Hint="Config-filer" Name="ConfigFilesList" Margin="20" FlowDirection="LeftToRight"/>
+            <ComboBox Grid.Column="0"  materialDesign:HintAssist.Hint="Config-filer" Name="ConfigFilesList" SelectionChanged="ConfigFilesList_OnSelectionChanged" Margin="20" FlowDirection="LeftToRight"/>
             <Button  Grid.Column="1" Style="{StaticResource MaterialDesignRaisedButton}" Margin="20" Click="BtnNewConfigFile_OnClick" Width="50"  FlowDirection="RightToLeft" VerticalAlignment="Bottom">Ny</Button>
         </Grid>
 

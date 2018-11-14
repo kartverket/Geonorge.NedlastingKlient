@@ -39,7 +39,7 @@ namespace Geonorge.MassivNedlasting.Gui
             _appSettings = ApplicationService.GetAppSettings();
             _datasetService = new DatasetService(_appSettings.LastOpendConfigFile);
             _selectedConfigFile = _appSettings.LastOpendConfigFile;
-
+            
             try
             {
                 LbDatasets.ItemsSource = _datasetService.GetDatasets();
@@ -57,13 +57,14 @@ namespace Geonorge.MassivNedlasting.Gui
             {
                 _projections = _datasetService.ReadFromProjectionFile();
             }
+
+            _selectedFilesForDownload = _datasetService.GetSelectedFilesToDownloadAsViewModel(_projections);
+            _selectedDatasetFiles = new List<DatasetFileViewModel>();
+
             var viewDatasets = (CollectionView)CollectionViewSource.GetDefaultView(LbDatasets.ItemsSource);
             if (viewDatasets != null) viewDatasets.Filter = UserDatasetFilter;
 
-
-            _selectedFilesForDownload = _datasetService.GetSelectedFilesToDownloadAsViewModel(_projections);
             LbSelectedFilesForDownload.ItemsSource = _selectedFilesForDownload;
-            _selectedDatasetFiles = new List<DatasetFileViewModel>();
 
             cmbConfigFiles.ItemsSource = ApplicationService.NameConfigFiles();
             cmbConfigFiles.SelectedItem = _selectedConfigFile.Name;
@@ -372,6 +373,10 @@ namespace Geonorge.MassivNedlasting.Gui
         {
             var loginDialog = new SettingsDialog();
             loginDialog.ShowDialog();
+            _appSettings = ApplicationService.GetAppSettings();
+            _selectedConfigFile = _appSettings.LastOpendConfigFile;
+            cmbConfigFiles.ItemsSource = _appSettings.NameConfigFiles();
+            cmbConfigFiles.SelectedItem = _selectedConfigFile.Name;
         }
 
         private void BtnHelp_OnClick(object sender, RoutedEventArgs e)
@@ -457,6 +462,7 @@ namespace Geonorge.MassivNedlasting.Gui
             }
         }
 
+        
         private void CmbConfigFiles_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var cmbConfig = (ComboBox) sender;
@@ -464,6 +470,8 @@ namespace Geonorge.MassivNedlasting.Gui
             {
                 SaveDownloadList();
                 _datasetService = new DatasetService(ApplicationService.GetConfigByName(cmbConfig.SelectedItem.ToString()));
+                _appSettings.LastOpendConfigFile = ApplicationService.GetConfigByName(cmbConfig.SelectedItem.ToString());
+                ApplicationService.WriteToAppSettingsFile(_appSettings);
                 _selectedFilesForDownload = _datasetService.GetSelectedFilesToDownloadAsViewModel(_projections);
                 LbSelectedFilesForDownload.ItemsSource = _selectedFilesForDownload;
             }
