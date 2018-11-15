@@ -260,8 +260,8 @@ namespace Geonorge.MassivNedlasting.Gui
         {
             _selectedConfigFile = _appSettings.LastOpendConfigFile;
             ConfigFilesList.ItemsSource = ApplicationService.NameConfigFiles();
-            DownloadDirectory = _selectedConfigFile.DownloadDirectory;
-            LogDirectory = _selectedConfigFile.LogDirectory;
+            FolderPickerDialogBoxLog.DirectoryPath = _selectedConfigFile.LogDirectory;
+            FolderPickerDialogBox.DirectoryPath = _selectedConfigFile.DownloadDirectory;
             if (ConfigFilesList.SelectedItem != _selectedConfigFile.Name)
             {
                 ConfigFilesList.SelectedItem = _selectedConfigFile.Name;
