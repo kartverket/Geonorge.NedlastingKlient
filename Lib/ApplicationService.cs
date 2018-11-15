@@ -66,6 +66,17 @@ namespace Geonorge.MassivNedlasting
         }
 
         /// <summary>
+        /// Returns path to the old version, "download.json", of config file
+        /// </summary>
+        /// <returns></returns>
+        public static string GetOldDownloadFilePath()
+        {
+            DirectoryInfo appDirectory = GetAppDirectory();
+
+            return Path.Combine(appDirectory.FullName, "download.json");
+        }
+
+        /// <summary>
         /// Returns path to the file containing the list of downloaded datasets.
         /// </summary>
         /// <returns></returns>
@@ -198,22 +209,6 @@ namespace Geonorge.MassivNedlasting
             serializer.NullValueHandling = NullValueHandling.Ignore;
 
             using (var outputFile = new StreamWriter(GetAppSettingsFilePath(), false))
-            {
-                using (JsonWriter writer = new JsonTextWriter(outputFile))
-                {
-                    serializer.Serialize(writer, appSettings);
-                    writer.Close();
-                }
-            }
-        }
-
-        public static void WriteNewSettingToAppSettingsFile(AppSettings appSettings)
-        {
-            var serializer = new JsonSerializer();
-            serializer.Converters.Add(new JavaScriptDateTimeConverter());
-            serializer.NullValueHandling = NullValueHandling.Ignore;
-
-            using (var outputFile = new StreamWriter(GetAppSettingsFilePath(), true))
             {
                 using (JsonWriter writer = new JsonTextWriter(outputFile))
                 {

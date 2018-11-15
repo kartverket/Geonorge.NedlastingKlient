@@ -39,7 +39,10 @@ namespace Geonorge.MassivNedlasting.Gui
             _appSettings = ApplicationService.GetAppSettings();
             _datasetService = new DatasetService(_appSettings.LastOpendConfigFile);
             _selectedConfigFile = _appSettings.LastOpendConfigFile;
-            
+
+            _datasetService.ConvertDownloadToDefaultConfigFileIfExists();
+
+
             try
             {
                 LbDatasets.ItemsSource = _datasetService.GetDatasets();
@@ -113,12 +116,13 @@ namespace Geonorge.MassivNedlasting.Gui
                         progressBar.IsIndeterminate = true;
 
                         LbSelectedDatasetFiles.ItemsSource = await Task.Run(() => GetFilesAsync(selectedDataset));
-                        progressBar.IsIndeterminate = false;
                         var viewDatasetFiles =
                             (CollectionView)CollectionViewSource.GetDefaultView(LbSelectedDatasetFiles.ItemsSource);
                         if (viewDatasetFiles != null) viewDatasetFiles.Filter = UserDatasetFileFilter;
 
                         SubscribeOnSelectedDataset(selectedDataset.Title);
+                        progressBar.IsIndeterminate = false;
+
                     }
                 }
 
@@ -284,7 +288,7 @@ namespace Geonorge.MassivNedlasting.Gui
 
         private void SaveDownloadList()
         {
-            _datasetService.WriteToDownloadFile(_selectedFilesForDownload);
+            _datasetService.WriteToConfigFile(_selectedFilesForDownload);
         }
 
         private void BtnSelectAll_OnClick(object sender, RoutedEventArgs e)

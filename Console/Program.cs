@@ -108,7 +108,7 @@ namespace Geonorge.Nedlaster
             }
 
             datasetService.SendDownloadUsage(downloadUsage);
-            datasetService.WriteToDownloadFile(updatedDatasetToDownload);
+            datasetService.WriteToConfigFile(updatedDatasetToDownload);
             datasetService.WriteToDownloadHistoryFile(updatedDatasetToDownload);
             datasetService.WriteToDownloadLogFile(downloadLog);
         }

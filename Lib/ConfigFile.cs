@@ -38,6 +38,11 @@ namespace Geonorge.MassivNedlasting
         {
             return DownloadUsage != null && DownloadUsage.Group.Any() && DownloadUsage.Purpose != null;
         }
+
+        public bool IsDefault()
+        {
+            return Name == Default;
+        }
     }
 
     public class ConfigFileViewModel

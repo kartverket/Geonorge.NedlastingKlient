@@ -150,8 +150,9 @@
 
             <ProgressBar
                 Value="0" 
-                Name="progressBar" Background="White" BorderBrush="White"
-                IsIndeterminate="False">
+                Name="progressBar"
+                IsIndeterminate="False"
+                Background="White" BorderThickness="0">
             </ProgressBar>
 
 
@@ -256,7 +257,7 @@
 
             <!-- Liste over filer valgt for nedlasting-->
 
-            <TreeView Name ="LbSelectedFilesForDownload" ItemsSource="{Binding Downloads}" Margin="10" Height="300">
+            <TreeView VirtualizingStackPanel.IsVirtualizing="True" Name ="LbSelectedFilesForDownload" ItemsSource="{Binding Downloads}" Margin="10" Height="300">
                 <TreeView.ItemTemplate>
                     <HierarchicalDataTemplate ItemsSource="{Binding Files}" DataType="{x:Type local:DatasetFileViewModel}">
                         <TextBlock Text="{Binding DatasetTitle}">
