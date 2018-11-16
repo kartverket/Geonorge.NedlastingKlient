@@ -41,7 +41,7 @@ namespace Geonorge.MassivNedlasting
         {
             foreach (var configFile in ConfigFiles)
             {
-                if (configFile.Name == name)
+                if (configFile.Name.ToLower() == name.ToLower())
                 {
                     return configFile;
                 }

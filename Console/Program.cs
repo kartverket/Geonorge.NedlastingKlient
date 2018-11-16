@@ -10,24 +10,46 @@ namespace Geonorge.Nedlaster
 {
     public class Program
     {
-        public static void Main(string[] args, string configFile)
+        public static void Main(string[] args)
         {
             Console.WriteLine("Geonorge - nedlaster");
             Console.WriteLine("--------------------");
             DeleteOldLogs();
-            StartDownloadAsync(configFile).Wait();
+            var appSettings = ApplicationService.GetAppSettings();
+
+            if (args != null)
+            {
+                foreach (var configName in args)
+                {
+                    var config = appSettings.GetConfigByName(configName);
+                    if (config != null)
+                    {
+                        StartDownloadAsync(config).Wait();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Error: Could not find config file: " + configName);
+                    }
+                }
+            }
+            else
+            {
+                foreach (var config in appSettings.ConfigFiles)
+                {
+                    StartDownloadAsync(config).Wait();
+                }     
+            }
         }
 
-        private static async Task StartDownloadAsync(string configFileName)
+        private static async Task StartDownloadAsync(ConfigFile config)
         {
             var appSettings = ApplicationService.GetAppSettings();
-            var configFile = appSettings.GetConfigByName(configFileName);
-            var datasetService = new DatasetService(configFile);
+            var datasetService = new DatasetService(config);
             var updatedDatasetToDownload = new List<Download>();
             var downloadLog = new DownloadLog();
             var downloader = new FileDownloader();
             var datasetToDownload = datasetService.GetSelectedFilesToDownload();
-            var downloadUsage = configFile.DownloadUsage;
+            var downloadUsage = config.DownloadUsage;
 
             downloadLog.TotalDatasetsToDownload = datasetToDownload.Count;
 
@@ -41,7 +63,7 @@ namespace Geonorge.Nedlaster
 
                     if (localDataset.AutoDeleteFiles)
                     {
-                        localDataset.Files = RemoveFiles(datasetFilesFromFeed, localDataset.Files, configFile);
+                        localDataset.Files = RemoveFiles(datasetFilesFromFeed, localDataset.Files, config);
                     }
 
                     if (localDataset.AutoAddFiles)
@@ -58,7 +80,7 @@ namespace Geonorge.Nedlaster
                     {
                         Console.WriteLine(datasetFile.DatasetId + " - " + datasetFile.Title);
 
-                        DirectoryInfo downloadDirectory = GetDownloadDirectory(configFile, datasetFile);
+                        DirectoryInfo downloadDirectory = GetDownloadDirectory(config, datasetFile);
                         DatasetFile datasetFromFeed = datasetService.GetDatasetFile(datasetFile);
                         DownloadHistory downloadHistory = datasetService.GetFileDownloaHistory(datasetFile.Url);
                         bool newDatasetAvailable = NewDatasetAvailable(downloadHistory, datasetFromFeed, downloadDirectory);

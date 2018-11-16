@@ -80,20 +80,19 @@ namespace Geonorge.MassivNedlasting
         /// Returns path to the file containing the list of downloaded datasets.
         /// </summary>
         /// <returns></returns>
-        public static string GetDownloadHistoryFilePath()
+        public static string GetDownloadHistoryFilePath(string configName)
         {
-            DirectoryInfo appDirectory = GetAppDirectory();
+            DirectoryInfo configDirectory = GetConfigAppDirectory();
 
-            return Path.Combine(appDirectory.FullName, "downloadHistory.json");
+            return Path.Combine(configDirectory.FullName, configName + "-downloadHistory.json");
         }
 
         /// <summary>
         /// Returns path to the log file containing the list of downloaded datasets.
         /// </summary>
         /// <returns></returns>
-        public static string GetDownloadLogFilePath()
+        public static string GetDownloadLogFilePath(string logDirectory)
         {
-            var logDirectory = LogDirectory();
             var name = DateTime.Now.ToString("yyyy-M-dd--HH-mm-ss");
 
             return Path.Combine(logDirectory, name + ".txt");

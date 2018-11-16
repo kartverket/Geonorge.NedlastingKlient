@@ -16,7 +16,7 @@ namespace Geonorge.MassivNedlasting
     public class DatasetService
     {
         private static readonly HttpClient HttpClient = new HttpClient();
-        private ConfigFile _configFile;
+        private ConfigFile _configFile = ConfigFile.GetDefaultConfigFile();
 
         public DatasetService()
         {
@@ -200,7 +200,7 @@ namespace Geonorge.MassivNedlasting
             serializer.NullValueHandling = NullValueHandling.Ignore;
             try
             {
-                using (var w = new StreamWriter(ApplicationService.GetDownloadLogFilePath()))
+                using (var w = new StreamWriter(ApplicationService.GetDownloadLogFilePath(_configFile.LogDirectory)))
                 {
                     w.WriteLine("SELECTED FILES: " + downloadLog.TotalDatasetsToDownload);
                     w.WriteLine("-------------------------------");
@@ -274,7 +274,7 @@ namespace Geonorge.MassivNedlasting
             serializer.Converters.Add(new JavaScriptDateTimeConverter());
             serializer.NullValueHandling = NullValueHandling.Ignore;
 
-            using (var outputFile = new StreamWriter(ApplicationService.GetDownloadHistoryFilePath(), false))
+            using (var outputFile = new StreamWriter(ApplicationService.GetDownloadHistoryFilePath(_configFile.Name), false))
             using (JsonWriter writer = new JsonTextWriter(outputFile))
             {
                 serializer.Serialize(writer, downloadHistory);
@@ -448,7 +448,7 @@ namespace Geonorge.MassivNedlasting
         /// <returns></returns>
         public DownloadHistory GetFileDownloaHistory(string url)
         {
-            var downloadHistoryFilePath = ApplicationService.GetDownloadHistoryFilePath();
+            var downloadHistoryFilePath = ApplicationService.GetDownloadHistoryFilePath(_configFile.Name);
             try
             {
                 using (var r = new StreamReader(downloadHistoryFilePath))
