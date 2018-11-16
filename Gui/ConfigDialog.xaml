@@ -15,10 +15,15 @@
             </Grid.ColumnDefinitions>
 
             <ComboBox Grid.Column="0"  materialDesign:HintAssist.Hint="Config-filer" Name="ConfigFilesList" SelectionChanged="ConfigFilesList_OnSelectionChanged" Margin="20" FlowDirection="LeftToRight"/>
-            <Button  Grid.Column="1" Style="{StaticResource MaterialDesignRaisedButton}" Margin="20" Click="BtnNewConfigFile_OnClick" Width="50"  FlowDirection="RightToLeft" VerticalAlignment="Bottom">Ny</Button>
+            <Button  Grid.Column="1" Name="btnNew" Style="{StaticResource MaterialDesignRaisedButton}" Margin="20" Click="BtnNewConfigFile_OnClick" Width="50"  FlowDirection="RightToLeft" VerticalAlignment="Bottom">Ny</Button>
         </Grid>
 
-        <Grid Margin="20">
+        <StackPanel Name="Validation" Background="#FFCCCC" Visibility="Collapsed">
+            <ItemsControl Margin="20" Name="ErrorList"/>
+        </StackPanel>
+        
+
+            <Grid Margin="20">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="3*"/>
@@ -32,6 +37,7 @@
                 <RowDefinition Height="Auto"></RowDefinition>
             </Grid.RowDefinitions>
 
+            
             <!--Navn-->
             <TextBlock Margin="0 10 0 0" Style="{StaticResource MaterialDesignBody2TextBlock}">Navn</TextBlock>
             <TextBox 

@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -85,6 +86,7 @@ namespace Geonorge.MassivNedlasting.Gui
             LogDirectory = string.Empty;
             FolderPickerDialogBox.DirectoryPath = null;
             FolderPickerDialogBoxLog.DirectoryPath = null;
+            btnNew.IsEnabled = false;
 
             HideDownloadUsage();
         }
@@ -109,21 +111,29 @@ namespace Geonorge.MassivNedlasting.Gui
 
         private void BtnDialogDelete_Click(object sender, RoutedEventArgs e)
         {
-            if (_appSettings.ConfigFiles.Count > 1)
+            var result = MessageBox.Show("Er du sikker på at du vil slette " + _selectedConfigFile.Name, "Slett",
+                MessageBoxButton.YesNo);
+
+            if (result == MessageBoxResult.Yes)
             {
-                foreach (var configFile in _appSettings.ConfigFiles)
+                if (_appSettings.ConfigFiles.Count > 1)
                 {
-                    if (_selectedConfigFile.Id == configFile.Id)
+                    foreach (var configFile in _appSettings.ConfigFiles)
                     {
-                        var remove = _appSettings.ConfigFiles.Remove(_selectedConfigFile);
-                        break;
+                        if (_selectedConfigFile.Id == configFile.Id)
+                        {
+                            var remove = _appSettings.ConfigFiles.Remove(_selectedConfigFile);
+                            break;
+                        }
                     }
+
+                    _appSettings.LastOpendConfigFile = _appSettings.ConfigFiles.FirstOrDefault();
+                    ApplicationService.WriteToAppSettingsFile(_appSettings);
+                    ShowSelectedConfigFile();
                 }
-                _appSettings.LastOpendConfigFile = _appSettings.ConfigFiles.FirstOrDefault();
-                ApplicationService.WriteToAppSettingsFile(_appSettings);
-                ShowSelectedConfigFile();
+
+                StatusEditConfigFile();
             }
-            StatusEditConfigFile();
         }
 
         private void BtnDialogSave_Click(object sender, RoutedEventArgs e)
@@ -152,6 +162,7 @@ namespace Geonorge.MassivNedlasting.Gui
                     _appSettings.LastOpendConfigFile = configFile;
                     _selectedConfigFile = configFile;
                     _appSettings.TempConfigFile = null;
+
                 }
             }
             else
@@ -221,39 +232,60 @@ namespace Geonorge.MassivNedlasting.Gui
 
         private bool NewConfigFileIsValid()
         {
+            var errorList = new List<string>();
             bool valid = true;
 
             if (!NameIsValid())
             {
                 valid = false;
+                errorList.Add("* Navn finnes fra før");
             }
             if (string.IsNullOrWhiteSpace(FolderPickerDialogBox.DirectoryPath))
             {
                 // Feilmelding
                 valid = false;
+                errorList.Add("* Nedlastingsmappe er ikke angitt");
             }
             if (string.IsNullOrWhiteSpace(FolderPickerDialogBoxLog.DirectoryPath))
             {
                 // Feilmelding
                 valid = false;
+                errorList.Add("* Logg mappe er ikke angitt");
             }
             if (string.IsNullOrWhiteSpace(ConfigNameTextBox.Text))
             {
                 // Feilmelding
                 valid = false;
-            }
-            if (string.IsNullOrWhiteSpace(ConfigNameTextBox.Text))
-            {
-                // Feilmelding
-                valid = false;
+                errorList.Add("* Navn er ikke angitt");
             }
             if (string.IsNullOrWhiteSpace(DownloadUsageGroup.Text))
             {
                 // Feilmelding
                 valid = false;
+                errorList.Add("* Brukergruppe og formål er ikke angitt");
             }
 
+            if (!valid)
+            {
+                ShowValidation(errorList);
+            }
+            else
+            {
+                HideValidation();
+            }
             return valid;
+        }
+
+        private void ShowValidation(List<string> errorList)
+        {
+            Validation.Visibility = Visibility.Visible;
+            ErrorList.ItemsSource = errorList;
+        }
+
+        private void HideValidation()
+        {
+            Validation.Visibility = Visibility.Collapsed;
+            ErrorList.ItemsSource = null;
         }
 
         private void ShowSelectedConfigFile()
@@ -266,8 +298,12 @@ namespace Geonorge.MassivNedlasting.Gui
             {
                 ConfigFilesList.SelectedItem = _selectedConfigFile.Name;
             }
+
             ConfigNameTextBox.Text = _selectedConfigFile.Name;
+            HideValidation();
+            btnNew.IsEnabled = true;
             GetDownloadUsage();
+
         }
     }
 }
