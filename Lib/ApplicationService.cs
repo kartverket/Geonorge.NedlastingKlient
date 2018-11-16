@@ -17,9 +17,10 @@ namespace Geonorge.MassivNedlasting
     {
 
         /// <summary>
-        /// Returns path to the file containing the list of dataset to download. Return default if file name is not set. 
+        /// Returns path to the config file containing the list of dataset to download. Return default if file name is not set. 
         /// </summary>
-        /// <returns></returns>
+        /// <param name="fileName">Name of config file</param>
+        /// <returns>Path</returns>
         public static string GetDownloadFilePath(string fileName = null)
         {
             DirectoryInfo configDirectory = GetConfigAppDirectory();
@@ -66,7 +67,7 @@ namespace Geonorge.MassivNedlasting
         }
 
         /// <summary>
-        /// Returns path to the old version, "download.json", of config file
+        /// Returns path to the old version, "download.json", of config file.
         /// </summary>
         /// <returns></returns>
         public static string GetOldDownloadFilePath()
@@ -77,8 +78,9 @@ namespace Geonorge.MassivNedlasting
         }
 
         /// <summary>
-        /// Returns path to the file containing the list of downloaded datasets.
+        /// Returns path to the file containing the list of downloaded datasets pr config file
         /// </summary>
+        /// <param name="configName">Name of config selected config file.</param>
         /// <returns></returns>
         public static string GetDownloadHistoryFilePath(string configName)
         {
@@ -98,14 +100,8 @@ namespace Geonorge.MassivNedlasting
             return Path.Combine(logDirectory, name + ".txt");
         }
 
-
-        public static string GetUserName()
-        {
-            return GetAppSettings().Username;
-        }
-
         /// <summary>
-        ///     App directory is located within the users AppData folder
+        /// App directory is located within the users AppData folder
         /// </summary>
         /// <returns></returns>
         public static DirectoryInfo GetAppDirectory()
@@ -122,11 +118,12 @@ namespace Geonorge.MassivNedlasting
         }
 
         /// <summary>
-        ///     App directory is located within the users AppData folder
+        /// App directory is located within the users AppData folder
         /// </summary>
         /// <returns></returns>
         public static DirectoryInfo GetLogAppDirectory()
         {
+            // TODO brukes til å logge hendelser i applikasjonen utenfor selve nedlastingen.. ?
             var appDirectory = new DirectoryInfo(GetAppDirectory().ToString() + Path.DirectorySeparatorChar + "Log");
 
             if (!appDirectory.Exists)
@@ -150,6 +147,10 @@ namespace Geonorge.MassivNedlasting
             return appDirectory;
         }
 
+        /// <summary>
+        /// Get application settings
+        /// </summary>
+        /// <returns>Return applications if set, else return default settings. </returns>
         public static AppSettings GetAppSettings()
         {
             var appSettingsFileInfo = new FileInfo(GetAppSettingsFilePath());
@@ -166,19 +167,11 @@ namespace Geonorge.MassivNedlasting
             return JsonConvert.DeserializeObject<AppSettings>(File.ReadAllText(GetAppSettingsFilePath())); ;
         }
 
-        private static void SetDefaultIfSettingsNotSet()
-        {
-            AppSettings appSetting = JsonConvert.DeserializeObject<AppSettings>(File.ReadAllText(GetAppSettingsFilePath()));
 
-            if (!appSetting.LastOpendConfigFileIsSet() || !appSetting.ConfigFiles.Any())
-            {
-                appSetting.LastOpendConfigFile = appSetting.LastOpendConfigFile ?? ConfigFile.GetDefaultConfigFile();
-                appSetting.ConfigFiles = appSetting.ConfigFiles ?? new List<ConfigFile>{ConfigFile.GetDefaultConfigFile()};
-
-                WriteToAppSettingsFile(appSetting);
-            }
-        }
-
+        /// <summary>
+        /// Default download directory path. 
+        /// </summary>
+        /// <returns>Directory path</returns>
         public static string GetDefaultDownloadDirectory()
         {
             string myDocuments = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
@@ -190,6 +183,10 @@ namespace Geonorge.MassivNedlasting
             return downloadDirectory.FullName;
         }
 
+        /// <summary>
+        /// Default log directory path
+        /// </summary>
+        /// <returns>Log path</returns>
         public static string GetDefaultLogDirectory()
         {
             string myDocuments = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
@@ -201,6 +198,10 @@ namespace Geonorge.MassivNedlasting
             return logDirectory.FullName;
         }
 
+        /// <summary>
+        /// Write application settings to settings file
+        /// </summary>
+        /// <param name="appSettings">Application settings</param>
         public static void WriteToAppSettingsFile(AppSettings appSettings)
         {
             var serializer = new JsonSerializer();
@@ -217,21 +218,10 @@ namespace Geonorge.MassivNedlasting
             }
         }
 
-        private static string GetAppSettingsFilePath()
-        {
-            return Path.Combine(GetAppDirectory().FullName, "settings.json");
-        }
-
-        public static string DownloadDirectory()
-        {
-            return GetAppSettings().LastOpendConfigFile.DownloadDirectory;
-        }
-
-        public static string LogDirectory()
-        {
-            return GetAppSettings().LastOpendConfigFile.LogDirectory;
-        }
-
+        /// <summary>
+        /// List with names of all config files 
+        /// </summary>
+        /// <returns></returns>
         public static List<string> NameConfigFiles()
         {
             var configFiles = GetAppSettings().ConfigFiles;
@@ -244,19 +234,29 @@ namespace Geonorge.MassivNedlasting
             return nameConfigFiles;
         }
 
-        public static ConfigFile GetConfigByName(string name)
+        /// <summary>
+        /// Application settings file path
+        /// </summary>
+        /// <returns></returns>
+        private static string GetAppSettingsFilePath()
         {
-            var configFiles = GetAppSettings().ConfigFiles;
-            foreach (var configFile in configFiles)
+            return Path.Combine(GetAppDirectory().FullName, "settings.json");
+        }
+
+        /// <summary>
+        /// If application settings is not set, return default
+        /// </summary>
+        private static void SetDefaultIfSettingsNotSet()
+        {
+            AppSettings appSetting = JsonConvert.DeserializeObject<AppSettings>(File.ReadAllText(GetAppSettingsFilePath()));
+
+            if (!appSetting.LastOpendConfigFileIsSet() || !appSetting.ConfigFiles.Any())
             {
-                if (configFile.Name == name)
-                {
-                    return configFile;
-                }
+                appSetting.LastOpendConfigFile = appSetting.LastOpendConfigFile ?? ConfigFile.GetDefaultConfigFile();
+                appSetting.ConfigFiles = appSetting.ConfigFiles ?? new List<ConfigFile> { ConfigFile.GetDefaultConfigFile() };
+
+                WriteToAppSettingsFile(appSetting);
             }
-
-            return null;
-
         }
     }
 }

@@ -4,42 +4,34 @@ namespace Geonorge.MassivNedlasting
 {
     public class Dataset
     {
+        /// <summary>
+        /// Dataset title
+        /// </summary>
         public string Title { get; set; }
+
+        /// <summary>
+        /// Dataset description
+        /// </summary>
         public string Description { get; set; }
+
+        /// <summary>
+        /// Dataset uuid
+        /// </summary>
         public string Uuid { get; set; }
+
+        /// <summary>
+        /// Url to dataset in feed
+        /// </summary>
         public string Url { get; set; }
+
+        /// <summary>
+        /// Date when dataset was updated
+        /// </summary>
         public string LastUpdated { get; set; }
+
+        /// <summary>
+        /// Owner of dataset
+        /// </summary>
         public string Organization { get; set; }
     }
-
-    public class DatasetViewModel
-    {
-        private Dataset selectedDataset;
-
-        public string DatasetId { get; set; }
-        public bool Subscribe { get; set; }
-        public bool AutoDeleteFiles { get; set; }
-        public bool AutoAddFiles { get; set; }
-        public List<DatasetFileViewModel> Files { get; set; }
-
-        public DatasetViewModel()
-        {
-            Files = new List<DatasetFileViewModel>();
-        }
-
-        public DatasetViewModel(Dataset selectedDataset, List<DatasetFileViewModel> selectedDatasetFiles)
-        {
-            DatasetId = selectedDataset.Title;
-        }
-
-        public DatasetViewModel(Dataset selectedDataset, bool subscribe)
-        {
-            DatasetId = selectedDataset.Title;
-            Subscribe = subscribe;
-            AutoAddFiles = subscribe;
-            AutoAddFiles = subscribe;
-            Files = new List<DatasetFileViewModel>();
-        }
-    }
-
 }

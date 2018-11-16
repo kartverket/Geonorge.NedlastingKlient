@@ -23,11 +23,19 @@ namespace Geonorge.MassivNedlasting
 
         }
 
+        /// <summary>
+        /// Use selected config file when using download service. 
+        /// </summary>
+        /// <param name="configFile">Selected config file</param>
         public DatasetService(ConfigFile configFile)
         {
             _configFile = configFile;
         }
 
+        /// <summary>
+        /// Return dataset from feed "https://nedlasting.geonorge.no/geonorge/Tjenestefeed_daglig.xml"
+        /// </summary>
+        /// <returns></returns>
         public List<Dataset> GetDatasets()
         {
             var getFeedTask = HttpClient.GetStringAsync("https://nedlasting.geonorge.no/geonorge/Tjenestefeed_daglig.xml");

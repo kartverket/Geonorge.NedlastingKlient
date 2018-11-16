@@ -9,7 +9,57 @@ namespace Geonorge.MassivNedlasting
         private DatasetFileViewModel datasetFileViewModel;
         private const string NorwayDigitalRestricted = "norway digital restricted";
         private const string Restricted = "restricted";
-        private const string NoRestrictions = "norway digital restricted";
+
+        /// <summary>
+        /// Dataset file title
+        /// </summary>
+        public string Title { get; set; }
+
+        /// <summary>
+        /// Dataset file description
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
+        /// Url to download file
+        /// </summary>
+        public string Url { get; set; }
+
+        /// <summary>
+        /// Date when file was updated
+        /// </summary>
+        public string LastUpdated { get; set; }
+
+        /// <summary>
+        /// Owner organization
+        /// </summary>
+        public string Organization { get; set; }
+
+        /// <summary>
+        /// Projection of file
+        /// </summary>
+        public string Projection { get; set; }
+
+        /// <summary>
+        /// DatasetId (Dataset title) to the dataset where file belongs
+        /// </summary>
+        public string DatasetId { get; set; }
+
+        /// <summary>
+        /// Url to the dataset where file belongs
+        /// </summary>
+        public string DatasetUrl { get; set; }
+
+        /// <summary>
+        /// File restriction
+        /// </summary>
+        public string Restrictions { get; set; }
+
+        /// <summary>
+        /// File path
+        /// </summary>
+        public string FilePath { get; set; }
+
 
         public DatasetFile(DatasetFileViewModel datasetFileViewModel)
         {
@@ -27,17 +77,6 @@ namespace Geonorge.MassivNedlasting
         public DatasetFile()
         {
         }
-
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public string Url { get; set; }
-        public string LastUpdated { get; set; }
-        public string Organization { get; set; }
-        public string Projection { get; set; }
-        public string DatasetId { get; set; }
-        public string DatasetUrl { get; set; }
-        public string Restrictions { get; set; }
-        public string FilePath { get; set; }
 
         public bool IsRestricted()
         {
@@ -57,11 +96,6 @@ namespace Geonorge.MassivNedlasting
         public bool HasLocalFileName()
         {
             return !string.IsNullOrWhiteSpace(LocalFileName());
-        }
-
-        public void SetFilePath(string filePath)
-        {
-            FilePath = filePath;
         }
     }
 

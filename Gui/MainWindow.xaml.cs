@@ -473,8 +473,8 @@ namespace Geonorge.MassivNedlasting.Gui
             if (cmbConfig != null)
             {
                 SaveDownloadList();
-                _datasetService = new DatasetService(ApplicationService.GetConfigByName(cmbConfig.SelectedItem.ToString()));
-                _appSettings.LastOpendConfigFile = ApplicationService.GetConfigByName(cmbConfig.SelectedItem.ToString());
+                _datasetService = new DatasetService(_appSettings.GetConfigByName(cmbConfig.SelectedItem.ToString()));
+                _appSettings.LastOpendConfigFile = _appSettings.GetConfigByName(cmbConfig.SelectedItem.ToString());
                 ApplicationService.WriteToAppSettingsFile(_appSettings);
                 _selectedFilesForDownload = _datasetService.GetSelectedFilesToDownloadAsViewModel(_projections);
                 LbSelectedFilesForDownload.ItemsSource = _selectedFilesForDownload;
