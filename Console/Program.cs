@@ -14,7 +14,6 @@ namespace Geonorge.Nedlaster
         {
             Console.WriteLine("Geonorge - nedlaster");
             Console.WriteLine("--------------------");
-            DeleteOldLogs();
             var appSettings = ApplicationService.GetAppSettings();
 
             if (args != null)
@@ -24,6 +23,7 @@ namespace Geonorge.Nedlaster
                     var config = appSettings.GetConfigByName(configName);
                     if (config != null)
                     {
+                        DeleteOldLogs(config.LogDirectory);
                         StartDownloadAsync(config).Wait();
                     }
                     else
@@ -37,7 +37,7 @@ namespace Geonorge.Nedlaster
                 foreach (var config in appSettings.ConfigFiles)
                 {
                     StartDownloadAsync(config).Wait();
-                }     
+                }
             }
         }
 
@@ -135,7 +135,7 @@ namespace Geonorge.Nedlaster
             datasetService.WriteToDownloadLogFile(downloadLog);
         }
 
-        
+
         private static List<DatasetFile> AddFiles(List<DatasetFile> datasetFilesFromFeed, List<DatasetFile> localDatasetFiles)
         {
             var datasetFiles = localDatasetFiles.ToList();
@@ -240,15 +240,22 @@ namespace Geonorge.Nedlaster
             return filePath.Exists;
         }
 
-        private static void DeleteOldLogs()
+        private static void DeleteOldLogs(string logDirectory)
         {
-            string[] files = Directory.GetFiles(ApplicationService.GetLogAppDirectory().ToString());
-
-            foreach (string file in files)
+            try
             {
-                FileInfo fi = new FileInfo(file);
-                if (fi.LastAccessTime < DateTime.Now.AddMonths(-1))
-                    fi.Delete();
+                string[] files = Directory.GetFiles(logDirectory);
+
+                foreach (string file in files)
+                {
+                    FileInfo fi = new FileInfo(file);
+                    if (fi.LastAccessTime < DateTime.Now.AddMonths(-1))
+                        fi.Delete();
+                }
+            }
+            catch (Exception e)
+            {
+                // logge?
             }
         }
 
