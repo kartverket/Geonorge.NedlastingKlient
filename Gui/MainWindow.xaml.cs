@@ -345,7 +345,7 @@ namespace Geonorge.MassivNedlasting.Gui
                 Path.Combine(executingAssemblyDirectory, "..", "Nedlaster", "Geonorge.Nedlaster.exe");
             try
             {
-                Process.Start(pathToConsoleApp);
+                Process.Start(pathToConsoleApp, _appSettings.LastOpendConfigFile.Name);
             }
             catch (Exception)
             {
