@@ -129,9 +129,5 @@ namespace Geonorge.MassivNedlasting
             return datasetFiles;
         }
 
-        public List<Dataset> ParseDataset(string xml)
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }

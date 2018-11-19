@@ -16,7 +16,7 @@ namespace Geonorge.MassivNedlasting.Gui
         private List<PurposeViewModel> _downloadUsagePurposesViewModel;
         private AppSettings _appSettings;
 
-
+        private ConfigFile _config;
         private readonly DatasetService _datasetService;
 
         public static readonly DependencyProperty DownloadUsageGroupProperty = DependencyProperty.Register("DownloadUsageGroup", typeof(string), typeof(DownloadUsageDialog),
@@ -34,7 +34,9 @@ namespace Geonorge.MassivNedlasting.Gui
         {
             InitializeComponent();
 
-            _datasetService = new DatasetService();
+            _appSettings = ApplicationService.GetAppSettings();
+            _datasetService = new DatasetService(_appSettings.LastOpendConfigFile);
+            _config = _appSettings.TempConfigFile ?? _appSettings.LastOpendConfigFile;
 
             try
             {
@@ -54,12 +56,11 @@ namespace Geonorge.MassivNedlasting.Gui
                 _downloadUsagePurposes = _datasetService.ReadFromDownloadUsagePurposes();
             }
 
-            _appSettings = ApplicationService.GetAppSettings();
 
-            if (_appSettings.DownloadUsageIsSet())
+            if (_config.DownloadUsageIsSet())
             {
-                Group = _appSettings.DownloadUsage.Group;
-                Purpose = _appSettings.DownloadUsage.Purpose;
+                Group = _config.DownloadUsage.Group;
+                Purpose = _config.DownloadUsage.Purpose;
             }
 
             _downloadUsagePurposesViewModel = new List<PurposeViewModel>();
@@ -76,7 +77,7 @@ namespace Geonorge.MassivNedlasting.Gui
 
         private void BtnDialogOk_Click(object sender, RoutedEventArgs e)
         {
-            _appSettings.DownloadUsage = new DownloadUsage();
+            _config.DownloadUsage = new DownloadUsage();
             bool purposeIsSelected = false;
             bool groupIsSelected = false;
 
@@ -85,18 +86,34 @@ namespace Geonorge.MassivNedlasting.Gui
                 if (purpose.IsSelected)
                 {
                     purposeIsSelected = true;
-                    _appSettings.DownloadUsage.Purpose.Add(purpose.Purpose);
+                    _config.DownloadUsage.Purpose.Add(purpose.Purpose);
                 }
             }
 
             if (cmbDownloadUsageGroups.SelectedItem != null)
             {
                 groupIsSelected = true;
-                _appSettings.DownloadUsage.Group = cmbDownloadUsageGroups.SelectedItem.ToString();
+                _config.DownloadUsage.Group = cmbDownloadUsageGroups.SelectedItem.ToString();
             }
 
             if (purposeIsSelected && groupIsSelected)
             {
+                if (_appSettings.TempConfigFile != null)
+                {
+                    _appSettings.TempConfigFile.DownloadUsage.Purpose = _config.DownloadUsage.Purpose;
+                    _appSettings.TempConfigFile.DownloadUsage.Group = _config.DownloadUsage.Group;
+                }
+                else
+                {
+                    _appSettings.LastOpendConfigFile = _config;
+                    foreach (var configFile in _appSettings.ConfigFiles)
+                    {
+                        if (configFile.Name == _config.Name)
+                        {
+                            configFile.DownloadUsage = _config.DownloadUsage;
+                        }
+                    }
+                }
                 ApplicationService.WriteToAppSettingsFile(_appSettings);
                 Close();
             }

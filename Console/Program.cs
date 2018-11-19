@@ -14,19 +14,42 @@ namespace Geonorge.Nedlaster
         {
             Console.WriteLine("Geonorge - nedlaster");
             Console.WriteLine("--------------------");
-            DeleteOldLogs();
-            StartDownloadAsync().Wait();
+            var appSettings = ApplicationService.GetAppSettings();
+
+            if (args != null)
+            {
+                foreach (var configName in args)
+                {
+                    var config = appSettings.GetConfigByName(configName);
+                    if (config != null)
+                    {
+                        DeleteOldLogs(config.LogDirectory);
+                        StartDownloadAsync(config).Wait();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Error: Could not find config file: " + configName);
+                    }
+                }
+            }
+            else
+            {
+                foreach (var config in appSettings.ConfigFiles)
+                {
+                    StartDownloadAsync(config).Wait();
+                }
+            }
         }
 
-        private static async Task StartDownloadAsync()
+        private static async Task StartDownloadAsync(ConfigFile config)
         {
-            var datasetService = new DatasetService();
+            var appSettings = ApplicationService.GetAppSettings();
+            var datasetService = new DatasetService(config);
             var updatedDatasetToDownload = new List<Download>();
             var downloadLog = new DownloadLog();
             var downloader = new FileDownloader();
-            var appSettings = ApplicationService.GetAppSettings();
             var datasetToDownload = datasetService.GetSelectedFilesToDownload();
-            var downloadUsage = appSettings.DownloadUsage;
+            var downloadUsage = config.DownloadUsage;
 
             downloadLog.TotalDatasetsToDownload = datasetToDownload.Count;
 
@@ -40,7 +63,7 @@ namespace Geonorge.Nedlaster
 
                     if (localDataset.AutoDeleteFiles)
                     {
-                        localDataset.Files = RemoveFiles(datasetFilesFromFeed, localDataset.Files, appSettings);
+                        localDataset.Files = RemoveFiles(datasetFilesFromFeed, localDataset.Files, config);
                     }
 
                     if (localDataset.AutoAddFiles)
@@ -57,7 +80,7 @@ namespace Geonorge.Nedlaster
                     {
                         Console.WriteLine(datasetFile.DatasetId + " - " + datasetFile.Title);
 
-                        DirectoryInfo downloadDirectory = GetDownloadDirectory(appSettings, datasetFile);
+                        DirectoryInfo downloadDirectory = GetDownloadDirectory(config, datasetFile);
                         DatasetFile datasetFromFeed = datasetService.GetDatasetFile(datasetFile);
                         DownloadHistory downloadHistory = datasetService.GetFileDownloaHistory(datasetFile.Url);
                         bool newDatasetAvailable = NewDatasetAvailable(downloadHistory, datasetFromFeed, downloadDirectory);
@@ -85,7 +108,7 @@ namespace Geonorge.Nedlaster
                         }
                         else
                         {
-                            fileLog.Message = "Not necessary to download dataset.";
+                            fileLog.Message = "Not necessary to download dataset." + datasetFromFeed.LastUpdated;
                             downloadLog.NotUpdated.Add(fileLog);
                             Console.WriteLine("Not necessary to download dataset.");
                             datasetFile.FilePath = downloadHistory.FilePath;
@@ -107,12 +130,11 @@ namespace Geonorge.Nedlaster
             }
 
             datasetService.SendDownloadUsage(downloadUsage);
-            datasetService.WriteToDownloadFile(updatedDatasetToDownload);
+            datasetService.WriteToConfigFile(updatedDatasetToDownload);
             datasetService.WriteToDownloadHistoryFile(updatedDatasetToDownload);
             datasetService.WriteToDownloadLogFile(downloadLog);
         }
 
-        
 
         private static List<DatasetFile> AddFiles(List<DatasetFile> datasetFilesFromFeed, List<DatasetFile> localDatasetFiles)
         {
@@ -128,7 +150,7 @@ namespace Geonorge.Nedlaster
             return localDatasetFiles;
         }
 
-        private static List<DatasetFile> RemoveFiles(List<DatasetFile> datasetFilesFromFeed, List<DatasetFile> datasetFiles, AppSettings appSettings)
+        private static List<DatasetFile> RemoveFiles(List<DatasetFile> datasetFilesFromFeed, List<DatasetFile> datasetFiles, ConfigFile configFile)
         {
             var exists = false;
             var removeFiles = new List<DatasetFile>();
@@ -147,7 +169,7 @@ namespace Geonorge.Nedlaster
             }
             foreach (var fileToRemove in removeFiles)
             {
-                DirectoryInfo downloadDirectory = GetDownloadDirectory(appSettings, fileToRemove);
+                DirectoryInfo downloadDirectory = GetDownloadDirectory(configFile, fileToRemove);
                 string filePath = downloadDirectory + "\\" + fileToRemove.FilePath;
 
                 File.Delete(filePath);
@@ -172,9 +194,9 @@ namespace Geonorge.Nedlaster
         }
 
 
-        private static DirectoryInfo GetDownloadDirectory(AppSettings appSettings, DatasetFile dataset)
+        private static DirectoryInfo GetDownloadDirectory(ConfigFile configFile, DatasetFile dataset)
         {
-            var downloadDirectory = new DirectoryInfo(Path.Combine(appSettings.DownloadDirectory, dataset.DatasetId));
+            var downloadDirectory = new DirectoryInfo(Path.Combine(configFile.DownloadDirectory, dataset.DatasetId));
             if (!downloadDirectory.Exists)
             {
                 Console.WriteLine($"Creating directory: {downloadDirectory}");
@@ -218,15 +240,22 @@ namespace Geonorge.Nedlaster
             return filePath.Exists;
         }
 
-        private static void DeleteOldLogs()
+        private static void DeleteOldLogs(string logDirectory)
         {
-            string[] files = Directory.GetFiles(ApplicationService.GetLogAppDirectory().ToString());
-
-            foreach (string file in files)
+            try
             {
-                FileInfo fi = new FileInfo(file);
-                if (fi.LastAccessTime < DateTime.Now.AddMonths(-1))
-                    fi.Delete();
+                string[] files = Directory.GetFiles(logDirectory);
+
+                foreach (string file in files)
+                {
+                    FileInfo fi = new FileInfo(file);
+                    if (fi.LastAccessTime < DateTime.Now.AddMonths(-1))
+                        fi.Delete();
+                }
+            }
+            catch (Exception e)
+            {
+                // logge?
             }
         }
 

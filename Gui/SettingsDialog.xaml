@@ -12,35 +12,16 @@
         <TextBlock Margin="0 20 0 0" Name="lblPassword" Style="{StaticResource MaterialDesignBody2TextBlock}">Passord:</TextBlock>
         <PasswordBox Name="txtPassword" MinWidth="250"></PasswordBox>
 
-        <TextBlock Margin="0 20 0 0" Name="lblDownloadDirectory" Style="{StaticResource MaterialDesignBody2TextBlock}">Nedlastingsmappe:</TextBlock>
-        <StackPanel Visibility="{Binding SelectionVisibility}">
-            <gui:FolderPickerDialog x:Name="FolderPickerDialogBox" DirectoryPath="{Binding DownloadDirectory, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
-        </StackPanel>
-
-        <TextBlock Margin="0 20 0 0" Name="lblLogDirectory" Style="{StaticResource MaterialDesignBody2TextBlock}">Loggfiler:</TextBlock>
-        <StackPanel Visibility="{Binding SelectionVisibility2}">
-            <gui:FolderPickerDialog x:Name="FolderPickerDialogBoxLog" DirectoryPath="{Binding LogDirectory, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
-        </StackPanel>
-
-        <StackPanel Name="DownloadeUsage">
+        <StackPanel Name="ConfigFiles">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Margin="0 20 0 0">Nedlasting brukergruppe og formål</TextBlock>
-                <Button  Style="{StaticResource MaterialDesignFlatButton}" Click="ButtonBase_OnClick"  VerticalAlignment="Bottom" Margin="20 12 0 0">Edit</Button>
+                <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Margin="0 20 0 0">Config-filer</TextBlock>
+                <Button  Style="{StaticResource MaterialDesignFlatButton}" Click="ButtonEditConfig_OnClick"  VerticalAlignment="Bottom" Margin="20 12 0 0">Edit</Button>
             </StackPanel>
 
             <StackPanel>
-                <TextBlock FontWeight="Bold" Margin="0 10 0 0">Brukergruppe</TextBlock>
-                <TextBlock Name="DownloadUsageGroup"/>
-            </StackPanel>
-
-            <StackPanel>
-                <TextBlock FontWeight="Bold" Margin="0 10 0 0">Formål</TextBlock>
-                <ItemsControl Name="DownloadUsagePurpose" />
+                <ItemsControl Name="ConfigFilesList" />
             </StackPanel>
         </StackPanel>
-
-        
-
 
         <WrapPanel HorizontalAlignment="Right" Margin="0,15,0,0">
             <Button IsDefault="True" Name="btnDialogOk" Click="BtnDialogOk_Click" MinWidth="60" Margin="0,0,10,0">_Ok</Button>

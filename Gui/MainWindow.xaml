@@ -26,6 +26,9 @@
             <DockPanel>
                 <Image HorizontalAlignment="Left" Margin="40 0 0 20" Source="Content/geonorge_logo_225px.gif"/>
                 <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right" Orientation="Horizontal" Margin="0 0 40 0">
+
+                    <ComboBox materialDesign:HintAssist.Hint="Config fil" IsEditable="True"
+                              Style="{StaticResource MaterialDesignFloatingHintComboBox}" SelectionChanged="CmbConfigFiles_OnSelectionChanged" Name="cmbConfigFiles" Margin="0 0 50 0" MinWidth="150"/>
                     <Button Name="BtnSave" 
                             Margin="0 0 10 0"  Click="BtnSave_OnClick"
                             Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
@@ -62,6 +65,7 @@
                             Height="24"
                             Width="24" />
                     </Button>
+                    
                 </StackPanel>
             </DockPanel>
 
@@ -69,7 +73,7 @@
             <!-- Overskrifter -->
             <Grid Background="#dfdcda">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="2*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
@@ -146,8 +150,9 @@
 
             <ProgressBar
                 Value="0" 
-                Name="progressBar" Background="White" BorderBrush="White"
-                IsIndeterminate="False">
+                Name="progressBar"
+                IsIndeterminate="False"
+                Background="White" BorderThickness="0">
             </ProgressBar>
 
 
@@ -252,7 +257,7 @@
 
             <!-- Liste over filer valgt for nedlasting-->
 
-            <TreeView Name ="LbSelectedFilesForDownload" ItemsSource="{Binding Downloads}" Margin="10" Height="300">
+            <TreeView VirtualizingStackPanel.IsVirtualizing="True" Name ="LbSelectedFilesForDownload" ItemsSource="{Binding Downloads}" Margin="10" Height="300">
                 <TreeView.ItemTemplate>
                     <HierarchicalDataTemplate ItemsSource="{Binding Files}" DataType="{x:Type local:DatasetFileViewModel}">
                         <TextBlock Text="{Binding DatasetTitle}">

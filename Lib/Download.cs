@@ -4,6 +4,9 @@ using Geonorge.MassivNedlasting.Gui;
 
 namespace Geonorge.MassivNedlasting
 {
+    /// <summary>
+    /// Dataset with selected dataset files to download. 
+    /// </summary>
     public class Download
     {
         public string DatasetUrl { get; set; }

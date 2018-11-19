@@ -17,24 +17,51 @@ namespace Geonorge.MassivNedlasting
     public class DatasetService
     {
         private static readonly HttpClient HttpClient = new HttpClient();
+        private ConfigFile _configFile = ConfigFile.GetDefaultConfigFile();
 
         public DatasetService()
         {
             HttpClient.DefaultRequestHeaders.UserAgent.ParseAdd($"GeonorgeNedlastingsklient/{Assembly.GetExecutingAssembly().GetName().Version.ToString()}");
         }
 
+        
+
+        /// <summary>
+        /// Use selected config file when using download service. 
+        /// </summary>
+        /// <param name="configFile">Selected config file</param>
+        public DatasetService(ConfigFile configFile)
+        {
+            _configFile = configFile;
+            HttpClient.DefaultRequestHeaders.UserAgent.ParseAdd($"GeonorgeNedlastingsklient/{Assembly.GetExecutingAssembly().GetName().Version.ToString()}");
+        }
+
+        /// <summary>
+        /// Return dataset from feed "https://nedlasting.geonorge.no/geonorge/Tjenestefeed_daglig.xml"
+        /// </summary>
+        /// <returns></returns>
         public List<Dataset> GetDatasets()
         {
             var getFeedTask = HttpClient.GetStringAsync("https://nedlasting.geonorge.no/geonorge/Tjenestefeed_daglig.xml");
             return new AtomFeedParser().ParseDatasets(getFeedTask.Result);
         }
 
+        /// <summary>
+        /// Parse dataset file from feed and return as DatasetFile
+        /// </summary>
+        /// <param name="originalDatasetFile">local dataset file</param>
+        /// <returns></returns>
         public DatasetFile GetDatasetFile(DatasetFile originalDatasetFile)
         {
             var getFeedTask = HttpClient.GetStringAsync(originalDatasetFile.DatasetUrl);
             return new AtomFeedParser().ParseDatasetFile(getFeedTask.Result, originalDatasetFile);
         }
 
+        /// <summary>
+        /// Parse dataset files from feed
+        /// </summary>
+        /// <param name="download">Local dataset</param>
+        /// <returns></returns>
         public List<DatasetFile> GetDatasetFiles(Download download)
         {
             var getFeedTask = HttpClient.GetStringAsync(download.DatasetUrl);
@@ -43,6 +70,12 @@ namespace Geonorge.MassivNedlasting
             return datasetFiles;
         }
 
+        /// <summary>
+        /// Parse dataset files and return as view model
+        /// </summary>
+        /// <param name="dataset"></param>
+        /// <param name="propotions"></param>
+        /// <returns></returns>
         public List<DatasetFileViewModel> GetDatasetFiles(Dataset dataset, List<Projections> propotions)
         {
             var getFeedTask = HttpClient.GetStringAsync(dataset.Url);
@@ -51,6 +84,10 @@ namespace Geonorge.MassivNedlasting
             return ConvertToViewModel(datasetFiles, propotions);
         }
 
+        /// <summary>
+        /// Fetch projections from epsg-registry - https://register.geonorge.no/register/epsg-koder
+        /// </summary>
+        /// <returns></returns>
         public List<Projections> FetchProjections()
         {
             List<Projections> projections = new List<Projections>();
@@ -73,6 +110,11 @@ namespace Geonorge.MassivNedlasting
             return projections;
         }
 
+
+        /// <summary>
+        /// Fetch a list of download usage group from metadata-codelist registry - https://register.geonorge.no/api/metadata-kodelister/brukergrupper.json
+        /// </summary>
+        /// <returns></returns>
         public List<string> FetchDownloadUsageGroups()
         {
             List<string> groups = new List<string>();
@@ -95,6 +137,10 @@ namespace Geonorge.MassivNedlasting
             return groups;
         }
 
+        /// <summary>
+        /// Fetch a list of download puroses from metadata-codelist registry - https://register.geonorge.no/api/metadata-kodelister/formal.json
+        /// </summary>
+        /// <returns></returns>
         public List<string> FetchDownloadUsagePurposes()
         {
             List<string> purposes = new List<string>();
@@ -195,7 +241,7 @@ namespace Geonorge.MassivNedlasting
             serializer.NullValueHandling = NullValueHandling.Ignore;
             try
             {
-                using (var w = new StreamWriter(ApplicationService.GetDownloadLogFilePath()))
+                using (var w = new StreamWriter(ApplicationService.GetDownloadLogFilePath(_configFile.LogDirectory)))
                 {
                     w.WriteLine("SELECTED FILES: " + downloadLog.TotalDatasetsToDownload);
                     w.WriteLine("-------------------------------");
@@ -228,13 +274,13 @@ namespace Geonorge.MassivNedlasting
         /// <summary>
         /// Writes the information about the selected files to the local download list. 
         /// </summary>
-        public void WriteToDownloadFile(List<Download> downloads)
+        public void WriteToConfigFile(List<Download> downloads)
         {
             var serializer = new JsonSerializer();
             serializer.Converters.Add(new JavaScriptDateTimeConverter());
             serializer.NullValueHandling = NullValueHandling.Ignore;
 
-            using (var outputFile = new StreamWriter(ApplicationService.GetDownloadFilePath(), false))
+            using (var outputFile = new StreamWriter(_configFile.FilePath, false))
             using (JsonWriter writer = new JsonTextWriter(outputFile))
             {
                 serializer.Serialize(writer, downloads);
@@ -242,10 +288,14 @@ namespace Geonorge.MassivNedlasting
             }
         }
 
-        public void WriteToDownloadFile(List<DownloadViewModel> selectedFilesToDownloadViewModel)
+        /// <summary>
+        /// Write selected files to download to config file. 
+        /// </summary>
+        /// <param name="selectedFilesToDownloadViewModel"></param>
+        public void WriteToConfigFile(List<DownloadViewModel> selectedFilesToDownloadViewModel)
         {
             var selectedFilesToDownload = ConvertToModel(selectedFilesToDownloadViewModel);
-            WriteToDownloadFile(selectedFilesToDownload);
+            WriteToConfigFile(selectedFilesToDownload);
         }
 
 
@@ -269,7 +319,7 @@ namespace Geonorge.MassivNedlasting
             serializer.Converters.Add(new JavaScriptDateTimeConverter());
             serializer.NullValueHandling = NullValueHandling.Ignore;
 
-            using (var outputFile = new StreamWriter(ApplicationService.GetDownloadHistoryFilePath(), false))
+            using (var outputFile = new StreamWriter(ApplicationService.GetDownloadHistoryFilePath(_configFile.Name), false))
             using (JsonWriter writer = new JsonTextWriter(outputFile))
             {
                 serializer.Serialize(writer, downloadHistory);
@@ -311,7 +361,7 @@ namespace Geonorge.MassivNedlasting
         {
             try
             {
-                using (var r = new StreamReader(ApplicationService.GetDownloadFilePath()))
+                using (var r = new StreamReader(_configFile.FilePath))
                 {
                     var json = r.ReadToEnd();
                     var selecedForDownload = JsonConvert.DeserializeObject<List<DatasetFile>>(json);
@@ -329,11 +379,12 @@ namespace Geonorge.MassivNedlasting
         /// Returns a list of dataset files to download. 
         /// </summary>
         /// <returns></returns>
-        public List<Download> GetSelectedFilesToDownload()
+        public List<Download> GetSelectedFilesToDownload(ConfigFile configFile = null)
         {
+            var downloadFilePath = _configFile != null ? _configFile.FilePath : ApplicationService.GetDownloadFilePath();
             try
             {
-                using (var r = new StreamReader(ApplicationService.GetDownloadFilePath()))
+                using (var r = new StreamReader(downloadFilePath))
                 {
                     var json = r.ReadToEnd();
                     var selecedForDownload = JsonConvert.DeserializeObject<List<Download>>(json);
@@ -344,7 +395,7 @@ namespace Geonorge.MassivNedlasting
                     return selecedForDownload;
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 // TODO error handling
                 return new List<Download>();
@@ -352,10 +403,11 @@ namespace Geonorge.MassivNedlasting
         }
 
 
+        
         private List<Download> ConvertToNewVersionOfDownloadFile(List<Download> downloads)
         {
             var newListOfDatasetForDownload = new List<Download>();
-            var datasetFilesSelectedForDownload = GetSelectedDatasetFiles();
+            var datasetFilesSelectedForDownload = GetSelectedDatasetFilesFromDownloadFile();
             foreach (var download in downloads)
             {
                 if (!download.Files.Any() && !download.Subscribe)
@@ -373,16 +425,69 @@ namespace Geonorge.MassivNedlasting
             return newListOfDatasetForDownload;
         }
 
+        private List<DatasetFile> GetSelectedDatasetFilesFromDownloadFile()
+        {
+            var downloadFileInfo = new FileInfo(ApplicationService.GetOldDownloadFilePath());
+            if (downloadFileInfo.Exists)
+            {
+                try
+                {
+                    using (var r = new StreamReader(ApplicationService.GetOldDownloadFilePath()))
+                    {
+                        var json = r.ReadToEnd();
+                        var selecedForDownload = JsonConvert.DeserializeObject<List<DatasetFile>>(json);
+                        r.Close();
+                        return selecedForDownload;
+                    }
+                }
+                catch (Exception)
+                {
+                    return new List<DatasetFile>();
+                }
+            }
+            return new List<DatasetFile>();
+        }
+
+
+        private List<Download> GetSelectedDatasetFilesFromDownloadFileAsDownloadModel()
+        {
+            var downloadFileInfo = new FileInfo(ApplicationService.GetOldDownloadFilePath());
+            if (downloadFileInfo.Exists)
+            {
+                try
+                {
+                    using (var r = new StreamReader(ApplicationService.GetOldDownloadFilePath()))
+                    {
+                        var json = r.ReadToEnd();
+                        var selecedForDownload = JsonConvert.DeserializeObject<List<Download>>(json);
+                        r.Close();
+                        return selecedForDownload;
+                    }
+                }
+                catch (Exception)
+                {
+                    return new List<Download>();
+                }
+            }
+            return new List<Download>();
+        }
+
+
+        /// <summary>
+        /// Part of converting from old version of config file. 
+        /// </summary>
+        /// <param name="items"></param>
+        /// <returns></returns>
         public List<Download> RemoveDuplicatesIterative(List<Download> items)
         {
             var result = new List<Download>();
             var set = new HashSet<string>();
             for (int i = 0; i < items.Count; i++)
             {
-                if (!set.Contains(items[i].DatasetId)) // TODO, bytte med id.
+                if (!set.Contains(items[i].DatasetTitle))
                 {
                     result.Add(items[i]);
-                    set.Add(items[i].DatasetId); // TODO, bytte med id.
+                    set.Add(items[i].DatasetTitle);
                 }
             }
             return result;
@@ -395,7 +500,7 @@ namespace Geonorge.MassivNedlasting
         /// <returns></returns>
         public DownloadHistory GetFileDownloaHistory(string url)
         {
-            var downloadHistoryFilePath = ApplicationService.GetDownloadHistoryFilePath();
+            var downloadHistoryFilePath = ApplicationService.GetDownloadHistoryFilePath(_configFile.Name);
             try
             {
                 using (var r = new StreamReader(downloadHistoryFilePath))
@@ -414,11 +519,18 @@ namespace Geonorge.MassivNedlasting
             }
         }
 
+        /// <summary>
+        /// Returns selected files to download as downlaod view models
+        /// </summary>
+        /// <param name="propotions"></param>
+        /// <returns></returns>
         public List<DownloadViewModel> GetSelectedFilesToDownloadAsViewModel(List<Projections> propotions)
         {
-            List<Download> selectedFiles = GetSelectedFilesToDownload();
+            List<Download> selectedFiles = GetSelectedFilesToDownload(_configFile);
             return ConvertToViewModel(selectedFiles, propotions, true);
+
         }
+
 
         private List<DatasetFileViewModel> ConvertToViewModel(List<DatasetFile> datasetFiles, List<Projections> projections, bool selectedForDownload = false)
         {
@@ -457,6 +569,10 @@ namespace Geonorge.MassivNedlasting
         }
 
 
+        /// <summary>
+        /// Write list of projections to file in case epsg-registry won't respond
+        /// </summary>
+        /// <param name="projections"></param>
         public void WriteToProjectionFile(List<Projections> projections)
         {
             var serializer = new JsonSerializer();
@@ -472,6 +588,10 @@ namespace Geonorge.MassivNedlasting
             }
         }
 
+        /// <summary>
+        /// Write list of download usage to file in case registry api won't respond
+        /// </summary>
+        /// <param name="userGroups">list of user groups</param>
         public void WriteToUsageGroupFile(List<string> userGroups)
         {
             var serializer = new JsonSerializer();
@@ -487,6 +607,10 @@ namespace Geonorge.MassivNedlasting
             }
         }
 
+        /// <summary>
+        /// /// Write list of download usage to file in case registry api won't respond
+        /// </summary>
+        /// <param name="userPurposes">list of purposes</param>
         public void WriteToUsagePurposeFile(List<string> userPurposes)
         {
             var serializer = new JsonSerializer();
@@ -503,13 +627,17 @@ namespace Geonorge.MassivNedlasting
         }
 
 
-        
+
         private static string GetEpsgName(List<Projections> projections, DatasetFile selectedFile)
         {
             var projection = projections.FirstOrDefault(p => p.Epsg == selectedFile.Projection);
             return projection != null ? projection.Name : selectedFile.Projection;
         }
 
+        /// <summary>
+        /// Post selected download usage to "Nedlasting api" 
+        /// </summary>
+        /// <param name="downloadUsage"></param>
         public void SendDownloadUsage(DownloadUsage downloadUsage)
         {
             if (downloadUsage != null && downloadUsage.Entries.Any())
@@ -522,8 +650,26 @@ namespace Geonorge.MassivNedlasting
 
                 HttpClient hc = new HttpClient();
                 hc.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
-                hc.DefaultRequestHeaders.UserAgent.ParseAdd($"GeonorgeNedlastingsklient/{Assembly.GetExecutingAssembly().GetName().Version.ToString()}");
                 var respons = hc.PostAsync(downloadUsageUrl, stringContent).Result;
+            }
+        }
+
+        /// <summary>
+        /// Move content from old config file to default config file. 
+        /// </summary>
+        public void ConvertDownloadToDefaultConfigFileIfExists()
+        {
+            var selecedForDownload = GetSelectedDatasetFilesFromDownloadFileAsDownloadModel();
+            if (selecedForDownload.Any())
+            {
+                selecedForDownload = RemoveDuplicatesIterative(selecedForDownload);
+                selecedForDownload = ConvertToNewVersionOfDownloadFile(selecedForDownload);
+
+                if (_configFile.IsDefault())
+                {
+                    WriteToConfigFile(selecedForDownload);
+                    File.Delete(ApplicationService.GetOldDownloadFilePath());
+                }
             }
         }
     }
