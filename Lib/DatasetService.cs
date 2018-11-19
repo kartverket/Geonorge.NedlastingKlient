@@ -42,12 +42,22 @@ namespace Geonorge.MassivNedlasting
             return new AtomFeedParser().ParseDatasets(getFeedTask.Result);
         }
 
+        /// <summary>
+        /// Parse dataset file from feed and return as DatasetFile
+        /// </summary>
+        /// <param name="originalDatasetFile">local dataset file</param>
+        /// <returns></returns>
         public DatasetFile GetDatasetFile(DatasetFile originalDatasetFile)
         {
             var getFeedTask = HttpClient.GetStringAsync(originalDatasetFile.DatasetUrl);
             return new AtomFeedParser().ParseDatasetFile(getFeedTask.Result, originalDatasetFile);
         }
 
+        /// <summary>
+        /// Parse dataset files from feed
+        /// </summary>
+        /// <param name="download">Local dataset</param>
+        /// <returns></returns>
         public List<DatasetFile> GetDatasetFiles(Download download)
         {
             var getFeedTask = HttpClient.GetStringAsync(download.DatasetUrl);
@@ -56,6 +66,12 @@ namespace Geonorge.MassivNedlasting
             return datasetFiles;
         }
 
+        /// <summary>
+        /// Parse dataset files and return as view model
+        /// </summary>
+        /// <param name="dataset"></param>
+        /// <param name="propotions"></param>
+        /// <returns></returns>
         public List<DatasetFileViewModel> GetDatasetFiles(Dataset dataset, List<Projections> propotions)
         {
             var getFeedTask = HttpClient.GetStringAsync(dataset.Url);
@@ -64,6 +80,10 @@ namespace Geonorge.MassivNedlasting
             return ConvertToViewModel(datasetFiles, propotions);
         }
 
+        /// <summary>
+        /// Fetch projections from epsg-registry - https://register.geonorge.no/register/epsg-koder
+        /// </summary>
+        /// <returns></returns>
         public List<Projections> FetchProjections()
         {
             List<Projections> projections = new List<Projections>();
@@ -86,6 +106,11 @@ namespace Geonorge.MassivNedlasting
             return projections;
         }
 
+
+        /// <summary>
+        /// Fetch a list of download usage group from metadata-codelist registry - https://register.geonorge.no/api/metadata-kodelister/brukergrupper.json
+        /// </summary>
+        /// <returns></returns>
         public List<string> FetchDownloadUsageGroups()
         {
             List<string> groups = new List<string>();
@@ -108,6 +133,10 @@ namespace Geonorge.MassivNedlasting
             return groups;
         }
 
+        /// <summary>
+        /// Fetch a list of download puroses from metadata-codelist registry - https://register.geonorge.no/api/metadata-kodelister/formal.json
+        /// </summary>
+        /// <returns></returns>
         public List<string> FetchDownloadUsagePurposes()
         {
             List<string> purposes = new List<string>();
@@ -255,6 +284,10 @@ namespace Geonorge.MassivNedlasting
             }
         }
 
+        /// <summary>
+        /// Write selected files to download to config file. 
+        /// </summary>
+        /// <param name="selectedFilesToDownloadViewModel"></param>
         public void WriteToConfigFile(List<DownloadViewModel> selectedFilesToDownloadViewModel)
         {
             var selectedFilesToDownload = ConvertToModel(selectedFilesToDownloadViewModel);
@@ -366,6 +399,7 @@ namespace Geonorge.MassivNedlasting
         }
 
 
+        
         private List<Download> ConvertToNewVersionOfDownloadFile(List<Download> downloads)
         {
             var newListOfDatasetForDownload = new List<Download>();
@@ -434,6 +468,12 @@ namespace Geonorge.MassivNedlasting
             return new List<Download>();
         }
 
+
+        /// <summary>
+        /// Part of converting from old version of config file. 
+        /// </summary>
+        /// <param name="items"></param>
+        /// <returns></returns>
         public List<Download> RemoveDuplicatesIterative(List<Download> items)
         {
             var result = new List<Download>();
@@ -475,6 +515,11 @@ namespace Geonorge.MassivNedlasting
             }
         }
 
+        /// <summary>
+        /// Returns selected files to download as downlaod view models
+        /// </summary>
+        /// <param name="propotions"></param>
+        /// <returns></returns>
         public List<DownloadViewModel> GetSelectedFilesToDownloadAsViewModel(List<Projections> propotions)
         {
             List<Download> selectedFiles = GetSelectedFilesToDownload(_configFile);
@@ -520,6 +565,10 @@ namespace Geonorge.MassivNedlasting
         }
 
 
+        /// <summary>
+        /// Write list of projections to file in case epsg-registry won't respond
+        /// </summary>
+        /// <param name="projections"></param>
         public void WriteToProjectionFile(List<Projections> projections)
         {
             var serializer = new JsonSerializer();
@@ -535,6 +584,10 @@ namespace Geonorge.MassivNedlasting
             }
         }
 
+        /// <summary>
+        /// Write list of download usage to file in case registry api won't respond
+        /// </summary>
+        /// <param name="userGroups">list of user groups</param>
         public void WriteToUsageGroupFile(List<string> userGroups)
         {
             var serializer = new JsonSerializer();
@@ -550,6 +603,10 @@ namespace Geonorge.MassivNedlasting
             }
         }
 
+        /// <summary>
+        /// /// Write list of download usage to file in case registry api won't respond
+        /// </summary>
+        /// <param name="userPurposes">list of purposes</param>
         public void WriteToUsagePurposeFile(List<string> userPurposes)
         {
             var serializer = new JsonSerializer();
@@ -573,6 +630,10 @@ namespace Geonorge.MassivNedlasting
             return projection != null ? projection.Name : selectedFile.Projection;
         }
 
+        /// <summary>
+        /// Post selected download usage to "Nedlasting api" 
+        /// </summary>
+        /// <param name="downloadUsage"></param>
         public void SendDownloadUsage(DownloadUsage downloadUsage)
         {
             if (downloadUsage != null && downloadUsage.Entries.Any())
@@ -590,6 +651,9 @@ namespace Geonorge.MassivNedlasting
             }
         }
 
+        /// <summary>
+        /// Move content from old config file to default config file. 
+        /// </summary>
         public void ConvertDownloadToDefaultConfigFileIfExists()
         {
             var selecedForDownload = GetSelectedDatasetFilesFromDownloadFileAsDownloadModel();
