@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Geonorge.MassivNedlasting.Gui;
@@ -20,8 +21,10 @@ namespace Geonorge.MassivNedlasting
 
         public DatasetService()
         {
-
+            HttpClient.DefaultRequestHeaders.UserAgent.ParseAdd($"GeonorgeNedlastingsklient/{Assembly.GetExecutingAssembly().GetName().Version.ToString()}");
         }
+
+        
 
         /// <summary>
         /// Use selected config file when using download service. 
@@ -30,6 +33,7 @@ namespace Geonorge.MassivNedlasting
         public DatasetService(ConfigFile configFile)
         {
             _configFile = configFile;
+            HttpClient.DefaultRequestHeaders.UserAgent.ParseAdd($"GeonorgeNedlastingsklient/{Assembly.GetExecutingAssembly().GetName().Version.ToString()}");
         }
 
         /// <summary>
@@ -646,7 +650,6 @@ namespace Geonorge.MassivNedlasting
 
                 HttpClient hc = new HttpClient();
                 hc.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
-
                 var respons = hc.PostAsync(downloadUsageUrl, stringContent).Result;
             }
         }
