@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
+using Serilog;
 
 namespace Geonorge.MassivNedlasting.Gui
 {
@@ -27,8 +28,18 @@ namespace Geonorge.MassivNedlasting.Gui
         private ConfigFile _selectedConfigFile;
         public bool LoggedIn;
 
+
         public MainWindow()
         {
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Information()
+                .WriteTo.File("log-.txt",
+                    rollOnFileSizeLimit: true,
+                    shared: true,
+                    flushToDiskInterval: TimeSpan.FromSeconds(1))
+                .CreateLogger();
+
+            Log.Information("Start application");
             InitializeComponent();
 
             BtnSelectAll.Visibility = Visibility.Hidden;
@@ -45,19 +56,23 @@ namespace Geonorge.MassivNedlasting.Gui
 
             try
             {
+                Log.Debug("Fetch datasets");
                 LbDatasets.ItemsSource = _datasetService.GetDatasets();
             }
             catch (Exception)
             {
+                Log.Error("Could not fetch datasets. Internet connection?");
                 MessageBox.Show("Klarer ikke hente datasett... Sjekk internett tilkoblingen din");
             }
 
             try
             {
+                Log.Debug("Fetch projections");
                 _projections = _datasetService.FetchProjections();
             }
             catch (Exception e)
             {
+                Log.Error(e, "Fetching projections");
                 _projections = _datasetService.ReadFromProjectionFile();
             }
 
@@ -349,6 +364,7 @@ namespace Geonorge.MassivNedlasting.Gui
             }
             catch (Exception)
             {
+                Log.Error("Could not start downloader");
                 MessageBox.Show("Finner ikke nedlaster...");
             }
         }

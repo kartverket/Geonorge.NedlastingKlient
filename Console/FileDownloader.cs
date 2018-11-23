@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Geonorge.MassivNedlasting;
+using Serilog;
 
 namespace Geonorge.Nedlaster
 {
@@ -15,6 +16,8 @@ namespace Geonorge.Nedlaster
     /// </summary>
     public class FileDownloader
     {
+        private static readonly ILogger Log = Serilog.Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+
         public delegate void ProgressChangedHandler(long? totalFileSize, long totalBytesDownloaded,
             double? progressPercentage);
 

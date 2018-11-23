@@ -11,11 +11,14 @@ using Geonorge.Nedlaster;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
+using Serilog;
 
 namespace Geonorge.MassivNedlasting
 {
     public class DatasetService
     {
+
+        private static readonly ILogger Log = Serilog.Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
         private static readonly HttpClient HttpClient = new HttpClient();
         private ConfigFile _configFile = ConfigFile.GetDefaultConfigFile();
 
@@ -24,7 +27,7 @@ namespace Geonorge.MassivNedlasting
             HttpClient.DefaultRequestHeaders.UserAgent.ParseAdd($"GeonorgeNedlastingsklient/{Assembly.GetExecutingAssembly().GetName().Version.ToString()}");
         }
 
-        
+
 
         /// <summary>
         /// Use selected config file when using download service. 
@@ -250,23 +253,22 @@ namespace Geonorge.MassivNedlasting
 
                     w.WriteLine("UPDATED: " + downloadLog.Updated.Count());
 
-                    Log(downloadLog.Updated, w);
+                    DownloadLog(downloadLog.Updated, w);
 
                     w.WriteLine();
 
                     w.WriteLine("NOT UPDATED: " + downloadLog.NotUpdated.Count());
-                    Log(downloadLog.NotUpdated, w);
+                    DownloadLog(downloadLog.NotUpdated, w);
 
                     w.WriteLine();
 
                     w.WriteLine("FAILED: " + downloadLog.Faild.Count());
-                    Log(downloadLog.Faild, w);
+                    DownloadLog(downloadLog.Faild, w);
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                Log.Error(e, "Write to download log file");
             }
         }
 
@@ -280,11 +282,18 @@ namespace Geonorge.MassivNedlasting
             serializer.Converters.Add(new JavaScriptDateTimeConverter());
             serializer.NullValueHandling = NullValueHandling.Ignore;
 
-            using (var outputFile = new StreamWriter(_configFile.FilePath, false))
-            using (JsonWriter writer = new JsonTextWriter(outputFile))
+            try
             {
-                serializer.Serialize(writer, downloads);
-                writer.Close();
+                using (var outputFile = new StreamWriter(_configFile.FilePath, false))
+                using (JsonWriter writer = new JsonTextWriter(outputFile))
+                {
+                    serializer.Serialize(writer, downloads);
+                    writer.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "Write to config file");
             }
         }
 
@@ -319,16 +328,23 @@ namespace Geonorge.MassivNedlasting
             serializer.Converters.Add(new JavaScriptDateTimeConverter());
             serializer.NullValueHandling = NullValueHandling.Ignore;
 
-            using (var outputFile = new StreamWriter(ApplicationService.GetDownloadHistoryFilePath(_configFile.Name), false))
-            using (JsonWriter writer = new JsonTextWriter(outputFile))
+            try
             {
-                serializer.Serialize(writer, downloadHistory);
-                writer.Close();
+                using (var outputFile = new StreamWriter(ApplicationService.GetDownloadHistoryFilePath(_configFile.Name), false))
+                using (JsonWriter writer = new JsonTextWriter(outputFile))
+                {
+                    serializer.Serialize(writer, downloadHistory);
+                    writer.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "Write to download history file");
             }
         }
 
 
-        private void Log(List<DatasetFileLog> datasetFileLogs, TextWriter w)
+        private void DownloadLog(List<DatasetFileLog> datasetFileLogs, TextWriter w)
         {
             w.WriteLine("-------------------------------");
             foreach (var item in datasetFileLogs.OrderBy(d => d.DatasetId))
@@ -384,6 +400,7 @@ namespace Geonorge.MassivNedlasting
             var downloadFilePath = _configFile != null ? _configFile.FilePath : ApplicationService.GetDownloadFilePath();
             try
             {
+
                 using (var r = new StreamReader(downloadFilePath))
                 {
                     var json = r.ReadToEnd();
@@ -397,13 +414,13 @@ namespace Geonorge.MassivNedlasting
             }
             catch (Exception e)
             {
-                // TODO error handling
+                Log.Error(e, "Could not get selected files to download");
                 return new List<Download>();
             }
         }
 
 
-        
+
         private List<Download> ConvertToNewVersionOfDownloadFile(List<Download> downloads)
         {
             var newListOfDatasetForDownload = new List<Download>();
@@ -412,6 +429,7 @@ namespace Geonorge.MassivNedlasting
             {
                 if (!download.Files.Any() && !download.Subscribe)
                 {
+                    Log.Debug("Convert to new version of download file");
                     download.Files = ConvertToNewVersionOfDownloadFile(download, datasetFilesSelectedForDownload);
                     newListOfDatasetForDownload.Add(download);
                 }
@@ -454,6 +472,7 @@ namespace Geonorge.MassivNedlasting
             var downloadFileInfo = new FileInfo(ApplicationService.GetOldDownloadFilePath());
             if (downloadFileInfo.Exists)
             {
+                Log.Information("Old version of config file - download exists");
                 try
                 {
                     using (var r = new StreamReader(ApplicationService.GetOldDownloadFilePath()))
@@ -464,8 +483,9 @@ namespace Geonorge.MassivNedlasting
                         return selecedForDownload;
                     }
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    Log.Error(e, "Could not read from old config file");
                     return new List<Download>();
                 }
             }
@@ -480,6 +500,7 @@ namespace Geonorge.MassivNedlasting
         /// <returns></returns>
         public List<Download> RemoveDuplicatesIterative(List<Download> items)
         {
+            Log.Debug("Remove duplicate iteratives of datasets");
             var result = new List<Download>();
             var set = new HashSet<string>();
             for (int i = 0; i < items.Count; i++)
@@ -528,7 +549,6 @@ namespace Geonorge.MassivNedlasting
         {
             List<Download> selectedFiles = GetSelectedFilesToDownload(_configFile);
             return ConvertToViewModel(selectedFiles, propotions, true);
-
         }
 
 
@@ -640,17 +660,25 @@ namespace Geonorge.MassivNedlasting
         /// <param name="downloadUsage"></param>
         public void SendDownloadUsage(DownloadUsage downloadUsage)
         {
-            if (downloadUsage != null && downloadUsage.Entries.Any())
+            try
             {
-                var json = JsonConvert.SerializeObject(downloadUsage);
-                var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+                if (downloadUsage != null && downloadUsage.Entries.Any())
+                {
+                    var json = JsonConvert.SerializeObject(downloadUsage);
+                    var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
 
-                string token = !string.IsNullOrWhiteSpace(AppSettings.StatisticsToken) ? AppSettings.StatisticsToken : AppSettings.TestStatisticsToken;
-                string downloadUsageUrl = !string.IsNullOrWhiteSpace(AppSettings.NedlatingsApiDownloadUsage) ? AppSettings.NedlatingsApiDownloadUsage : AppSettings.NedlatingsApiDownloadUsageDev;
+                    string token = !string.IsNullOrWhiteSpace(AppSettings.StatisticsToken) ? AppSettings.StatisticsToken : AppSettings.TestStatisticsToken;
+                    string downloadUsageUrl = !string.IsNullOrWhiteSpace(AppSettings.NedlatingsApiDownloadUsage) ? AppSettings.NedlatingsApiDownloadUsage : AppSettings.NedlatingsApiDownloadUsageDev;
 
-                HttpClient hc = new HttpClient();
-                hc.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
-                var respons = hc.PostAsync(downloadUsageUrl, stringContent).Result;
+                    HttpClient hc = new HttpClient();
+                    hc.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+                    var respons = hc.PostAsync(downloadUsageUrl, stringContent).Result;
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "Sending download usage");
+                throw;
             }
         }
 

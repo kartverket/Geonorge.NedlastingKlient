@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Geonorge.MassivNedlasting;
+using Serilog;
 
 namespace Geonorge.Nedlaster
 {
@@ -12,14 +12,31 @@ namespace Geonorge.Nedlaster
     {
         public static void Main(string[] args)
         {
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Information()
+                .WriteTo.File("log-.txt",
+                        rollOnFileSizeLimit: true,
+                        shared: true,
+                        flushToDiskInterval: TimeSpan.FromSeconds(1))
+                .CreateLogger();
+
+            Log.Information("Start Geonorge - nedlaster");
             Console.WriteLine("Geonorge - nedlaster");
             Console.WriteLine("--------------------");
             var appSettings = ApplicationService.GetAppSettings();
 
             if (args != null)
             {
+                Log.Debug("Selected config file(s): ");
+
                 foreach (var configName in args)
                 {
+                    Log.Debug(configName);
+                }
+
+                foreach (var configName in args)
+                {
+                    Log.Debug("Download from selected config-file: " + configName);
                     var config = appSettings.GetConfigByName(configName);
                     if (config != null)
                     {
@@ -28,12 +45,14 @@ namespace Geonorge.Nedlaster
                     }
                     else
                     {
+                        Log.Error("Could not find config file: " + configName);
                         Console.WriteLine("Error: Could not find config file: " + configName);
                     }
                 }
             }
             else
             {
+                Log.Debug("No config file is selected. Download from all config-files");
                 foreach (var config in appSettings.ConfigFiles)
                 {
                     StartDownloadAsync(config).Wait();
@@ -59,15 +78,18 @@ namespace Geonorge.Nedlaster
 
                 if (localDataset.Subscribe)
                 {
+                    Log.Information("Subscribe to Dataset files");
                     var datasetFilesFromFeed = datasetService.GetDatasetFiles(localDataset);
 
                     if (localDataset.AutoDeleteFiles)
                     {
+                        Log.Debug("Delete files");
                         localDataset.Files = RemoveFiles(datasetFilesFromFeed, localDataset.Files, config);
                     }
 
                     if (localDataset.AutoAddFiles)
                     {
+                        Log.Debug("Add new files");
                         localDataset.Files = AddFiles(datasetFilesFromFeed, localDataset.Files);
                     }
                 }
@@ -118,6 +140,7 @@ namespace Geonorge.Nedlaster
 
                     catch (Exception e)
                     {
+                        Log.Error(e, "Error while downloading file " + datasetFile.Title);
                         updatedDatasetFileToDownload.Add(datasetFile);
                         fileLog.Message = "Error while downloading dataset: " + e.Message;
                         downloadLog.Faild.Add(fileLog);
@@ -129,9 +152,13 @@ namespace Geonorge.Nedlaster
                 updatedDatasetToDownload.Add(localDataset);
             }
 
+            Log.Information("Send download usage");
             datasetService.SendDownloadUsage(downloadUsage);
+            Log.Information("Write to config file");
             datasetService.WriteToConfigFile(updatedDatasetToDownload);
+            Log.Information("Write to download history file");
             datasetService.WriteToDownloadHistoryFile(updatedDatasetToDownload);
+            Log.Information("Write to download log file");
             datasetService.WriteToDownloadLogFile(downloadLog);
         }
 
@@ -144,6 +171,7 @@ namespace Geonorge.Nedlaster
                 var datasetFile = datasetFiles.Find(d => datasetFileFromFeed.Title == d.Title && datasetFileFromFeed.DatasetId == d.DatasetId && datasetFileFromFeed.Projection == d.Projection);
                 if (datasetFile == null)
                 {
+                    Log.Debug(datasetFileFromFeed.Title);
                     localDatasetFiles.Add(datasetFileFromFeed);
                 }
             }
@@ -163,6 +191,7 @@ namespace Geonorge.Nedlaster
                 }
                 if (!exists)
                 {
+                    Log.Debug(file.Title);
                     removeFiles.Add(file);
                 }
                 exists = false;
@@ -174,7 +203,6 @@ namespace Geonorge.Nedlaster
 
                 File.Delete(filePath);
                 datasetFiles.Remove(fileToRemove);
-                // TODO delete local file...
             }
 
             return datasetFiles;
