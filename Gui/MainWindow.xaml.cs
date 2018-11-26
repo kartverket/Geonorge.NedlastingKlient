@@ -56,23 +56,19 @@ namespace Geonorge.MassivNedlasting.Gui
 
             try
             {
-                Log.Debug("Fetch datasets");
                 LbDatasets.ItemsSource = _datasetService.GetDatasets();
             }
             catch (Exception)
             {
-                Log.Error("Could not fetch datasets. Internet connection?");
                 MessageBox.Show("Klarer ikke hente datasett... Sjekk internett tilkoblingen din");
             }
 
             try
             {
-                Log.Debug("Fetch projections");
                 _projections = _datasetService.FetchProjections();
             }
             catch (Exception e)
             {
-                Log.Error(e, "Fetching projections");
                 _projections = _datasetService.ReadFromProjectionFile();
             }
 
@@ -94,6 +90,7 @@ namespace Geonorge.MassivNedlasting.Gui
         {
             if (!_selectedConfigFile.DownloadUsageIsSet())
             {
+                Log.Information("Set download usage");
                 var downloadUsageDialog = new DownloadUsageDialog();
                 downloadUsageDialog.ShowDialog();
             }
@@ -299,6 +296,8 @@ namespace Geonorge.MassivNedlasting.Gui
         private void ClosingWindow(object sender, CancelEventArgs e)
         {
             SaveDownloadList();
+            Log.Information("Close application");
+
         }
 
         private void SaveDownloadList()
@@ -360,11 +359,12 @@ namespace Geonorge.MassivNedlasting.Gui
                 Path.Combine(executingAssemblyDirectory, "..", "Nedlaster", "Geonorge.Nedlaster.exe");
             try
             {
+                Log.Information("Start downloader");
                 Process.Start(pathToConsoleApp, _appSettings.LastOpendConfigFile.Name);
             }
-            catch (Exception)
+            catch (Exception er)
             {
-                Log.Error("Could not start downloader");
+                Log.Error(er, "Could not start downloader");
                 MessageBox.Show("Finner ikke nedlaster...");
             }
         }
@@ -408,6 +408,7 @@ namespace Geonorge.MassivNedlasting.Gui
         private void BtnSave_OnClick(object sender, RoutedEventArgs e)
         {
             SaveDownloadList();
+            Log.Information("Save download list");
         }
 
         private void BtnSubscribe_OnClick(object sender, RoutedEventArgs e)

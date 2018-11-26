@@ -3,9 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Geonorge.MassivNedlasting.Gui;
+using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Serilog;
 
 
 namespace Geonorge.MassivNedlasting
@@ -15,6 +16,8 @@ namespace Geonorge.MassivNedlasting
     /// </summary>
     public class ApplicationService
     {
+        private static readonly ILogger Log = Serilog.Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+
 
         /// <summary>
         /// Returns path to the config file containing the list of dataset to download. Return default if file name is not set. 
@@ -158,7 +161,7 @@ namespace Geonorge.MassivNedlasting
             {
                 var defaultConfigFile = ConfigFile.GetDefaultConfigFile();
                 var configFiles = new List<ConfigFile> {defaultConfigFile};
-
+                Log.Information("Create app settings file");
                 WriteToAppSettingsFile(new AppSettings() { LastOpendConfigFile = defaultConfigFile, ConfigFiles = configFiles});
             }
 
@@ -213,6 +216,7 @@ namespace Geonorge.MassivNedlasting
                 using (JsonWriter writer = new JsonTextWriter(outputFile))
                 {
                     serializer.Serialize(writer, appSettings);
+                    Log.Debug("Write to appsettings file");
                     writer.Close();
                 }
             }
@@ -252,6 +256,8 @@ namespace Geonorge.MassivNedlasting
 
             if (!appSetting.LastOpendConfigFileIsSet() || !appSetting.ConfigFiles.Any())
             {
+                Log.Debug("Set default app setting information");
+
                 appSetting.LastOpendConfigFile = appSetting.LastOpendConfigFile ?? ConfigFile.GetDefaultConfigFile();
                 appSetting.ConfigFiles = appSetting.ConfigFiles ?? new List<ConfigFile> { ConfigFile.GetDefaultConfigFile() };
 
