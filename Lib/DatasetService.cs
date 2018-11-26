@@ -709,7 +709,6 @@ namespace Geonorge.MassivNedlasting
             catch (Exception e)
             {
                 Log.Error(e, "Sending download usage");
-                throw;
             }
         }
 
