@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Xml.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Serilog;
@@ -160,9 +161,9 @@ namespace Geonorge.MassivNedlasting
             if (!appSettingsFileInfo.Exists)
             {
                 var defaultConfigFile = ConfigFile.GetDefaultConfigFile();
-                var configFiles = new List<ConfigFile> {defaultConfigFile};
+                var configFiles = new List<ConfigFile> { defaultConfigFile };
                 Log.Information("Create app settings file");
-                WriteToAppSettingsFile(new AppSettings() { LastOpendConfigFile = defaultConfigFile, ConfigFiles = configFiles});
+                WriteToAppSettingsFile(new AppSettings() { LastOpendConfigFile = defaultConfigFile, ConfigFiles = configFiles });
             }
 
             SetDefaultIfSettingsNotSet();
@@ -263,6 +264,29 @@ namespace Geonorge.MassivNedlasting
 
                 WriteToAppSettingsFile(appSetting);
             }
+        }
+
+
+        /// <summary>
+        /// Set time last check for update
+        /// </summary>
+        /// <param name="timeLastCheckForUpdate"></param>
+        public static void SetTimeLastCheckForUpdate(DateTime timeLastCheckForUpdate)
+        {
+            AppSettings appSetting = JsonConvert.DeserializeObject<AppSettings>(File.ReadAllText(GetAppSettingsFilePath()));
+            appSetting.LastCheckForUpdate = timeLastCheckForUpdate;
+            WriteToAppSettingsFile(appSetting);
+        }
+
+
+        /// <summary>
+        /// Set time last check for update
+        /// </summary>
+        /// <returns></returns>
+        public static DateTime? GetTimeLastCheckForUpdate()
+        {
+            AppSettings appSetting = JsonConvert.DeserializeObject<AppSettings>(File.ReadAllText(GetAppSettingsFilePath()));
+            return appSetting.LastCheckForUpdate;
         }
     }
 }

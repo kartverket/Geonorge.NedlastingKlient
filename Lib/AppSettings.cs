@@ -47,6 +47,8 @@ namespace Geonorge.MassivNedlasting
         /// </summary>
         public List<ConfigFile> ConfigFiles { get; set; }
 
+        public DateTime LastCheckForUpdate { get; set; }
+
         public AppSettings()
         {
             ConfigFiles = new List<ConfigFile>();

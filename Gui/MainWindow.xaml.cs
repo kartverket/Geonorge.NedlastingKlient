@@ -26,6 +26,7 @@ namespace Geonorge.MassivNedlasting.Gui
         private List<DatasetFileViewModel> _selectedDatasetFiles;
         private List<DownloadViewModel> _selectedFilesForDownload;
         private ConfigFile _selectedConfigFile;
+        private bool _versionStatusMessage = false;
         public bool LoggedIn;
 
 
@@ -46,6 +47,10 @@ namespace Geonorge.MassivNedlasting.Gui
             BtnSelectAll.IsChecked = false;
             ToggleSubscribeSelectedDatasetFiles.Visibility = Visibility.Hidden;
             MenuSubscribe.Visibility = Visibility.Hidden;
+
+            MassivNedlastingVersion massivNedlastingVersjon = new MassivNedlastingVersion(new GitHubReleaseInfoReader());
+            string currentVersion = MassivNedlastingVersion.Current;
+            bool VersionStatusMessage = massivNedlastingVersjon.UpdateIsAvailable();
 
             _appSettings = ApplicationService.GetAppSettings();
             _datasetService = new DatasetService(_appSettings.LastOpendConfigFile);
