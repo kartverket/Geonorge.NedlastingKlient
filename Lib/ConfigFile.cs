@@ -7,7 +7,7 @@ namespace Geonorge.MassivNedlasting
 {
     public class ConfigFile
     {
-        public const string Default = "Default";
+        public const string Default = "default";
 
         public Guid Id { get; set; }
 

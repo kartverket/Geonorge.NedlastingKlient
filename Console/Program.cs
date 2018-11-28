@@ -25,7 +25,7 @@ namespace Geonorge.Nedlaster
             Console.WriteLine("--------------------");
             var appSettings = ApplicationService.GetAppSettings();
 
-            if (args != null)
+            if (args.Any())
             {
                 Log.Debug("Selected config file(s): ");
 
