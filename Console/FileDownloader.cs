@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Net.Http;
 using System.Reflection;
@@ -34,13 +34,13 @@ namespace Geonorge.Nedlaster
             {
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    throw new Exception("Download failed: You need to authorize access before downloading file");
+                    Log.Error("Download failed: You need to authorize access before downloading file");
                 }
                 else if (!response.IsSuccessStatusCode)
                 {
                     var message = $"Download failed for url: {downloadRequest.DownloadUrl}, - response from server was: {response.StatusCode} - {response.ReasonPhrase}";
+                    Log.Error(message);
                     Console.WriteLine(message);
-                    throw new Exception(message);
                 }
                 else
                 {
