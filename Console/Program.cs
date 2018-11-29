@@ -169,14 +169,21 @@ namespace Geonorge.Nedlaster
         private static List<DatasetFile> AddFiles(List<DatasetFile> datasetFilesFromFeed, List<DatasetFile> localDatasetFiles)
         {
             var datasetFiles = localDatasetFiles.ToList();
-            foreach (var datasetFileFromFeed in datasetFilesFromFeed)
+            try
             {
-                var datasetFile = datasetFiles.Find(d => datasetFileFromFeed.Title == d.Title && datasetFileFromFeed.DatasetId == d.DatasetId && datasetFileFromFeed.Projection == d.Projection);
-                if (datasetFile == null)
+                foreach (var datasetFileFromFeed in datasetFilesFromFeed)
                 {
-                    Log.Debug(datasetFileFromFeed.Title);
-                    localDatasetFiles.Add(datasetFileFromFeed);
+                    var datasetFile = datasetFiles.Find(d => datasetFileFromFeed.Title == d.Title && datasetFileFromFeed.DatasetId == d.DatasetId && datasetFileFromFeed.Projection == d.Projection);
+                    if (datasetFile == null)
+                    {
+                        Log.Debug(datasetFileFromFeed.Title);
+                        localDatasetFiles.Add(datasetFileFromFeed);
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "Adding files");
             }
             return localDatasetFiles;
         }
@@ -186,28 +193,35 @@ namespace Geonorge.Nedlaster
             var exists = false;
             var removeFiles = new List<DatasetFile>();
 
-            foreach (var file in datasetFiles)
+            try
             {
-                if (datasetFilesFromFeed.Any(fileFromFeed => fileFromFeed.Title == file.Title && fileFromFeed.DatasetId == file.DatasetId && fileFromFeed.Projection == file.Projection))
+
+                foreach (var file in datasetFiles)
                 {
-                    exists = true;
+                    if (datasetFilesFromFeed.Any(fileFromFeed => fileFromFeed.Title == file.Title && fileFromFeed.DatasetId == file.DatasetId && fileFromFeed.Projection == file.Projection))
+                    {
+                        exists = true;
+                    }
+                    if (!exists)
+                    {
+                        Log.Debug(file.Title);
+                        removeFiles.Add(file);
+                    }
+                    exists = false;
                 }
-                if (!exists)
+                foreach (var fileToRemove in removeFiles)
                 {
-                    Log.Debug(file.Title);
-                    removeFiles.Add(file);
+                    DirectoryInfo downloadDirectory = GetDownloadDirectory(configFile, fileToRemove);
+                    string filePath = downloadDirectory + "\\" + fileToRemove.FilePath;
+
+                    File.Delete(filePath);
+                    datasetFiles.Remove(fileToRemove);
                 }
-                exists = false;
             }
-            foreach (var fileToRemove in removeFiles)
+            catch (Exception e)
             {
-                DirectoryInfo downloadDirectory = GetDownloadDirectory(configFile, fileToRemove);
-                string filePath = downloadDirectory + "\\" + fileToRemove.FilePath;
-
-                File.Delete(filePath);
-                datasetFiles.Remove(fileToRemove);
+                Log.Error(e, "Removing files");
             }
-
             return datasetFiles;
         }
 
@@ -227,13 +241,22 @@ namespace Geonorge.Nedlaster
 
         private static DirectoryInfo GetDownloadDirectory(ConfigFile configFile, DatasetFile dataset)
         {
-            var downloadDirectory = new DirectoryInfo(Path.Combine(configFile.DownloadDirectory, dataset.DatasetId));
-            if (!downloadDirectory.Exists)
+            try
             {
-                Console.WriteLine($"Creating directory: {downloadDirectory}");
-                downloadDirectory.Create();
+
+                var downloadDirectory = new DirectoryInfo(Path.Combine(configFile.DownloadDirectory, dataset.DatasetId));
+                if (!downloadDirectory.Exists)
+                {
+                    Console.WriteLine($"Creating directory: {downloadDirectory}");
+                    downloadDirectory.Create();
+                }
+                return downloadDirectory;
             }
-            return downloadDirectory;
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         private static bool NewDatasetAvailable(DownloadHistory downloadHistory, DatasetFile datasetFromFeed, DirectoryInfo downloadDirectory)

@@ -70,11 +70,19 @@ namespace Geonorge.MassivNedlasting
         /// <returns></returns>
         public List<DatasetFile> GetDatasetFiles(Download download)
         {
-            var getFeedTask = HttpClient.GetStringAsync(download.DatasetUrl);
-            Log.Debug("Fetch dataset files from " + download.DatasetUrl);
-            List<DatasetFile> datasetFiles = new AtomFeedParser().ParseDatasetFiles(getFeedTask.Result, download.DatasetTitle, download.DatasetUrl).OrderBy(d => d.Title).ToList();
+            try
+            {
+                var getFeedTask = HttpClient.GetStringAsync(download.DatasetUrl);
+                Log.Debug("Fetch dataset files from " + download.DatasetUrl);
+                List<DatasetFile> datasetFiles = new AtomFeedParser().ParseDatasetFiles(getFeedTask.Result, download.DatasetTitle, download.DatasetUrl).OrderBy(d => d.Title).ToList();
 
-            return datasetFiles;
+                return datasetFiles;
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "Could not get dataset files");
+                return new List<DatasetFile>();
+            }
         }
 
         /// <summary>
@@ -542,7 +550,7 @@ namespace Geonorge.MassivNedlasting
             }
             catch (FileNotFoundException e)
             {
-                Log.Error("Could not find "+ _configFile.Name + "- downloadHistory.json");
+                Log.Error("Could not find " + _configFile.Name + "- downloadHistory.json");
                 return null;
             }
         }

@@ -28,12 +28,20 @@ namespace Geonorge.MassivNedlasting
         {
             DirectoryInfo configDirectory = GetConfigAppDirectory();
 
-            if (string.IsNullOrWhiteSpace(fileName))
+            try
             {
-                return Path.Combine(configDirectory.FullName, "default.json");
-            }
+                if (string.IsNullOrWhiteSpace(fileName))
+                {
+                    return Path.Combine(configDirectory.FullName, "default.json");
+                }
 
-            return Path.Combine(configDirectory.FullName, fileName + ".json");
+                return Path.Combine(configDirectory.FullName, fileName + ".json");
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "Could not get download file path");
+                return null;
+            }
         }
 
         /// <summary>
@@ -142,12 +150,20 @@ namespace Geonorge.MassivNedlasting
         /// <returns></returns>
         public static DirectoryInfo GetConfigAppDirectory()
         {
-            var appDirectory = new DirectoryInfo(GetAppDirectory().ToString() + Path.DirectorySeparatorChar + "Config");
+            try
+            {
+                var appDirectory = new DirectoryInfo(GetAppDirectory().ToString() + Path.DirectorySeparatorChar + "Config");
 
-            if (!appDirectory.Exists)
-                appDirectory.Create();
+                if (!appDirectory.Exists)
+                    appDirectory.Create();
+                return appDirectory;
 
-            return appDirectory;
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "Could not get app directory");
+                return null;
+            }
         }
 
         /// <summary>
@@ -160,9 +176,9 @@ namespace Geonorge.MassivNedlasting
             if (!appSettingsFileInfo.Exists)
             {
                 var defaultConfigFile = ConfigFile.GetDefaultConfigFile();
-                var configFiles = new List<ConfigFile> {defaultConfigFile};
+                var configFiles = new List<ConfigFile> { defaultConfigFile };
                 Log.Information("Create app settings file");
-                WriteToAppSettingsFile(new AppSettings() { LastOpendConfigFile = defaultConfigFile, ConfigFiles = configFiles});
+                WriteToAppSettingsFile(new AppSettings() { LastOpendConfigFile = defaultConfigFile, ConfigFiles = configFiles });
             }
 
             SetDefaultIfSettingsNotSet();
