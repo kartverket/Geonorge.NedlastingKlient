@@ -21,7 +21,7 @@ namespace Geonorge.Nedlaster
         public delegate void ProgressChangedHandler(long? totalFileSize, long totalBytesDownloaded,
             double? progressPercentage);
 
-        private static readonly HttpClient Client = new HttpClient();
+        private static readonly HttpClient Client = new HttpClient(){Timeout = TimeSpan.FromMilliseconds(30000) };
 
         public event ProgressChangedHandler ProgressChanged;
         
@@ -34,13 +34,13 @@ namespace Geonorge.Nedlaster
             {
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    throw new Exception("Download failed: You need to authorize access before downloading file");
+                    Log.Error("Download failed: You need to authorize access before downloading file");
                 }
                 else if (!response.IsSuccessStatusCode)
                 {
                     var message = $"Download failed for url: {downloadRequest.DownloadUrl}, - response from server was: {response.StatusCode} - {response.ReasonPhrase}";
+                    Log.Error(message);
                     Console.WriteLine(message);
-                    throw new Exception(message);
                 }
                 else
                 {

@@ -400,6 +400,7 @@ namespace Geonorge.MassivNedlasting.Gui
             loginDialog.ShowDialog();
             _appSettings = ApplicationService.GetAppSettings();
             _selectedConfigFile = _appSettings.LastOpendConfigFile;
+            _datasetService = new DatasetService(_selectedConfigFile);
             cmbConfigFiles.ItemsSource = _appSettings.NameConfigFiles();
             cmbConfigFiles.SelectedItem = _selectedConfigFile.Name;
         }
@@ -492,7 +493,7 @@ namespace Geonorge.MassivNedlasting.Gui
         private void CmbConfigFiles_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var cmbConfig = (ComboBox) sender;
-            if (cmbConfig != null)
+            if (cmbConfig?.SelectedItem != null)
             {
                 SaveDownloadList();
                 _datasetService = new DatasetService(_appSettings.GetConfigByName(cmbConfig.SelectedItem.ToString()));

@@ -2,10 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms.VisualStyles;
+using Serilog;
 
 namespace Geonorge.MassivNedlasting.Gui
 {
@@ -18,6 +21,8 @@ namespace Geonorge.MassivNedlasting.Gui
         private bool _editConfig = true;
         private bool _newConfig = false;
         private ConfigFile _selectedConfigFile;
+
+        private static readonly ILogger Log = Serilog.Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
         public static readonly DependencyProperty DownloadDirectoryPathProperty = DependencyProperty.Register("DownloadDirectoryPath", typeof(string), typeof(SettingsDialog),
             new FrameworkPropertyMetadata());
@@ -146,7 +151,9 @@ namespace Geonorge.MassivNedlasting.Gui
                     {
                         if (config.Id == _selectedConfigFile.Id)
                         {
-                            config.Name = ConfigNameTextBox.Text;
+                            var oldName = config.Name;
+                            config.Name = CleanName();
+                            if (config.Name != oldName) ChangeNameOnConfigFile(config, oldName);
                             config.FilePath = ApplicationService.GetDownloadFilePath(config.Name);
                             config.DownloadDirectory = FolderPickerDialogBox.DirectoryPath;
                             config.LogDirectory = FolderPickerDialogBoxLog.DirectoryPath;
@@ -176,6 +183,32 @@ namespace Geonorge.MassivNedlasting.Gui
             StatusEditConfigFile();
         }
 
+        private static void ChangeNameOnConfigFile(ConfigFile config, string oldName)
+        {
+            try
+            {
+                System.IO.File.Move(config.FilePath, ApplicationService.GetDownloadFilePath(config.Name));
+                System.IO.File.Move(ApplicationService.GetDownloadHistoryFilePath(oldName), ApplicationService.GetDownloadFilePath(config.Name));
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Could not rename config file or download-history file");
+            }
+        }
+
+        private string CleanName()
+        {
+            try
+            {
+                return Regex.Replace(ConfigNameTextBox.Text, @"[^a-zA-Z0-9 -]", "",
+                    RegexOptions.None, TimeSpan.FromSeconds(1.5));
+            }
+            catch (RegexMatchTimeoutException)
+            {
+                return string.Empty;
+            }
+        }
+
         private void StatusEditConfigFile()
         {
             _editConfig = true;
@@ -194,7 +227,7 @@ namespace Geonorge.MassivNedlasting.Gui
             {
                 DownloadDirectory = FolderPickerDialogBox.DirectoryPath,
                 LogDirectory = FolderPickerDialogBoxLog.DirectoryPath,
-                Name = ConfigNameTextBox.Text,
+                Name = CleanName(),
                 FilePath = ApplicationService.GetDownloadFilePath(ConfigNameTextBox.Text),
                 DownloadUsage = _selectedConfigFile.DownloadUsage
             };
