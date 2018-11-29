@@ -720,6 +720,7 @@ namespace Geonorge.MassivNedlasting
             var selecedForDownload = GetSelectedDatasetFilesFromDownloadFileAsDownloadModel();
             if (selecedForDownload.Any())
             {
+                Log.Information("Convert from download.json to default.json");
                 selecedForDownload = RemoveDuplicatesIterative(selecedForDownload);
                 selecedForDownload = ConvertToNewVersionOfDownloadFile(selecedForDownload);
 

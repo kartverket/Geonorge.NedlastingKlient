@@ -53,6 +53,9 @@ namespace Geonorge.Nedlaster
             else
             {
                 Log.Debug("No config file is selected. Download from all config-files");
+                var datasetService = new DatasetService(appSettings.LastOpendConfigFile);
+                datasetService.ConvertDownloadToDefaultConfigFileIfExists();
+
                 foreach (var config in appSettings.ConfigFiles)
                 {
                     StartDownloadAsync(config).Wait();
