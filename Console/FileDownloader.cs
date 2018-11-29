@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Net.Http;
 using System.Reflection;
@@ -21,7 +21,7 @@ namespace Geonorge.Nedlaster
         public delegate void ProgressChangedHandler(long? totalFileSize, long totalBytesDownloaded,
             double? progressPercentage);
 
-        private static readonly HttpClient Client = new HttpClient();
+        private static readonly HttpClient Client = new HttpClient(){Timeout = TimeSpan.FromMilliseconds(30000) };
 
         public event ProgressChangedHandler ProgressChanged;
         
