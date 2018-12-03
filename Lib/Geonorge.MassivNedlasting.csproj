@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net471</TargetFrameworks>
@@ -12,6 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Cryptography.Internal" Version="1.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="1.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection.Abstractions" Version="1.1.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
