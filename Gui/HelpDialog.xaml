@@ -17,7 +17,12 @@
 
         <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0 0 0 10">
             <TextBlock Margin="2" Name="lblVersion" Text="Versjon:"/>
-            <TextBlock Margin="10 2 0 0" Name="txtVersion" MinWidth="250" Text="{Binding versionNumber}">test</TextBlock>
+            <TextBlock Margin="10 2 0 0" Name="txtVersion" MinWidth="250" Text="{Binding versionNumber}"></TextBlock>
+            <TextBlock FontSize="12" FontStyle="Italic" HorizontalAlignment="Right">
+                <Hyperlink Foreground="Red"  Click="VersionHyperlink_OnClick">
+                    <TextBlock Name="versionStatusMessage" />
+                </Hyperlink>
+            </TextBlock>
         </StackPanel>
 
         <TextBlock Margin="2" Name="lblHelpPage" Grid.Row="2" MinWidth="250" Text="Informasjonsside:"/>

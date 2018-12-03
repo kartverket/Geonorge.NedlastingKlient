@@ -290,7 +290,7 @@ namespace Geonorge.MassivNedlasting
         public static void SetTimeLastCheckForUpdate(DateTime timeLastCheckForUpdate)
         {
             AppSettings appSetting = JsonConvert.DeserializeObject<AppSettings>(File.ReadAllText(GetAppSettingsFilePath()));
-            appSetting.LastCheckForUpdate = timeLastCheckForUpdate;
+            appSetting.LastCheckForUpdate = timeLastCheckForUpdate.ToString("yyyy-MM-ddTHH:mm:ss");
             WriteToAppSettingsFile(appSetting);
         }
 
@@ -302,7 +302,7 @@ namespace Geonorge.MassivNedlasting
         public static DateTime? GetTimeLastCheckForUpdate()
         {
             AppSettings appSetting = JsonConvert.DeserializeObject<AppSettings>(File.ReadAllText(GetAppSettingsFilePath()));
-            return appSetting.LastCheckForUpdate;
+            return DateTime.Parse(appSetting.LastCheckForUpdate);
         }
     }
 }

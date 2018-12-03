@@ -26,7 +26,8 @@ namespace Geonorge.MassivNedlasting.Gui
         private List<DatasetFileViewModel> _selectedDatasetFiles;
         private List<DownloadViewModel> _selectedFilesForDownload;
         private ConfigFile _selectedConfigFile;
-        private bool _versionStatusMessage = false;
+        private Visibility _versionStatusMessage;
+        private string _currentVersion;
         public bool LoggedIn;
 
 
@@ -41,6 +42,7 @@ namespace Geonorge.MassivNedlasting.Gui
                 .CreateLogger();
 
             Log.Information("Start application");
+
             InitializeComponent();
 
             BtnSelectAll.Visibility = Visibility.Hidden;
@@ -48,9 +50,17 @@ namespace Geonorge.MassivNedlasting.Gui
             ToggleSubscribeSelectedDatasetFiles.Visibility = Visibility.Hidden;
             MenuSubscribe.Visibility = Visibility.Hidden;
 
-            MassivNedlastingVersion massivNedlastingVersjon = new MassivNedlastingVersion(new GitHubReleaseInfoReader());
-            string currentVersion = MassivNedlastingVersion.Current;
-            bool VersionStatusMessage = massivNedlastingVersjon.UpdateIsAvailable();
+            var massivNedlastingVersjon = new MassivNedlastingVersion(new GitHubReleaseInfoReader());
+            _currentVersion = MassivNedlastingVersion.Current;
+            if (massivNedlastingVersjon.UpdateIsAvailable())
+            {
+                versionStatusMessage.Visibility = Visibility.Visible;
+                versionStatusMessage.Text = "Ny versjon tilgjengelig!";
+            }
+            else
+            {
+                versionStatusMessage.Visibility = Visibility.Collapsed;
+            }
 
             _appSettings = ApplicationService.GetAppSettings();
             _datasetService = new DatasetService(_appSettings.LastOpendConfigFile);
@@ -503,6 +513,11 @@ namespace Geonorge.MassivNedlasting.Gui
                 LbSelectedFilesForDownload.ItemsSource = _selectedFilesForDownload;
             }
 
+        }
+
+        private void Hyperlink_OnClick(object sender, RoutedEventArgs e)
+        {
+            Process.Start("https://github.com/kartverket/Geonorge.NedlastingKlient/releases/latest");
         }
     }
 }

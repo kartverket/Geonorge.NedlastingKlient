@@ -27,13 +27,28 @@ namespace Geonorge.MassivNedlasting.Gui
         public HelpDialog()
         {
             InitializeComponent();
-            Version version = Assembly.GetExecutingAssembly().GetName().Version;
-            txtVersion.Text = version.ToString();
+            var massivNedlastingVersjon = new MassivNedlastingVersion(new GitHubReleaseInfoReader());
+            var currentVersion = MassivNedlastingVersion.Current;
+            if (massivNedlastingVersjon.UpdateIsAvailable())
+            {
+                versionStatusMessage.Visibility = Visibility.Visible;
+                versionStatusMessage.Text = "Ny versjon tilgjengelig!";
+            }
+            else
+            {
+                versionStatusMessage.Visibility = Visibility.Collapsed;
+            }
+            txtVersion.Text = currentVersion;
         }
 
         private void Hyperlink_Click(object sender, RoutedEventArgs e)
         {
             Process.Start("https://www.geonorge.no/verktoy/APIer-og-grensesnitt/massivnedlastingsklient/");
+        }
+
+        private void VersionHyperlink_OnClick(object sender, RoutedEventArgs e)
+        {
+            Process.Start("https://github.com/kartverket/Geonorge.NedlastingKlient/releases/latest");
         }
     }
 }
