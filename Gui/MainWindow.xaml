@@ -263,42 +263,48 @@
 
             <!-- Liste over filer valgt for nedlasting-->
 
-            <TreeView VirtualizingStackPanel.IsVirtualizing="True" Name ="LbSelectedFilesForDownload" ItemsSource="{Binding Downloads}" Margin="10" Height="300">
-                <TreeView.ItemTemplate>
-                    <HierarchicalDataTemplate ItemsSource="{Binding Files}" DataType="{x:Type local:DatasetFileViewModel}">
-                        <TextBlock Text="{Binding DatasetTitle}">
+            <!--<TreeView TreeViewItem.Expanded="TreeViewItem_Expanded" SelectedItemChanged="LbSelectedFilesForDownload_OnSelectedItemChanged" VirtualizingStackPanel.IsVirtualizing="True" Name ="LbSelectedFilesForDownload" Margin="10" Height="300">-->
+            <TreeView  SelectedItemChanged="LbSelectedFilesForDownload_OnSelectedItemChanged" VirtualizingStackPanel.IsVirtualizing="True" Name ="LbSelectedFilesForDownload" Margin="20 20 0 0" Height="300">
+                <TreeView.Resources>
+                    <HierarchicalDataTemplate ItemsSource="{Binding Files}" DataType="{x:Type local:DownloadViewModel}">
+                        <TextBlock  Style="{StaticResource MaterialDesignBody2TextBlock}" Text="{Binding DatasetTitle}">
                             <materialDesign:PackIcon Margin="10 0 0 -2" ToolTip="Abonnerer på datasettet" Kind="Rss" Visibility="{Binding Subscribe, Converter={StaticResource BoolToVisConverter}}"></materialDesign:PackIcon>
                         </TextBlock>
-                        <HierarchicalDataTemplate.ItemTemplate>
-                            <DataTemplate>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="250"/>
-                                        <ColumnDefinition Width="150"/>
-                                        <ColumnDefinition Width="150"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock VerticalAlignment="Center" Grid.Column="0" ToolTip="{Binding Title}"  Text="{Binding Title}">
-                                <materialDesign:PackIcon Margin="10 0 0 -2" ToolTip="{Binding Restrictions}" Grid.Column="2" Kind="Lock" Visibility="{Binding IsRestricted, Converter={StaticResource BoolToVisConverter}}"></materialDesign:PackIcon>
-                                    </TextBlock>
+                    </HierarchicalDataTemplate>
+                    <!--<Style x:Key="MaterialDesignFloatingHintTextBox"  BasedOn="{StaticResource MaterialDesignFloatingHintTextBox}" TargetType="TreeViewItem"> Testing. Få inn material design-->
 
-                                    <TextBlock VerticalAlignment="Center" Grid.Column="1" ToolTip="{Binding EpsgName}" Text="{Binding Category}"/>
-                                    <TextBlock VerticalAlignment="Center" Grid.Column="2" Text="{Binding LastUpdated}"/>
-                                    <Button x:Name="BtnAddOrRemove" Margin="10 0" Grid.Column="4" BindingGroup="{Binding LbSelectedFiles}" Click="RemoveFromDownloadList_Click"
-                                Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
-                                ToolTip="Fjern"
+                    <DataTemplate DataType="{x:Type local:DatasetFileViewModel}">
+                        <Grid Margin="20 5 0 5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="250"/>
+                                <ColumnDefinition Width="150"/>
+                                <ColumnDefinition Width="150"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock VerticalAlignment="Center" Grid.Column="0" ToolTip="{Binding Title}"  Text="{Binding Title}">
+                                <materialDesign:PackIcon Margin="10 0 0 -2" ToolTip="{Binding Restrictions}" Grid.Column="2" Kind="Lock" Visibility="{Binding IsRestricted, Converter={StaticResource BoolToVisConverter}}"></materialDesign:PackIcon>
+                            </TextBlock>
+
+                            <TextBlock VerticalAlignment="Center" Grid.Column="1" ToolTip="{Binding EpsgName}" Text="{Binding Category}"/>
+                            <TextBlock VerticalAlignment="Center" Grid.Column="2" Text="{Binding LastUpdated}"/>
+                            <Button x:Name="BtnAddOrRemove" Margin="10 0" Grid.Column="4" BindingGroup="{Binding LbSelectedFiles}" Click="RemoveFromDownloadList_Click"
+                                    Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
+                                    ToolTip="Fjern"
                                     Height="20"
                                     Width="20">
-                                        <materialDesign:PackIcon
+                                <materialDesign:PackIcon
                                     Kind="Minus"
                                     Height="18"
                                     Width="18" />
-                                    </Button>
-                                </Grid>
-                            </DataTemplate>
-                        </HierarchicalDataTemplate.ItemTemplate>
-                    </HierarchicalDataTemplate>
-                </TreeView.ItemTemplate>
+                            </Button>
+                        </Grid>
+                    </DataTemplate>
+                    <Style TargetType="TreeViewItem">
+                        <Setter Property="IsExpanded" Value="{Binding Expanded}" />
+                        <!--<Setter Property="IsExpanded" Value="true" /> Testing -->
+                    </Style>
+                </TreeView.Resources>
+                    
             </TreeView>
 
         </StackPanel>

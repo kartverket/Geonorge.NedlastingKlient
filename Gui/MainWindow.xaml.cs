@@ -268,11 +268,20 @@ namespace Geonorge.MassivNedlasting.Gui
 
         private void BindNewList()
         {
-            LbSelectedFilesForDownload.ItemsSource = null;
-            LbSelectedFilesForDownload.ItemsSource = _selectedFilesForDownload;
-            LbSelectedDatasetFiles.ItemsSource = null;
-            LbSelectedDatasetFiles.ItemsSource = _selectedDatasetFiles;
+            try
+            {
+                LbSelectedFilesForDownload.ItemsSource = null;
+                LbSelectedFilesForDownload.ItemsSource = _selectedFilesForDownload;
+                LbSelectedDatasetFiles.ItemsSource = null;
+                LbSelectedDatasetFiles.ItemsSource = _selectedDatasetFiles;
+            }
+            catch (Exception e)
+            {
+                
+            }
         }
+
+        
 
         private void RemoveFromDownloadList_Click(object sender, RoutedEventArgs e)
         {
@@ -499,10 +508,10 @@ namespace Geonorge.MassivNedlasting.Gui
             }
         }
 
-        
+
         private void CmbConfigFiles_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var cmbConfig = (ComboBox) sender;
+            var cmbConfig = (ComboBox)sender;
             if (cmbConfig?.SelectedItem != null)
             {
                 SaveDownloadList();
@@ -518,6 +527,29 @@ namespace Geonorge.MassivNedlasting.Gui
         private void Hyperlink_OnClick(object sender, RoutedEventArgs e)
         {
             Process.Start("https://github.com/kartverket/Geonorge.NedlastingKlient/releases/latest");
+        }
+
+        private void LbSelectedFilesForDownload_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if (e.NewValue != null)
+            {
+                var downloadViewModel = e.NewValue as DownloadViewModel;
+                if (downloadViewModel != null)
+                {
+                    downloadViewModel.Expanded = !downloadViewModel.Expanded;
+                    BindNewList();
+                }
+            }
+        }
+
+        private void TreeViewItem_Expanded(object sender, RoutedEventArgs e)
+        {
+            TreeViewItem tvi = e.OriginalSource as TreeViewItem;
+            if (tvi?.DataContext is DownloadViewModel item)
+            {
+                item.Expanded = !item.Expanded;
+                BindNewList(); // Ekspandering virker når denne tas vekk.. 
+            }
         }
     }
 }

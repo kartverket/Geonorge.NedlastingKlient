@@ -57,6 +57,7 @@ namespace Geonorge.MassivNedlasting
         public bool AutoDeleteFiles { get; set; }
         public bool AutoAddFiles { get; set; }
         public List<DatasetFileViewModel> Files { get; set; }
+        public bool Expanded { get; set; }
 
         public DownloadViewModel()
         {
@@ -87,6 +88,7 @@ namespace Geonorge.MassivNedlasting
             DatasetTitle = selectedDataset.Title;
             Subscribe = false; // TODO
             AutoDeleteFiles = false; // TODO
+            AutoAddFiles = false; // TODO
             AutoAddFiles = false; // TODO
             Files = AddSelectedFile(selectedFile);
         }
