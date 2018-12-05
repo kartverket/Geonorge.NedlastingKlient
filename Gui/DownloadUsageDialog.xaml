@@ -5,7 +5,7 @@
         xmlns:gui="clr-namespace:Geonorge.MassivNedlasting.Gui"
         Title="Brukergruppe og formål" SizeToContent="WidthAndHeight" Icon="Content/geonorge.ico" WindowStartupLocation="CenterScreen" WindowStyle="None">
     <StackPanel Margin="15">
-        <TextBlock>TODO - Informasjon om hvorfor det skal registreres brukergruppe og formål...</TextBlock>
+        <TextBlock>Brukergrupper/formål er kun for statistisk bruk. Dette for at vi skal vite hvilke grupper som bør prioriteres ved eventuelle tilpasninger.</TextBlock>
 
         <TextBlock FontWeight="Bold" Margin="0 10 0 0">Brukergruppe:</TextBlock>
         <ComboBox  materialDesign:HintAssist.Hint="Brukergruppe" Name="cmbDownloadUsageGroups" Margin="0 10 0 0"/>
