@@ -74,7 +74,7 @@ namespace Geonorge.MassivNedlasting
                 DatasetTitle = download.DatasetId;
             }
 
-
+            Expanded = false;
             Subscribe = download.Subscribe;
             AutoDeleteFiles = download.AutoDeleteFiles;
             AutoAddFiles = download.AutoAddFiles;

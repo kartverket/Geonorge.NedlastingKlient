@@ -277,11 +277,11 @@ namespace Geonorge.MassivNedlasting.Gui
             }
             catch (Exception e)
             {
-                
+
             }
         }
 
-        
+
 
         private void RemoveFromDownloadList_Click(object sender, RoutedEventArgs e)
         {
@@ -544,11 +544,41 @@ namespace Geonorge.MassivNedlasting.Gui
 
         private void TreeViewItem_Expanded(object sender, RoutedEventArgs e)
         {
-            TreeViewItem tvi = e.OriginalSource as TreeViewItem;
-            if (tvi?.DataContext is DownloadViewModel item)
+            TreeView treeView = sender as TreeView;
+            TreeViewItem selectedTreeViewItem = e.OriginalSource as TreeViewItem;
+           
+            if (selectedTreeViewItem != null && treeView != null)
             {
-                item.Expanded = !item.Expanded;
-                BindNewList(); // Ekspandering virker når denne tas vekk.. 
+                foreach (DownloadViewModel treeViewItem in treeView.Items)
+                {
+                    DownloadViewModel selecedDownloadViewModel = selectedTreeViewItem.DataContext as DownloadViewModel;
+
+                    if (selecedDownloadViewModel != null && treeViewItem.DatasetTitle == selecedDownloadViewModel.DatasetTitle)
+                    {
+                        treeViewItem.Expanded = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void TreeViewItem_Collapsed(object sender, RoutedEventArgs e)
+        {
+            TreeView treeView = sender as TreeView;
+            TreeViewItem selectedTreeViewItem = e.OriginalSource as TreeViewItem;
+
+            if (selectedTreeViewItem != null && treeView != null)
+            {
+                foreach (DownloadViewModel treeViewItem in treeView.Items)
+                {
+                    DownloadViewModel selecedDownloadViewModel = selectedTreeViewItem.DataContext as DownloadViewModel;
+
+                    if (selecedDownloadViewModel != null && treeViewItem.DatasetTitle == selecedDownloadViewModel.DatasetTitle)
+                    {
+                        treeViewItem.Expanded = false;
+                        break;
+                    }
+                }
             }
         }
     }
