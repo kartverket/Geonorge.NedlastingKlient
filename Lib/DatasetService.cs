@@ -354,7 +354,9 @@ namespace Geonorge.MassivNedlasting
             {
                 foreach (var datasetFile in dataset.Files)
                 {
-                    downloadHistory.Add(new DownloadHistory(datasetFile.Url, datasetFile.FilePath));
+                    downloadHistory.Add(datasetFile.DownloadSuccess
+                        ? new DownloadHistory(datasetFile.Url, datasetFile.FilePath)
+                        : new DownloadHistory(datasetFile.Url, datasetFile.FilePath, datasetFile.LastUpdated));
                 }
             }
 

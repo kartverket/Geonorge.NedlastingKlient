@@ -60,6 +60,11 @@ namespace Geonorge.MassivNedlasting
         /// </summary>
         public string FilePath { get; set; }
 
+        /// <summary>
+        /// Check if download was successful
+        /// </summary>
+        public bool DownloadSuccess { get; set; }
+
 
         public DatasetFile(DatasetFileViewModel datasetFileViewModel)
         {

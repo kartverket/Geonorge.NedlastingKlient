@@ -129,7 +129,6 @@ namespace Geonorge.Nedlaster
 
                             downloadUsage?.Entries.Add(new DownloadUsageEntries(datasetFile));
                             updatedDatasetFileToDownload.Add(datasetFile);
-
                         }
                         else
                         {
@@ -139,6 +138,7 @@ namespace Geonorge.Nedlaster
                             datasetFile.FilePath = downloadHistory.FilePath;
                             updatedDatasetFileToDownload.Add(datasetFile);
                         }
+                        datasetFile.DownloadSuccess = true;
                     }
 
                     catch (Exception e)
@@ -148,6 +148,7 @@ namespace Geonorge.Nedlaster
                         fileLog.Message = "Error while downloading dataset: " + e.Message;
                         downloadLog.Faild.Add(fileLog);
                         Console.WriteLine("Error while downloading dataset: " + e.Message);
+                        datasetFile.DownloadSuccess = true;
                     }
 
                     Console.WriteLine("-------------");

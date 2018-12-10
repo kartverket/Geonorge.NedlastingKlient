@@ -9,10 +9,10 @@ namespace Geonorge.MassivNedlasting
     public class DownloadHistory
     {
 
-        public DownloadHistory(string url, string filePath)
+        public DownloadHistory(string url, string filePath, string lastUpdated = null)
         {
             Id = url;
-            Downloaded = DateTime.Now.ToString();
+            Downloaded = lastUpdated ?? DateTime.Now.ToString();
             FilePath = filePath;
         }
 
