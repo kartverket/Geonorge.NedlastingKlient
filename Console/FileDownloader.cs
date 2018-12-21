@@ -59,7 +59,7 @@ namespace Geonorge.Nedlaster
 
         private static void SetClientRequestHeaders(DownloadRequest downloadRequest, AppSettings appSettings)
         {
-            //Client.DefaultRequestHeaders.UserAgent.ParseAdd($"GeonorgeNedlastingsklient/{Assembly.GetExecutingAssembly().GetName().Version.ToString()}");
+            Client.DefaultRequestHeaders.UserAgent.ParseAdd($"GeonorgeNedlastingsklient/{Assembly.GetExecutingAssembly().GetName().Version.ToString()}");
 
             if (downloadRequest.MustAuthenticate)
             {
