@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
@@ -59,7 +60,10 @@ namespace Geonorge.Nedlaster
 
         private static void SetClientRequestHeaders(DownloadRequest downloadRequest, AppSettings appSettings)
         {
+            if (!Client.DefaultRequestHeaders.Any())
+            {
             Client.DefaultRequestHeaders.UserAgent.ParseAdd($"GeonorgeNedlastingsklient/{Assembly.GetExecutingAssembly().GetName().Version.ToString()}");
+            }
 
             if (downloadRequest.MustAuthenticate)
             {
