@@ -422,6 +422,7 @@ namespace Geonorge.MassivNedlasting
                     r.Close();
                     selecedForDownload = RemoveDuplicatesIterative(selecedForDownload);
                     selecedForDownload = ConvertToNewVersionOfDownloadFile(selecedForDownload);
+                    selecedForDownload = GetAvailableProjections(selecedForDownload);
                     Log.Debug("Get selected files to download");
                     return selecedForDownload;
                 }
@@ -433,6 +434,32 @@ namespace Geonorge.MassivNedlasting
             }
         }
 
+        private List<Download> GetAvailableProjections(List<Download> datasets)
+        {
+            foreach (var dataset in datasets)
+            {
+                var datasetFiles = GetDatasetFiles(dataset);
+                var availableProjections = datasetFiles.GroupBy(p => p.Projection).Select(p => p.Key).ToList();
+                if (dataset.Projections.Any())
+                {
+                    List<string> newItems = availableProjections.Where(p => dataset.Projections.All(p2 => p2.Name != p)).ToList();
+
+                    foreach (var projection in newItems)
+                    {
+                        dataset.Projections.Add(new ProjectionsViewModel(projection, projection, true));
+                    }
+                }
+                else
+                {
+                    foreach (var projection in availableProjections)
+                    {
+                        dataset.Projections.Add(new ProjectionsViewModel(projection, projection, true));
+                    }
+                }
+            }
+
+            return datasets;
+        }
 
 
         private List<Download> ConvertToNewVersionOfDownloadFile(List<Download> downloads)
@@ -581,12 +608,15 @@ namespace Geonorge.MassivNedlasting
             return selectedFilesViewModel;
         }
 
-        private List<DownloadViewModel> ConvertToViewModel(List<Download> datasetFilesToDownload, List<Projections> projections, bool selectedForDownload = false)
+        private List<DownloadViewModel> ConvertToViewModel(List<Download> datasetToDownload, List<Projections> projectionList, bool selectedForDownload = false)
         {
             var selectedFilesViewModel = new List<DownloadViewModel>();
-            foreach (var dataset in datasetFilesToDownload)
+            foreach (var dataset in datasetToDownload)
             {
-                DownloadViewModel selectedFileViewModel = new DownloadViewModel(dataset, projections, selectedForDownload);
+                dataset.GetAvailableProjections();
+                DownloadViewModel selectedFileViewModel = new DownloadViewModel(dataset, projectionList, selectedForDownload);
+                //selectedFileViewModel.AddProjectionsIfNotExists(availableProjections);
+
                 selectedFilesViewModel.Add(selectedFileViewModel);
             }
             return selectedFilesViewModel;

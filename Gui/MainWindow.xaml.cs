@@ -468,6 +468,7 @@ namespace Geonorge.MassivNedlasting.Gui
             }
 
             MenuSubscribe.Visibility = subscribe ? Visibility.Visible : Visibility.Hidden;
+            MenuSubscribe.IsPopupOpen = subscribe;
             BtnAutoDeleteFiles.IsChecked = subscribe;
             BtnAutoAddFiles.IsChecked = subscribe;
 
