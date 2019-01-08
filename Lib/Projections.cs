@@ -24,7 +24,7 @@ namespace Geonorge.MassivNedlasting.Gui
     {
         public ProjectionsViewModel(string epsg, string name, bool selected)
         {
-            Selected = true;
+            Selected = selected;
             Epsg = epsg;
             Name = name;
         }

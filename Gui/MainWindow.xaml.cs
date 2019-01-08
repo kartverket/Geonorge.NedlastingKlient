@@ -21,7 +21,6 @@ namespace Geonorge.MassivNedlasting.Gui
     {
         private AppSettings _appSettings;
         private DatasetService _datasetService;
-        private List<Projections> _projections;
         private Dataset _selectedDataset;
         private List<DatasetFileViewModel> _selectedDatasetFiles;
         private List<DownloadViewModel> _selectedFilesForDownload;
@@ -45,6 +44,7 @@ namespace Geonorge.MassivNedlasting.Gui
 
             InitializeComponent();
 
+
             BtnSelectAll.Visibility = Visibility.Hidden;
             BtnSelectAll.IsChecked = false;
             ToggleSubscribeSelectedDatasetFiles.Visibility = Visibility.Hidden;
@@ -65,7 +65,7 @@ namespace Geonorge.MassivNedlasting.Gui
             _appSettings = ApplicationService.GetAppSettings();
             _datasetService = new DatasetService(_appSettings.LastOpendConfigFile);
             _selectedConfigFile = _appSettings.LastOpendConfigFile;
-
+            _datasetService.UpdateProjections();
             _datasetService.ConvertDownloadToDefaultConfigFileIfExists();
 
 
@@ -78,16 +78,8 @@ namespace Geonorge.MassivNedlasting.Gui
                 MessageBox.Show("Klarer ikke hente datasett... Sjekk internett tilkoblingen din");
             }
 
-            try
-            {
-                _projections = _datasetService.FetchProjections();
-            }
-            catch (Exception e)
-            {
-                _projections = _datasetService.ReadFromProjectionFile();
-            }
 
-            _selectedFilesForDownload = _datasetService.GetSelectedFilesToDownloadAsViewModel(_projections);
+            _selectedFilesForDownload = _datasetService.GetSelectedFilesToDownloadAsViewModel();
             _selectedDatasetFiles = new List<DatasetFileViewModel>();
 
             var viewDatasets = (CollectionView)CollectionViewSource.GetDefaultView(LbDatasets.ItemsSource);
@@ -173,18 +165,20 @@ namespace Geonorge.MassivNedlasting.Gui
                     subscribe = download.Subscribe;
                     autoAddFiles = download.AutoAddFiles;
                     autoDeleteFiles = download.AutoDeleteFiles;
+                    lbProjections.ItemsSource = download.Projections;
                 }
             }
 
             ToggleSubscribeSelectedDatasetFiles.IsChecked = subscribe;
             BtnAutoDeleteFiles.IsChecked = autoDeleteFiles;
             BtnAutoAddFiles.IsChecked = autoAddFiles;
+
             MenuSubscribe.Visibility = subscribe ? Visibility.Visible : Visibility.Hidden;
         }
 
         private List<DatasetFileViewModel> GetFilesAsync(Dataset selctedDataset)
         {
-            var selectedDatasetFiles = _datasetService.GetDatasetFiles(selctedDataset, _projections);
+            var selectedDatasetFiles = _datasetService.GetDatasetFiles(selctedDataset);
 
             foreach (var dataset in _selectedFilesForDownload)
             {
@@ -519,7 +513,7 @@ namespace Geonorge.MassivNedlasting.Gui
                 _datasetService = new DatasetService(_appSettings.GetConfigByName(cmbConfig.SelectedItem.ToString()));
                 _appSettings.LastOpendConfigFile = _appSettings.GetConfigByName(cmbConfig.SelectedItem.ToString());
                 ApplicationService.WriteToAppSettingsFile(_appSettings);
-                _selectedFilesForDownload = _datasetService.GetSelectedFilesToDownloadAsViewModel(_projections);
+                _selectedFilesForDownload = _datasetService.GetSelectedFilesToDownloadAsViewModel();
                 LbSelectedFilesForDownload.ItemsSource = _selectedFilesForDownload;
             }
 
@@ -579,6 +573,35 @@ namespace Geonorge.MassivNedlasting.Gui
                         treeViewItem.Expanded = false;
                         break;
                     }
+                }
+            }
+        }
+
+        private void BtnProjection_OnClick(object sender, RoutedEventArgs e)
+        {
+            var cbProjection = (CheckBox)sender;
+            if (cbProjection == null)
+            {
+                return;
+            }
+
+            foreach (var download in _selectedFilesForDownload)
+            {
+                if (download.DatasetTitle == _selectedDataset.Title)
+                {
+                    var selectedProjection = cbProjection.Uid;
+                    if (cbProjection.IsChecked != null)
+                    {
+                        foreach (var projection in download.Projections)
+                        {
+                            if (projection.Name == selectedProjection)
+                            {
+                                //projection.Selected = cbProjection.IsChecked.Value;
+                            }
+                        }        
+                    }
+
+                    break;
                 }
             }
         }

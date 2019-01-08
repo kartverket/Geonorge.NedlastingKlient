@@ -152,13 +152,11 @@
                             <Label>Projeksjoner</Label>
                             <ItemsControl
                                 Name="lbProjections"
-                                Grid.IsSharedSizeScope="True"
-                                Margin="12 0 12 0">
+                                Grid.IsSharedSizeScope="True">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <Border
-                                            x:Name="Border"
-                                            Padding="8">
+                                            x:Name="Border">
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition
@@ -166,14 +164,14 @@
                                                     <ColumnDefinition />
                                                 </Grid.ColumnDefinitions>
                                                 <CheckBox
+                                                    Click="BtnProjection_OnClick"
                                                     VerticalAlignment="Center"
-                                                    IsChecked="{Binding IsSelected}" />
+                                                    Uid="{Binding Epsg}"
+                                                    IsChecked="{Binding Selected}" />
                                                 <StackPanel
-                                                    Margin="8 0 0 0"
+                                                    Margin="2 0 0 0"
                                                     Grid.Column="1">
-                                                    <TextBlock
-                                                        FontWeight="Bold"
-                                                        Text="{Binding Projection}" />
+                                                    <TextBlock Text="{Binding Epsg}" />
                                                 </StackPanel>
                                             </Grid>
                                         </Border>
@@ -190,7 +188,6 @@
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
-                            <CheckBox Name="projections" Style="{StaticResource MaterialDesignCheckBox}" Click="BtnAutoAddFiles_OnClick">Legge til nye filer</CheckBox>
                         </StackPanel>
                     </materialDesign:PopupBox>
                 </StackPanel>
