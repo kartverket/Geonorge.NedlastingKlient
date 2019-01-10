@@ -417,12 +417,8 @@ namespace Geonorge.MassivNedlasting.Gui
             loginDialog.ShowDialog();
             _appSettings = ApplicationService.GetAppSettings();
             _selectedConfigFile = _appSettings.LastOpendConfigFile;
-            _datasetService = new DatasetService(_selectedConfigFile);
             cmbConfigFiles.ItemsSource = _appSettings.NameConfigFiles();
             cmbConfigFiles.SelectedItem = _selectedConfigFile.Name;
-            //_selectedFilesForDownload = _datasetService.GetSelectedFilesToDownloadAsViewModel();
-
-            //BindNewList();
         }
 
         private void BtnHelp_OnClick(object sender, RoutedEventArgs e)
