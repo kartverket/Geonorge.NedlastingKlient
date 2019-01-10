@@ -550,10 +550,21 @@ namespace Geonorge.MassivNedlasting
             var set = new HashSet<string>();
             for (int i = 0; i < items.Count; i++)
             {
-                if (!set.Contains(items[i].DatasetTitle))
+                if (string.IsNullOrWhiteSpace(items[i].DatasetTitle))
                 {
-                    result.Add(items[i]);
-                    set.Add(items[i].DatasetId);
+                    if (!set.Contains(items[i].DatasetId))
+                    {
+                        result.Add(items[i]);
+                        set.Add(items[i].DatasetId);
+                    }
+                }
+                else
+                {
+                    if (!set.Contains(items[i].DatasetTitle))
+                    {
+                        result.Add(items[i]);
+                        set.Add(items[i].DatasetId);
+                    }
                 }
             }
             return result;
