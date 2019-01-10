@@ -1,4 +1,6 @@
-﻿namespace Geonorge.MassivNedlasting.Gui
+﻿using System.Linq;
+
+namespace Geonorge.MassivNedlasting.Gui
 {
     public class Projections
     {
@@ -14,6 +16,20 @@
             
         }
 
+        public string Epsg { get; set; }
+        public string Name { get; set; }
+    }
+
+    public class ProjectionsViewModel
+    {
+        public ProjectionsViewModel(string epsg, string name, bool selected)
+        {
+            Selected = selected;
+            Epsg = epsg;
+            Name = name;
+        }
+
+        public bool Selected { get; set; }
         public string Epsg { get; set; }
         public string Name { get; set; }
     }

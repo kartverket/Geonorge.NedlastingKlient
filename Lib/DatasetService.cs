@@ -20,10 +20,11 @@ namespace Geonorge.MassivNedlasting
 
         private static readonly ILogger Log = Serilog.Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
         private static readonly HttpClient HttpClient = new HttpClient();
-        private ConfigFile _configFile = ConfigFile.GetDefaultConfigFile();
+        private ConfigFile _configFile;
 
         public DatasetService()
         {
+            _configFile = ConfigFile.GetDefaultConfigFile();
             HttpClient.DefaultRequestHeaders.UserAgent.ParseAdd($"GeonorgeNedlastingsklient/{Assembly.GetExecutingAssembly().GetName().Version.ToString()}");
         }
 
@@ -91,16 +92,16 @@ namespace Geonorge.MassivNedlasting
         /// <param name="dataset"></param>
         /// <param name="propotions"></param>
         /// <returns></returns>
-        public List<DatasetFileViewModel> GetDatasetFiles(Dataset dataset, List<Projections> propotions)
+        public List<DatasetFileViewModel> GetDatasetFiles(Dataset dataset)
         {
             var getFeedTask = HttpClient.GetStringAsync(dataset.Url);
             List<DatasetFile> datasetFiles = new AtomFeedParser().ParseDatasetFiles(getFeedTask.Result, dataset.Title, dataset.Url).OrderBy(d => d.Title).ToList();
             Log.Debug("Fetch dataset files from " + dataset.Url);
-            return ConvertToViewModel(datasetFiles, propotions);
+            return ConvertToViewModel(datasetFiles);
         }
 
         /// <summary>
-        /// Fetch projections from epsg-registry - https://register.geonorge.no/register/epsg-koder
+        /// Fetch projections from epsg-registry - https://register.geonorge.no//epsg-koder
         /// </summary>
         /// <returns></returns>
         public List<Projections> FetchProjections()
@@ -109,7 +110,7 @@ namespace Geonorge.MassivNedlasting
 
             var url = "https://register.geonorge.no/api/epsg-koder.json";
 
-            var c = new System.Net.WebClient { Encoding = System.Text.Encoding.UTF8 };
+            var c = new System.Net.WebClient { Encoding = Encoding.UTF8 };
 
             var json = c.DownloadString(url);
             Log.Debug("Fetch projection from https://register.geonorge.no/api/epsg-koder.json");
@@ -127,6 +128,7 @@ namespace Geonorge.MassivNedlasting
             {
                 Log.Debug("Projection is empty");
             }
+
             return projections;
         }
 
@@ -193,29 +195,6 @@ namespace Geonorge.MassivNedlasting
         }
 
 
-        /// <summary>
-        /// Returns a list of projections. 
-        /// </summary>
-        /// <returns></returns>
-        public List<Projections> ReadFromProjectionFile()
-        {
-            try
-            {
-                using (var r = new StreamReader(ApplicationService.GetProjectionFilePath()))
-                {
-                    var json = r.ReadToEnd();
-                    var propotions = JsonConvert.DeserializeObject<List<Projections>>(json);
-                    Log.Debug("Read from projection file");
-                    r.Close();
-                    return propotions;
-                }
-            }
-            catch (Exception e)
-            {
-                Log.Error(e, "Read from projection file");
-                return new List<Projections>();
-            }
-        }
 
         /// <summary>
         /// Returns a list of projections. 
@@ -240,6 +219,7 @@ namespace Geonorge.MassivNedlasting
                 return new List<string>();
             }
         }
+
 
         /// <summary>
         /// Returns a list of projections. 
@@ -422,6 +402,7 @@ namespace Geonorge.MassivNedlasting
                     r.Close();
                     selecedForDownload = RemoveDuplicatesIterative(selecedForDownload);
                     selecedForDownload = ConvertToNewVersionOfDownloadFile(selecedForDownload);
+                    //selecedForDownload = GetAvailableProjections(selecedForDownload);
                     Log.Debug("Get selected files to download");
                     return selecedForDownload;
                 }
@@ -433,7 +414,55 @@ namespace Geonorge.MassivNedlasting
             }
         }
 
+        public List<Download> GetAvailableProjections(List<Download> datasets)
+        {
+            foreach (var dataset in datasets)
+            {
+                var datasetFiles = GetDatasetFiles(dataset);
+                var availableProjections = datasetFiles.GroupBy(p => p.Projection).Select(p => p.Key).ToList();
+                if (dataset.Projections.Any())
+                {
+                    List<string> newItems = availableProjections.Where(p => dataset.Projections.All(p2 => p2.Name != p)).ToList();
 
+                    foreach (var projection in newItems)
+                    {
+                        dataset.Projections.Add(new ProjectionsViewModel(projection, projection, true));
+                    }
+                }
+                else
+                {
+                    foreach (var projection in availableProjections)
+                    {
+                        dataset.Projections.Add(new ProjectionsViewModel(projection, projection, true));
+                    }
+                }
+            }
+
+            return datasets;
+        }
+
+        public List<ProjectionsViewModel> GetAvailableProjections(Dataset dataset, List<DatasetFileViewModel> datasetFiles)
+        {
+            var availableProjections = datasetFiles.GroupBy(p => p.Category).Select(p => p.Key).ToList();
+            if (dataset.Projections.Any())
+            {
+                List<string> newItems = availableProjections.Where(p => dataset.Projections.All(p2 => p2.Name != p)).ToList();
+
+                foreach (var projection in newItems)
+                {
+                    dataset.Projections.Add(new ProjectionsViewModel(projection, projection, true));
+                }
+            }
+            else
+            {
+                foreach (var projection in availableProjections)
+                {
+                    dataset.Projections.Add(new ProjectionsViewModel(projection, projection, true));
+                }
+            }
+
+            return dataset.Projections;
+        }
 
         private List<Download> ConvertToNewVersionOfDownloadFile(List<Download> downloads)
         {
@@ -521,7 +550,7 @@ namespace Geonorge.MassivNedlasting
             var set = new HashSet<string>();
             for (int i = 0; i < items.Count; i++)
             {
-                if (!set.Contains(items[i].DatasetId))
+                if (!set.Contains(items[i].DatasetTitle))
                 {
                     result.Add(items[i]);
                     set.Add(items[i].DatasetId);
@@ -560,33 +589,32 @@ namespace Geonorge.MassivNedlasting
         /// <summary>
         /// Returns selected files to download as downlaod view models
         /// </summary>
-        /// <param name="propotions"></param>
         /// <returns></returns>
-        public List<DownloadViewModel> GetSelectedFilesToDownloadAsViewModel(List<Projections> propotions)
+        public List<DownloadViewModel> GetSelectedFilesToDownloadAsViewModel()
         {
             List<Download> selectedFiles = GetSelectedFilesToDownload(_configFile);
-            return ConvertToViewModel(selectedFiles, propotions, true);
+            return ConvertToViewModel(selectedFiles, true);
         }
 
 
-        private List<DatasetFileViewModel> ConvertToViewModel(List<DatasetFile> datasetFiles, List<Projections> projections, bool selectedForDownload = false)
+        private List<DatasetFileViewModel> ConvertToViewModel(List<DatasetFile> datasetFiles, bool selectedForDownload = false)
         {
             var selectedFilesViewModel = new List<DatasetFileViewModel>();
             foreach (var selectedFile in datasetFiles)
             {
-                string epsgName = GetEpsgName(projections, selectedFile);
+                string epsgName = GetEpsgName(selectedFile);
                 DatasetFileViewModel selectedFileViewModel = new DatasetFileViewModel(selectedFile, epsgName, selectedForDownload);
                 selectedFilesViewModel.Add(selectedFileViewModel);
             }
             return selectedFilesViewModel;
         }
 
-        private List<DownloadViewModel> ConvertToViewModel(List<Download> datasetFilesToDownload, List<Projections> projections, bool selectedForDownload = false)
+        private List<DownloadViewModel> ConvertToViewModel(List<Download> datasetToDownload, bool selectedForDownload = false)
         {
             var selectedFilesViewModel = new List<DownloadViewModel>();
-            foreach (var dataset in datasetFilesToDownload)
+            foreach (var dataset in datasetToDownload)
             {
-                DownloadViewModel selectedFileViewModel = new DownloadViewModel(dataset, projections, selectedForDownload);
+                DownloadViewModel selectedFileViewModel = new DownloadViewModel(dataset, selectedForDownload);
                 selectedFilesViewModel.Add(selectedFileViewModel);
             }
             return selectedFilesViewModel;
@@ -689,9 +717,9 @@ namespace Geonorge.MassivNedlasting
 
 
 
-        private static string GetEpsgName(List<Projections> projections, DatasetFile selectedFile)
+        private static string GetEpsgName(DatasetFile selectedFile)
         {
-            var projection = projections.FirstOrDefault(p => p.Epsg == selectedFile.Projection);
+            var projection = ApplicationService.GetProjections().FirstOrDefault(p => p.Epsg == selectedFile.Projection);
             return projection != null ? projection.Name : selectedFile.Projection;
         }
 
@@ -739,6 +767,18 @@ namespace Geonorge.MassivNedlasting
                     WriteToConfigFile(selecedForDownload);
                     File.Delete(ApplicationService.GetOldDownloadFilePath());
                 }
+            }
+        }
+
+        public void UpdateProjections()
+        {
+            try
+            {
+                FetchProjections();
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "Could not fetch projections");
             }
         }
     }

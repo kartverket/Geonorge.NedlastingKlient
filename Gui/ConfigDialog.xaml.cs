@@ -153,7 +153,7 @@ namespace Geonorge.MassivNedlasting.Gui
                         {
                             var oldName = config.Name;
                             config.Name = CleanName();
-                            if (config.Name != oldName) ChangeNameOnConfigFile(config, oldName);
+                            if (config.Name != oldName) ChangeNameOnConfigFile(config, config.Name);
                             config.FilePath = ApplicationService.GetDownloadFilePath(config.Name);
                             config.DownloadDirectory = FolderPickerDialogBox.DirectoryPath;
                             config.LogDirectory = FolderPickerDialogBoxLog.DirectoryPath;

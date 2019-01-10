@@ -12,14 +12,18 @@ namespace Geonorge.MassivNedlasting
         public string DatasetUrl { get; set; }
         public string DatasetTitle { get; set; }
         public string DatasetId { get; set; }
-        public bool Subscribe  { get; set; }
+        public bool Subscribe { get; set; }
         public bool AutoDeleteFiles { get; set; }
         public bool AutoAddFiles { get; set; }
+
+        public List<ProjectionsViewModel> Projections { get; set; }
+
         public List<DatasetFile> Files { get; set; }
 
         public Download()
         {
             Files = new List<DatasetFile>();
+            Projections = new List<ProjectionsViewModel>();
         }
 
         public Download(DownloadViewModel downloadViewModel)
@@ -31,6 +35,7 @@ namespace Geonorge.MassivNedlasting
             AutoAddFiles = downloadViewModel.AutoAddFiles;
             AutoDeleteFiles = downloadViewModel.AutoDeleteFiles;
             Files = GetFiles(downloadViewModel.Files);
+            Projections = downloadViewModel.Projections;
         }
 
         private List<DatasetFile> GetFiles(List<DatasetFileViewModel> datasetFilesViewModel)
@@ -46,7 +51,7 @@ namespace Geonorge.MassivNedlasting
         }
     }
 
-  
+
 
     public class DownloadViewModel
     {
@@ -56,15 +61,17 @@ namespace Geonorge.MassivNedlasting
         public bool Subscribe { get; set; }
         public bool AutoDeleteFiles { get; set; }
         public bool AutoAddFiles { get; set; }
+        public List<ProjectionsViewModel> Projections { get; set; }
         public List<DatasetFileViewModel> Files { get; set; }
         public bool Expanded { get; set; }
 
         public DownloadViewModel()
         {
             Files = new List<DatasetFileViewModel>();
+            Projections = new List<ProjectionsViewModel>();
         }
 
-        public DownloadViewModel(Download download, List<Projections> projections, bool selectedForDownload = false)
+        public DownloadViewModel(Download download, bool selectedForDownload = false)
         {
             DatasetUrl = download.DatasetUrl;
             DatasetTitle = download.DatasetTitle;
@@ -78,8 +85,10 @@ namespace Geonorge.MassivNedlasting
             Subscribe = download.Subscribe;
             AutoDeleteFiles = download.AutoDeleteFiles;
             AutoAddFiles = download.AutoAddFiles;
-            Files = GetFiles(download, projections, selectedForDownload);
+            Files = GetFiles(download, selectedForDownload);
+            Projections = download.Projections;
         }
+
 
         public DownloadViewModel(Dataset selectedDataset, DatasetFileViewModel selectedFile)
         {
@@ -91,6 +100,7 @@ namespace Geonorge.MassivNedlasting
             AutoAddFiles = false; // TODO
             AutoAddFiles = false; // TODO
             Files = AddSelectedFile(selectedFile);
+            Projections = selectedDataset.Projections;
         }
 
         public DownloadViewModel(Dataset selectedDataset, bool subscribe)
@@ -105,6 +115,7 @@ namespace Geonorge.MassivNedlasting
                 AutoAddFiles = true;
                 AutoDeleteFiles = true;
             }
+            Projections = selectedDataset.Projections;
         }
 
 
@@ -120,23 +131,35 @@ namespace Geonorge.MassivNedlasting
             return Files;
         }
 
-        private List<DatasetFileViewModel> GetFiles(Download download, List<Projections> projections, bool selectedForDownload)
+        private List<DatasetFileViewModel> GetFiles(Download download, bool selectedForDownload)
         {
             var files = new List<DatasetFileViewModel>();
             foreach (var file in download.Files)
             {
-                string epsgName = GetEpsgName(projections, file);
+                string epsgName = GetEpsgName(file);
                 files.Add(new DatasetFileViewModel(file, epsgName, selectedForDownload));
             }
 
             return files;
         }
 
-        private static string GetEpsgName(List<Projections> projections, DatasetFile selectedFile)
+        private static string GetEpsgName(DatasetFile selectedFile)
         {
-            var projection = projections.FirstOrDefault(p => p.Epsg == selectedFile.Projection);
+            var projection = ApplicationService.GetProjections().FirstOrDefault(p => p.Epsg == selectedFile.Projection);
             return projection != null ? projection.Name : selectedFile.Projection;
         }
 
+        public void AddProjectionsIfNotExists(List<DatasetFile> availableProjections)
+        {
+            if (!Projections.Any())
+            {
+                List<ProjectionsViewModel> projections = new List<ProjectionsViewModel>();
+                foreach (var projection in availableProjections)
+                {
+                    var projectionViewModel = new ProjectionsViewModel(projection.Projection, projection.Projection, true);
+                    projections.Add(projectionViewModel);
+                }
+            }
+        }
     }
 }
