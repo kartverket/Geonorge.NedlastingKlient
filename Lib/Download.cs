@@ -68,6 +68,7 @@ namespace Geonorge.MassivNedlasting
         public DownloadViewModel()
         {
             Files = new List<DatasetFileViewModel>();
+            Projections = new List<ProjectionsViewModel>();
         }
 
         public DownloadViewModel(Download download, bool selectedForDownload = false)
@@ -99,6 +100,7 @@ namespace Geonorge.MassivNedlasting
             AutoAddFiles = false; // TODO
             AutoAddFiles = false; // TODO
             Files = AddSelectedFile(selectedFile);
+            Projections = selectedDataset.Projections;
         }
 
         public DownloadViewModel(Dataset selectedDataset, bool subscribe)
@@ -113,6 +115,7 @@ namespace Geonorge.MassivNedlasting
                 AutoAddFiles = true;
                 AutoDeleteFiles = true;
             }
+            Projections = selectedDataset.Projections;
         }
 
 

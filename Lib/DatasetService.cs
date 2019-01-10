@@ -20,10 +20,11 @@ namespace Geonorge.MassivNedlasting
 
         private static readonly ILogger Log = Serilog.Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
         private static readonly HttpClient HttpClient = new HttpClient();
-        private ConfigFile _configFile = ConfigFile.GetDefaultConfigFile();
+        private ConfigFile _configFile;
 
         public DatasetService()
         {
+            _configFile = ConfigFile.GetDefaultConfigFile();
             HttpClient.DefaultRequestHeaders.UserAgent.ParseAdd($"GeonorgeNedlastingsklient/{Assembly.GetExecutingAssembly().GetName().Version.ToString()}");
         }
 
@@ -401,7 +402,7 @@ namespace Geonorge.MassivNedlasting
                     r.Close();
                     selecedForDownload = RemoveDuplicatesIterative(selecedForDownload);
                     selecedForDownload = ConvertToNewVersionOfDownloadFile(selecedForDownload);
-                    selecedForDownload = GetAvailableProjections(selecedForDownload);
+                    //selecedForDownload = GetAvailableProjections(selecedForDownload);
                     Log.Debug("Get selected files to download");
                     return selecedForDownload;
                 }
@@ -413,7 +414,7 @@ namespace Geonorge.MassivNedlasting
             }
         }
 
-        private List<Download> GetAvailableProjections(List<Download> datasets)
+        public List<Download> GetAvailableProjections(List<Download> datasets)
         {
             foreach (var dataset in datasets)
             {
@@ -440,6 +441,28 @@ namespace Geonorge.MassivNedlasting
             return datasets;
         }
 
+        public List<ProjectionsViewModel> GetAvailableProjections(Dataset dataset, List<DatasetFileViewModel> datasetFiles)
+        {
+            var availableProjections = datasetFiles.GroupBy(p => p.Category).Select(p => p.Key).ToList();
+            if (dataset.Projections.Any())
+            {
+                List<string> newItems = availableProjections.Where(p => dataset.Projections.All(p2 => p2.Name != p)).ToList();
+
+                foreach (var projection in newItems)
+                {
+                    dataset.Projections.Add(new ProjectionsViewModel(projection, projection, true));
+                }
+            }
+            else
+            {
+                foreach (var projection in availableProjections)
+                {
+                    dataset.Projections.Add(new ProjectionsViewModel(projection, projection, true));
+                }
+            }
+
+            return dataset.Projections;
+        }
 
         private List<Download> ConvertToNewVersionOfDownloadFile(List<Download> downloads)
         {
@@ -527,7 +550,7 @@ namespace Geonorge.MassivNedlasting
             var set = new HashSet<string>();
             for (int i = 0; i < items.Count; i++)
             {
-                if (!set.Contains(items[i].DatasetId))
+                if (!set.Contains(items[i].DatasetTitle))
                 {
                     result.Add(items[i]);
                     set.Add(items[i].DatasetId);

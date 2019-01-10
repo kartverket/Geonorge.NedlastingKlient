@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
+using System.Windows.Documents;
 using Serilog;
 
 namespace Geonorge.MassivNedlasting.Gui
@@ -134,7 +135,10 @@ namespace Geonorge.MassivNedlasting.Gui
                         _selectedDataset = selectedDataset;
                         progressBar.IsIndeterminate = true;
 
-                        LbSelectedDatasetFiles.ItemsSource = await Task.Run(() => GetFilesAsync(selectedDataset));
+                        List<DatasetFileViewModel> datasetFiles = await Task.Run(() => GetFilesAsync(selectedDataset));
+                        LbSelectedDatasetFiles.ItemsSource = datasetFiles;
+                        selectedDataset.Projections = _datasetService.GetAvailableProjections(selectedDataset, datasetFiles);
+
                         var viewDatasetFiles =
                             (CollectionView)CollectionViewSource.GetDefaultView(LbSelectedDatasetFiles.ItemsSource);
                         if (viewDatasetFiles != null) viewDatasetFiles.Filter = UserDatasetFileFilter;
@@ -165,7 +169,7 @@ namespace Geonorge.MassivNedlasting.Gui
                     subscribe = download.Subscribe;
                     autoAddFiles = download.AutoAddFiles;
                     autoDeleteFiles = download.AutoDeleteFiles;
-                    lbProjections.ItemsSource = download.Projections;
+                    lbProjections.ItemsSource = subscribe && download.Projections.Any() ? download.Projections : _selectedDataset.Projections;
                 }
             }
 
@@ -416,6 +420,9 @@ namespace Geonorge.MassivNedlasting.Gui
             _datasetService = new DatasetService(_selectedConfigFile);
             cmbConfigFiles.ItemsSource = _appSettings.NameConfigFiles();
             cmbConfigFiles.SelectedItem = _selectedConfigFile.Name;
+            //_selectedFilesForDownload = _datasetService.GetSelectedFilesToDownloadAsViewModel();
+
+            //BindNewList();
         }
 
         private void BtnHelp_OnClick(object sender, RoutedEventArgs e)
@@ -460,7 +467,7 @@ namespace Geonorge.MassivNedlasting.Gui
                 var download = new DownloadViewModel(_selectedDataset, subscribe);
                 _selectedFilesForDownload.Add(download);
             }
-
+            lbProjections.ItemsSource = _selectedDataset.Projections;
             MenuSubscribe.Visibility = subscribe ? Visibility.Visible : Visibility.Hidden;
             MenuSubscribe.IsPopupOpen = subscribe;
             BtnAutoDeleteFiles.IsChecked = subscribe;
@@ -596,7 +603,7 @@ namespace Geonorge.MassivNedlasting.Gui
                         {
                             if (projection.Name == selectedProjection)
                             {
-                                //projection.Selected = cbProjection.IsChecked.Value;
+                                projection.Selected = cbProjection.IsChecked.Value;
                             }
                         }        
                     }
