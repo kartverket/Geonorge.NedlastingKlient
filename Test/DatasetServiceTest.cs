@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using FluentAssertions;
-using Geonorge.MassivNedlasting;
 using Geonorge.MassivNedlasting.Gui;
-using Geonorge.Nedlaster;
 using Xunit;
 
 namespace Geonorge.MassivNedlasting.Test
@@ -40,7 +36,7 @@ namespace Geonorge.MassivNedlasting.Test
         {
             var dataset = Helper.NewDataset();
 
-            List<DatasetFileViewModel> files = new DatasetService().GetDatasetFiles(dataset, new List<Projections>());
+            List<DatasetFileViewModel> files = new DatasetService().GetDatasetFiles(dataset);
             files.Count.Should().BeGreaterThan(1);
         }
 

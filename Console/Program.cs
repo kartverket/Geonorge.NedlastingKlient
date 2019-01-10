@@ -84,16 +84,18 @@ namespace Geonorge.Nedlaster
                     Log.Information("Subscribe to Dataset files");
                     var datasetFilesFromFeed = datasetService.GetDatasetFiles(localDataset);
 
+                    var filterDatasetFromFeed = datasetFilesFromFeed.Where(p => localDataset.Projections.Where(s => s.Selected == false).All(p2 => p2.Epsg != p.Projection)).ToList();
+
                     if (localDataset.AutoDeleteFiles)
                     {
                         Log.Debug("Delete files");
-                        localDataset.Files = RemoveFiles(datasetFilesFromFeed, localDataset.Files, config);
+                        localDataset.Files = RemoveFiles(filterDatasetFromFeed, localDataset.Files, config);
                     }
 
                     if (localDataset.AutoAddFiles)
                     {
                         Log.Debug("Add new files");
-                        localDataset.Files = AddFiles(datasetFilesFromFeed, localDataset.Files);
+                        localDataset.Files = AddFiles(filterDatasetFromFeed, localDataset.Files);
                     }
                 }
 
@@ -212,11 +214,10 @@ namespace Geonorge.Nedlaster
                 }
                 foreach (var fileToRemove in removeFiles)
                 {
+                    datasetFiles.Remove(fileToRemove);
                     DirectoryInfo downloadDirectory = GetDownloadDirectory(configFile, fileToRemove);
                     string filePath = downloadDirectory + "\\" + fileToRemove.FilePath;
-
                     File.Delete(filePath);
-                    datasetFiles.Remove(fileToRemove);
                 }
             }
             catch (Exception e)

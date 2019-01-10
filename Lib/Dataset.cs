@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Geonorge.MassivNedlasting.Gui;
 
 namespace Geonorge.MassivNedlasting
 {
@@ -33,5 +34,15 @@ namespace Geonorge.MassivNedlasting
         /// Owner of dataset
         /// </summary>
         public string Organization { get; set; }
+
+        /// <summary>
+        /// List of available projections in dataset
+        /// </summary>
+        public List<ProjectionsViewModel> Projections { get; set; }
+
+        public Dataset()
+        {
+            Projections = new List<ProjectionsViewModel>();
+        }
     }
 }

@@ -4,9 +4,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 using System.Xml.Linq;
+using Geonorge.MassivNedlasting.Gui;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
 using Serilog;
 
 
@@ -153,7 +157,8 @@ namespace Geonorge.MassivNedlasting
         {
             try
             {
-                var appDirectory = new DirectoryInfo(GetAppDirectory().ToString() + Path.DirectorySeparatorChar + "Config");
+                var appDirectory =
+                    new DirectoryInfo(GetAppDirectory().ToString() + Path.DirectorySeparatorChar + "Config");
 
                 if (!appDirectory.Exists)
                     appDirectory.Create();
@@ -179,12 +184,17 @@ namespace Geonorge.MassivNedlasting
                 var defaultConfigFile = ConfigFile.GetDefaultConfigFile();
                 var configFiles = new List<ConfigFile> { defaultConfigFile };
                 Log.Information("Create app settings file");
-                WriteToAppSettingsFile(new AppSettings() { LastOpendConfigFile = defaultConfigFile, ConfigFiles = configFiles });
+                WriteToAppSettingsFile(new AppSettings()
+                {
+                    LastOpendConfigFile = defaultConfigFile,
+                    ConfigFiles = configFiles
+                });
             }
 
             SetDefaultIfSettingsNotSet();
 
-            return JsonConvert.DeserializeObject<AppSettings>(File.ReadAllText(GetAppSettingsFilePath())); ;
+            return JsonConvert.DeserializeObject<AppSettings>(File.ReadAllText(GetAppSettingsFilePath()));
+            ;
         }
 
 
@@ -269,14 +279,16 @@ namespace Geonorge.MassivNedlasting
         /// </summary>
         private static void SetDefaultIfSettingsNotSet()
         {
-            AppSettings appSetting = JsonConvert.DeserializeObject<AppSettings>(File.ReadAllText(GetAppSettingsFilePath()));
+            AppSettings appSetting =
+                JsonConvert.DeserializeObject<AppSettings>(File.ReadAllText(GetAppSettingsFilePath()));
 
             if (!appSetting.LastOpendConfigFileIsSet() || !appSetting.ConfigFiles.Any())
             {
                 Log.Debug("Set default app setting information");
 
                 appSetting.LastOpendConfigFile = appSetting.LastOpendConfigFile ?? ConfigFile.GetDefaultConfigFile();
-                appSetting.ConfigFiles = appSetting.ConfigFiles ?? new List<ConfigFile> { ConfigFile.GetDefaultConfigFile() };
+                appSetting.ConfigFiles =
+                    appSetting.ConfigFiles ?? new List<ConfigFile> { ConfigFile.GetDefaultConfigFile() };
 
                 WriteToAppSettingsFile(appSetting);
             }
@@ -289,7 +301,8 @@ namespace Geonorge.MassivNedlasting
         /// <param name="timeLastCheckForUpdate"></param>
         public static void SetTimeLastCheckForUpdate(DateTime timeLastCheckForUpdate)
         {
-            AppSettings appSetting = JsonConvert.DeserializeObject<AppSettings>(File.ReadAllText(GetAppSettingsFilePath()));
+            AppSettings appSetting =
+                JsonConvert.DeserializeObject<AppSettings>(File.ReadAllText(GetAppSettingsFilePath()));
             appSetting.LastCheckForUpdate = timeLastCheckForUpdate.ToString("yyyy-MM-ddTHH:mm:ss");
             WriteToAppSettingsFile(appSetting);
         }
@@ -301,8 +314,34 @@ namespace Geonorge.MassivNedlasting
         /// <returns></returns>
         public static DateTime? GetTimeLastCheckForUpdate()
         {
-            AppSettings appSetting = JsonConvert.DeserializeObject<AppSettings>(File.ReadAllText(GetAppSettingsFilePath()));
+            AppSettings appSetting =
+                JsonConvert.DeserializeObject<AppSettings>(File.ReadAllText(GetAppSettingsFilePath()));
             return DateTime.Parse(appSetting.LastCheckForUpdate);
         }
+
+        /// <summary>
+        /// Returns a list of projections. 
+        /// </summary>
+        /// <returns></returns>
+        public static List<Projections> GetProjections()
+        {
+            try
+            {
+                using (var r = new StreamReader(GetProjectionFilePath()))
+                {
+                    var json = r.ReadToEnd();
+                    var propotions = JsonConvert.DeserializeObject<List<Projections>>(json);
+                    Log.Debug("Read from projection file");
+                    r.Close();
+                    return propotions;
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "Read from projection file");
+                return new List<Projections>();
+            }
+        }
+
     }
 }
