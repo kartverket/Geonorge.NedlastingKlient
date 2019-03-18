@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>3.10</ProductVersion>
     <ProjectGuid>62792086-3c32-4620-9064-444ad6db12c8</ProjectGuid>
-    <SchemaVersion>2.0</SchemaVersion>
+    <SchemaVersion>2.2</SchemaVersion>
     <OutputName>NedlastingKlient.Setup.Bootstrapper</OutputName>
     <OutputType>Bundle</OutputType>
     <Name>Geonorge.MassivNedlasting.Setup.Bootstrapper</Name>
