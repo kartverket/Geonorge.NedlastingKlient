@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>3.10</ProductVersion>
     <ProjectGuid>241b56af-dbc8-4db5-99d7-7739ba59949c</ProjectGuid>
-    <SchemaVersion>2.2</SchemaVersion>
+    <SchemaVersion>2.0</SchemaVersion>
     <OutputName>Geonorge.MassivNedlasting.Setup</OutputName>
     <OutputType>Package</OutputType>
     <Name>Geonorge.MassivNedlasting.Setup</Name>
