@@ -55,7 +55,7 @@ Compilation target: .net framework 4.7.1
 ### NedlastingKlient.Konsoll
 Console application for downloading selected files
 
-Compilation target: netstandard 2.0 (.net core)
+Compilation target: netstandard 2.2 (.net core)
 
 
 ## How to build
