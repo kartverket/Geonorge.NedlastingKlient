@@ -27,7 +27,7 @@ To change this location go into the application settings directory, se previous 
 ## How to setup development environment
 
 Project depends on:
-* .net core 2.0 SDK
+* .net core 2.2 SDK
 * .net framework 4.7.1 Developer pack
 
 Packages can be downloaded from here:
@@ -44,7 +44,7 @@ Remember to sign both the exe file and the final setup exe/msi file.
 ### NedlastingKlient
 Common class library for parsing atom feeds and downloading files.
 
-Compilation targets both netstandard 2.0 (.net core) and .net framework 4.7.1
+Compilation targets both netstandard 2.2 (.net core) and .net framework 4.7.1
 
 ### NedlastingKlient.Gui
 
