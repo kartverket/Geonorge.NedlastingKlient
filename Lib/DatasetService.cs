@@ -42,13 +42,24 @@ namespace Geonorge.MassivNedlasting
         }
 
         /// <summary>
-        /// Return dataset from feed "https://nedlasting.geonorge.no/geonorge/Tjenestefeed_daglig.xml"
+        /// Return datasets from feeds "https://nedlasting.geonorge.no/geonorge/Tjenestefeed_daglig.xml" and "https://nedlasting.ngu.no/api/atomfeeds"
         /// </summary>
         /// <returns></returns>
         public List<Dataset> GetDatasets()
         {
-            var getFeedTask = HttpClient.GetStringAsync("https://nedlasting.geonorge.no/geonorge/Tjenestefeed_daglig.xml");
-            Log.Debug("Fetch datasets from https://nedlasting.geonorge.no/geonorge/Tjenestefeed_daglig.xml");
+            List<Dataset> geonorgeDatasets;
+            List<Dataset> nguDatasets;
+
+            geonorgeDatasets = GetDatasetsFromUrl("https://nedlasting.geonorge.no/geonorge/Tjenestefeed_daglig.xml");
+            nguDatasets = GetDatasetsFromUrl("https://nedlasting.ngu.no/api/atomfeeds");
+
+            return geonorgeDatasets.Concat(nguDatasets).OrderBy(o => o.Title).ToList();
+        }
+
+        public List<Dataset> GetDatasetsFromUrl(string url)
+        {
+            var getFeedTask = HttpClient.GetStringAsync(url);
+            Log.Debug("Fetch datasets from " + url);
             return new AtomFeedParser().ParseDatasets(getFeedTask.Result);
         }
 

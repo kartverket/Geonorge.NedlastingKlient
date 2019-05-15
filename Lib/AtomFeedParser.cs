@@ -25,10 +25,21 @@ namespace Geonorge.MassivNedlasting
                 {
                     var dataset = new Dataset();
                     dataset.Title = childrenNode.SelectSingleNode("a:title", nsmgr).InnerXml;
-                    dataset.Description = childrenNode.SelectSingleNode("a:content", nsmgr).InnerXml;
-                    dataset.Url = childrenNode.SelectSingleNode("a:link", nsmgr).InnerXml;
+                    var description = childrenNode.SelectSingleNode("a:content", nsmgr);
+                        if(description != null)
+                        dataset.Description = description.InnerXml;
+                    var url = childrenNode.SelectSingleNode("a:link", nsmgr);
+                    if (!string.IsNullOrEmpty(url.InnerXml))
+                        dataset.Url = url.InnerXml;
+                    else
+                    {
+                        var uri = childrenNode.SelectSingleNode("a:link", nsmgr).Attributes.GetNamedItem("href");
+                        dataset.Url = uri.Value;
+                    }
                     dataset.LastUpdated = childrenNode.SelectSingleNode("a:updated", nsmgr).InnerXml;
                     dataset.Organization = childrenNode.SelectSingleNode("a:author/a:name", nsmgr).InnerXml;
+                    if (string.IsNullOrEmpty(dataset.Organization) && dataset.Url.Contains("ngu.no"))
+                        dataset.Organization = "Norges geologiske undersøkelse";
                     dataset.Uuid = childrenNode.SelectSingleNode("inspire_dls:spatial_dataset_identifier_code", nsmgr)?.InnerXml;
 
                     datasets.Add(dataset);
@@ -88,8 +99,9 @@ namespace Geonorge.MassivNedlasting
         {
             foreach (XmlNode node in xmlNodeList)
             {
-                if (node.Attributes["scheme"].Value == "http://www.opengis.net/def/crs/")
-                {
+                if (node.Attributes["scheme"].Value == "http://www.opengis.net/def/crs/" ||
+                    node.Attributes["scheme"].Value == "https://register.geonorge.no/api/epsg-koder.xml")
+                    {
                     return node.Attributes["term"].Value;
                 }
             }
