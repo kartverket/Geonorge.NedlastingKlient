@@ -106,7 +106,7 @@ namespace Geonorge.Nedlaster
 
         private void TriggerProgressChanged(long? totalDownloadSize, long totalBytesRead)
         {
-            if (ProgressChanged == null)
+            if (ProgressChanged == null || !totalDownloadSize.HasValue)
                 return;
 
             double? progressPercentage = null;
