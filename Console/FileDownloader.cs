@@ -42,6 +42,7 @@ namespace Geonorge.Nedlaster
                     var message = $"Download failed for url: {downloadRequest.DownloadUrl}, - response from server was: {response.StatusCode} - {response.ReasonPhrase}";
                     Log.Error(message);
                     Console.WriteLine(message);
+                    throw new Exception(message);
                 }
                 else
                 {
