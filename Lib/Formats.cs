@@ -7,7 +7,7 @@ namespace Geonorge.MassivNedlasting.Gui
 
         public Formats(dynamic item)
         {
-            Epsg = "EPSG:" + item["epsgcode"];
+            Code = item["label"];
             Name = item["label"];
         }
 
@@ -16,21 +16,21 @@ namespace Geonorge.MassivNedlasting.Gui
 
         }
 
-        public string Epsg { get; set; }
+        public string Code { get; set; }
         public string Name { get; set; }
     }
 
     public class FormatsViewModel
     {
-        public FormatsViewModel(string epsg, string name, bool selected)
+        public FormatsViewModel(string code, string name, bool selected)
         {
             Selected = selected;
-            Epsg = epsg;
+            Code = code;
             Name = name;
         }
 
         public bool Selected { get; set; }
-        public string Epsg { get; set; }
+        public string Code { get; set; }
         public string Name { get; set; }
     }
 }
