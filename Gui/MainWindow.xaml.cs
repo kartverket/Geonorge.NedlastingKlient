@@ -138,6 +138,7 @@ namespace Geonorge.MassivNedlasting.Gui
                         List<DatasetFileViewModel> datasetFiles = await Task.Run(() => GetFilesAsync(selectedDataset));
                         LbSelectedDatasetFiles.ItemsSource = datasetFiles;
                         selectedDataset.Projections = _datasetService.GetAvailableProjections(selectedDataset, datasetFiles);
+                        selectedDataset.Formats = _datasetService.GetAvailableFormats(selectedDataset, datasetFiles);
 
                         var viewDatasetFiles =
                             (CollectionView)CollectionViewSource.GetDefaultView(LbSelectedDatasetFiles.ItemsSource);
@@ -170,6 +171,7 @@ namespace Geonorge.MassivNedlasting.Gui
                     autoAddFiles = download.AutoAddFiles;
                     autoDeleteFiles = download.AutoDeleteFiles;
                     lbProjections.ItemsSource = subscribe && download.Projections.Any() ? download.Projections : _selectedDataset.Projections;
+                    lbFormats.ItemsSource = subscribe && download.Formats.Any() ? download.Formats : _selectedDataset.Formats;
                 }
             }
 
@@ -464,6 +466,7 @@ namespace Geonorge.MassivNedlasting.Gui
                 _selectedFilesForDownload.Add(download);
             }
             lbProjections.ItemsSource = _selectedDataset.Projections;
+            lbFormats.ItemsSource = _selectedDataset.Formats;
             MenuSubscribe.Visibility = subscribe ? Visibility.Visible : Visibility.Hidden;
             MenuSubscribe.IsPopupOpen = subscribe;
             BtnAutoDeleteFiles.IsChecked = subscribe;
@@ -602,6 +605,34 @@ namespace Geonorge.MassivNedlasting.Gui
                                 projection.Selected = cbProjection.IsChecked.Value;
                             }
                         }        
+                    }
+
+                    break;
+                }
+            }
+        }
+        private void BtnFormat_OnClick(object sender, RoutedEventArgs e)
+        {
+            var cbFormat = (CheckBox)sender;
+            if (cbFormat == null)
+            {
+                return;
+            }
+
+            foreach (var download in _selectedFilesForDownload)
+            {
+                if (download.DatasetTitle == _selectedDataset.Title)
+                {
+                    var selectedFormat = cbFormat.Uid;
+                    if (cbFormat.IsChecked != null)
+                    {
+                        foreach (var format in download.Formats)
+                        {
+                            if (format.Name == selectedFormat)
+                            {
+                                format.Selected = cbFormat.IsChecked.Value;
+                            }
+                        }
                     }
 
                     break;

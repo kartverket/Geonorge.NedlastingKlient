@@ -475,6 +475,29 @@ namespace Geonorge.MassivNedlasting
             return dataset.Projections;
         }
 
+        public List<FormatsViewModel> GetAvailableFormats(Dataset dataset, List<DatasetFileViewModel> datasetFiles)
+        {
+            var availableFormats = datasetFiles.GroupBy(p => p.Format).Select(p => p.Key).ToList();
+            if (dataset.Formats.Any())
+            {
+                List<string> newItems = availableFormats.Where(f => dataset.Formats.All(f2 => f2.Name != f)).ToList();
+
+                foreach (var format in newItems)
+                {
+                    dataset.Formats.Add(new FormatsViewModel(format, format, true));
+                }
+            }
+            else
+            {
+                foreach (var format in availableFormats)
+                {
+                    dataset.Formats.Add(new FormatsViewModel(format, format, true));
+                }
+            }
+
+            return dataset.Formats;
+        }
+
         private List<Download> ConvertToNewVersionOfDownloadFile(List<Download> downloads)
         {
             var newListOfDatasetForDownload = new List<Download>();

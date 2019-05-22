@@ -85,7 +85,7 @@ namespace Geonorge.Nedlaster
                     var datasetFilesFromFeed = datasetService.GetDatasetFiles(localDataset);
 
                     var filterDatasetFromFeed = datasetFilesFromFeed.Where(p => localDataset.Projections.Where(s => s.Selected == false).All(p2 => p2.Epsg != p.Projection)).ToList();
-
+                    filterDatasetFromFeed = filterDatasetFromFeed.Where(p => localDataset.Formats.Where(s => s.Selected == false).All(f2 => f2.Code != p.Format)).ToList();
                     if (localDataset.AutoDeleteFiles)
                     {
                         Log.Debug("Delete files");

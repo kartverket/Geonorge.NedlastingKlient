@@ -107,6 +107,25 @@ namespace Geonorge.MassivNedlasting
             }
             return null;
         }
+        private string GetFormat(XmlNode xmlNode, XmlNodeList xmlNodeList)
+        {
+            foreach (XmlNode node in xmlNodeList)
+            {
+                if (node.Attributes["scheme"] != null && node.Attributes["scheme"].Value == "https://register.geonorge.no/api/metadata-kodelister/vektorformater.xml")
+                {
+                    return node.Attributes["term"].Value;
+                }
+            }
+
+            if(xmlNode != null)
+            { 
+                var format = xmlNode.InnerText;
+                if (format.Contains(","))
+                    return format.Split(',')[0];
+            }
+
+            return null;
+        }
 
         public List<DatasetFile> ParseDatasetFiles(string xml, string datasetTitle, string datasetUrl)
         {
@@ -132,6 +151,7 @@ namespace Geonorge.MassivNedlasting
                 datasetFile.LastUpdated = childrenNode.SelectSingleNode("a:updated", nsmgr).InnerXml;
                 datasetFile.Organization = childrenNode.SelectSingleNode("a:author/a:name", nsmgr).InnerXml;
                 datasetFile.Projection = GetProjection(childrenNode.SelectNodes("a:category", nsmgr));
+                datasetFile.Format = GetFormat(childrenNode.SelectSingleNode("a:title", nsmgr), childrenNode.SelectNodes("a:category", nsmgr));
                 datasetFile.Restrictions = GetRestrictions(childrenNode.SelectNodes("a:category", nsmgr));
                 datasetFile.DatasetId = datasetTitle;
                 datasetFile.DatasetUrl = datasetUrl;

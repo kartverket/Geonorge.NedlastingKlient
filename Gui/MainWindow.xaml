@@ -188,6 +188,45 @@
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
+                            <Label>Formater</Label>
+                            <ItemsControl
+                                Name="lbFormats"
+                                Grid.IsSharedSizeScope="True">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border
+                                            x:Name="Border">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition
+                                                        SharedSizeGroup="Checkerz" />
+                                                    <ColumnDefinition />
+                                                </Grid.ColumnDefinitions>
+                                                <CheckBox
+                                                    Click="BtnFormat_OnClick"
+                                                    VerticalAlignment="Center"
+                                                    Uid="{Binding Epsg}"
+                                                    IsChecked="{Binding Selected}" />
+                                                <StackPanel
+                                                    Margin="2 0 0 0"
+                                                    Grid.Column="1">
+                                                    <TextBlock Text="{Binding Epsg}" />
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                        <DataTemplate.Triggers>
+                                            <DataTrigger
+                                                Binding="{Binding IsSelected}"
+                                                Value="True">
+                                                <Setter
+                                                    TargetName="Border"
+                                                    Property="Background"
+                                                    Value="{DynamicResource MaterialDesignSelection}" />
+                                            </DataTrigger>
+                                        </DataTemplate.Triggers>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
                         </StackPanel>
                     </materialDesign:PopupBox>
                 </StackPanel>

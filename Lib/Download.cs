@@ -17,6 +17,7 @@ namespace Geonorge.MassivNedlasting
         public bool AutoAddFiles { get; set; }
 
         public List<ProjectionsViewModel> Projections { get; set; }
+        public List<FormatsViewModel> Formats { get; set; }
 
         public List<DatasetFile> Files { get; set; }
 
@@ -36,6 +37,7 @@ namespace Geonorge.MassivNedlasting
             AutoDeleteFiles = downloadViewModel.AutoDeleteFiles;
             Files = GetFiles(downloadViewModel.Files);
             Projections = downloadViewModel.Projections;
+            Formats = downloadViewModel.Formats;
         }
 
         private List<DatasetFile> GetFiles(List<DatasetFileViewModel> datasetFilesViewModel)
@@ -62,6 +64,7 @@ namespace Geonorge.MassivNedlasting
         public bool AutoDeleteFiles { get; set; }
         public bool AutoAddFiles { get; set; }
         public List<ProjectionsViewModel> Projections { get; set; }
+        public List<FormatsViewModel> Formats { get; set; }
         public List<DatasetFileViewModel> Files { get; set; }
         public bool Expanded { get; set; }
 
@@ -69,6 +72,7 @@ namespace Geonorge.MassivNedlasting
         {
             Files = new List<DatasetFileViewModel>();
             Projections = new List<ProjectionsViewModel>();
+            Formats = new List<FormatsViewModel>();
         }
 
         public DownloadViewModel(Download download, bool selectedForDownload = false)
@@ -87,6 +91,7 @@ namespace Geonorge.MassivNedlasting
             AutoAddFiles = download.AutoAddFiles;
             Files = GetFiles(download, selectedForDownload);
             Projections = download.Projections;
+            Formats = download.Formats;
         }
 
 
@@ -101,6 +106,7 @@ namespace Geonorge.MassivNedlasting
             AutoAddFiles = false; // TODO
             Files = AddSelectedFile(selectedFile);
             Projections = selectedDataset.Projections;
+            Formats = selectedDataset.Formats;
         }
 
         public DownloadViewModel(Dataset selectedDataset, bool subscribe)
@@ -116,6 +122,7 @@ namespace Geonorge.MassivNedlasting
                 AutoDeleteFiles = true;
             }
             Projections = selectedDataset.Projections;
+            Formats = selectedDataset.Formats;
         }
 
 

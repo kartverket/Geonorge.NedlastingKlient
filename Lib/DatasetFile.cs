@@ -41,6 +41,11 @@ namespace Geonorge.MassivNedlasting
         public string Projection { get; set; }
 
         /// <summary>
+        /// Format of file
+        /// </summary>
+        public string Format { get; set; }
+
+        /// <summary>
         /// DatasetId (Dataset title) to the dataset where file belongs
         /// </summary>
         public string DatasetId { get; set; }
@@ -74,6 +79,7 @@ namespace Geonorge.MassivNedlasting
             LastUpdated = datasetFileViewModel.LastUpdated;
             Organization = datasetFileViewModel.Organization;
             Projection = datasetFileViewModel.Category;
+            Format = datasetFileViewModel.Format;
             DatasetId = datasetFileViewModel.DatasetId;
             DatasetUrl = datasetFileViewModel.DatasetUrl;
             Restrictions = datasetFileViewModel.Restrictions;
@@ -114,6 +120,7 @@ namespace Geonorge.MassivNedlasting
         public string Organization { get; set; }
         public string Category { get; set; }
         public string EpsgName { get; set; }
+        public string Format { get; set; }
         public string DatasetId { get; set; }
         public string DatasetUrl { get; set; }
         public bool SelectedForDownload { get; set; }
@@ -133,6 +140,7 @@ namespace Geonorge.MassivNedlasting
             LastUpdated = datasetFile.LastUpdated;
             Organization = datasetFile.Organization;
             Category = datasetFile.Projection;
+            Format = datasetFile.Format;
             DatasetId = datasetFile.DatasetId;
             DatasetUrl = FixDatasetUrl(datasetFile.DatasetUrl);
             Id = GetId();

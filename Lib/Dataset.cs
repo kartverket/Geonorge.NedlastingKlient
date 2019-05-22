@@ -38,11 +38,17 @@ namespace Geonorge.MassivNedlasting
         /// <summary>
         /// List of available projections in dataset
         /// </summary>
+        
         public List<ProjectionsViewModel> Projections { get; set; }
+        /// <summary>
+        /// List of available formats in dataset
+        /// </summary>
+        public List<FormatsViewModel> Formats { get; set; }
 
         public Dataset()
         {
             Projections = new List<ProjectionsViewModel>();
+            Formats = new List<FormatsViewModel>();
         }
     }
 }
