@@ -258,6 +258,10 @@ namespace Geonorge.MassivNedlasting.Gui
                 {
                     dataset.Files.RemoveAll(f => f.Id == selectedFile.Id);
                 }
+                var dataSet = _selectedFilesForDownload.Where(d => d.DatasetTitle == selectedFile.DatasetId).FirstOrDefault();
+                if (!dataSet.Files.Any())
+                    _selectedFilesForDownload.Remove(dataSet);
+
                 BindNewList();
             }
             else
