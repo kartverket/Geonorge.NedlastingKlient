@@ -102,6 +102,7 @@ namespace Geonorge.Nedlaster
                 foreach (var datasetFile in localDataset.Files)
                 {
                     var fileLog = new DatasetFileLog(datasetFile);
+                    DownloadRequest downloadRequest = null;
 
                     try
                     {
@@ -122,7 +123,7 @@ namespace Geonorge.Nedlaster
                                 Console.Write($"{progressPercentage}% ({HumanReadableBytes(totalBytesDownloaded)}/{HumanReadableBytes(totalFileSize.Value)})                "); // add som extra whitespace to blank out previous updates
                             };
 
-                            var downloadRequest = new DownloadRequest(datasetFile.Url, downloadDirectory, datasetFile.IsRestricted());
+                            downloadRequest = new DownloadRequest(datasetFile.Url, downloadDirectory, datasetFile.IsRestricted());
                             datasetFile.FilePath = await downloader.StartDownload(downloadRequest, appSettings);
 
                             downloadLog.Updated.Add(fileLog);
@@ -151,6 +152,13 @@ namespace Geonorge.Nedlaster
                         downloadLog.Faild.Add(fileLog);
                         Console.WriteLine("Error while downloading dataset: " + e.Message);
                         datasetFile.DownloadSuccess = true;
+                        try
+                        {
+                            var tempFile = downloadRequest.DestinationDirectory + "\\" + datasetFile.FilePath + Constants.TempFileSuffix;
+                            if (File.Exists(tempFile))
+                                File.Delete(tempFile);
+                        }
+                        catch (Exception ex){ Console.WriteLine(ex); }
                     }
 
                     Console.WriteLine("-------------");

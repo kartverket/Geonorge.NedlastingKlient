@@ -51,7 +51,9 @@ namespace Geonorge.Nedlaster
                         string destinationFilePath = downloadRequest.GetDestinationFilePath(response);
                         fileName = downloadRequest.GetDestinationFileName(response);
                         var totalBytes = response.Content.Headers.ContentLength;
-                        await ProcessContentStream(totalBytes, contentStream, destinationFilePath);
+                        await ProcessContentStream(totalBytes, contentStream, destinationFilePath + Constants.TempFileSuffix);
+                        File.Copy(destinationFilePath + Constants.TempFileSuffix, destinationFilePath, true);
+                        File.Delete(destinationFilePath + Constants.TempFileSuffix);
                     }
                 }
             }
