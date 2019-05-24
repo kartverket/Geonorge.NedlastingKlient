@@ -345,9 +345,7 @@ namespace Geonorge.MassivNedlasting
             {
                 foreach (var datasetFile in dataset.Files)
                 {
-                    downloadHistory.Add(datasetFile.DownloadSuccess
-                        ? new DownloadHistory(datasetFile.Url, datasetFile.FilePath)
-                        : new DownloadHistory(datasetFile.Url, datasetFile.FilePath, datasetFile.LastUpdated));
+                    downloadHistory.Add(new DownloadHistory(datasetFile.Url, datasetFile.FilePath, datasetFile.DownloadedDate, datasetFile.LastUpdated));
                 }
             }
 
@@ -620,8 +618,12 @@ namespace Geonorge.MassivNedlasting
                     var downloadHistories = JsonConvert.DeserializeObject<List<DownloadHistory>>(json);
                     Log.Debug("Read from download history file, " + _configFile.Name + "- downloadHistory.json");
                     r.Close();
-                    DownloadHistory downloadHistory = downloadHistories.FirstOrDefault(d => d.Id == url);
-                    return downloadHistory;
+                    if(downloadHistories != null)
+                    { 
+                        DownloadHistory downloadHistory = downloadHistories.FirstOrDefault(d => d.Id == url);
+                        return downloadHistory;
+                    }
+                    return null;
                 }
             }
             catch (FileNotFoundException e)

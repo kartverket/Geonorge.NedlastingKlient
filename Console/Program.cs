@@ -125,6 +125,7 @@ namespace Geonorge.Nedlaster
 
                             downloadRequest = new DownloadRequest(datasetFile.Url, downloadDirectory, datasetFile.IsRestricted());
                             datasetFile.FilePath = await downloader.StartDownload(downloadRequest, appSettings);
+                            datasetFile.DownloadedDate = DateTime.Now.ToString();
 
                             downloadLog.Updated.Add(fileLog);
 
@@ -139,9 +140,9 @@ namespace Geonorge.Nedlaster
                             downloadLog.NotUpdated.Add(fileLog);
                             Console.WriteLine("Not necessary to download dataset.");
                             datasetFile.FilePath = downloadHistory.FilePath;
+                            datasetFile.DownloadedDate = downloadHistory.Downloaded;
                             updatedDatasetFileToDownload.Add(datasetFile);
                         }
-                        datasetFile.DownloadSuccess = true;
                     }
 
                     catch (Exception e)
@@ -151,7 +152,6 @@ namespace Geonorge.Nedlaster
                         fileLog.Message = "Error while downloading dataset: " + e.Message;
                         downloadLog.Faild.Add(fileLog);
                         Console.WriteLine("Error while downloading dataset: " + e.Message);
-                        datasetFile.DownloadSuccess = true;
                         try
                         {
                             var tempFile = downloadRequest.DestinationDirectory + "\\" + datasetFile.FilePath + Constants.TempFileSuffix;
@@ -274,7 +274,7 @@ namespace Geonorge.Nedlaster
             if (downloadHistory == null) return true;
             if (!LocalFileExists(downloadHistory, downloadDirectory, datasetFromFeed)) return true;
 
-            var originalDatasetLastUpdated = DateTime.Parse(downloadHistory.Downloaded);
+            var originalDatasetLastUpdated = DateTime.Parse(downloadHistory.LastUpdated);
             var datasetFromFeedLastUpdated = DateTime.Parse(datasetFromFeed.LastUpdated);
 
             var updatedDatasetAvailable = originalDatasetLastUpdated < datasetFromFeedLastUpdated;

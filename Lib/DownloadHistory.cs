@@ -9,11 +9,12 @@ namespace Geonorge.MassivNedlasting
     public class DownloadHistory
     {
 
-        public DownloadHistory(string url, string filePath, string lastUpdated = null)
+        public DownloadHistory(string url, string filePath, string downloaded = null, string lastUpdated = null)
         {
             Id = url;
-            Downloaded = lastUpdated ?? DateTime.Now.ToString();
+            Downloaded = downloaded ?? DateTime.Now.ToString();
             FilePath = filePath;
+            LastUpdated = lastUpdated ?? new DateTime(1970, 1, 1).ToString();
         }
 
         /// <summary>
@@ -30,6 +31,11 @@ namespace Geonorge.MassivNedlasting
         /// File path to check if local file exists
         /// </summary>
         public string FilePath { get; set; }
+
+        /// <summary>
+        /// Date when dataset was last updated 
+        /// </summary>
+        public string LastUpdated { get; set; }
     }
 
 }
