@@ -126,6 +126,7 @@ namespace Geonorge.Nedlaster
                             downloadRequest = new DownloadRequest(datasetFile.Url, downloadDirectory, datasetFile.IsRestricted());
                             datasetFile.FilePath = await downloader.StartDownload(downloadRequest, appSettings);
                             datasetFile.DownloadedDate = DateTime.Now.ToString();
+                            datasetFile.LastUpdated = datasetFromFeed.LastUpdated;
 
                             downloadLog.Updated.Add(fileLog);
 
