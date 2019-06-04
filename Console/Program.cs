@@ -272,13 +272,27 @@ namespace Geonorge.Nedlaster
 
         private static bool NewDatasetAvailable(DownloadHistory downloadHistory, DatasetFile datasetFromFeed, DirectoryInfo downloadDirectory)
         {
-            if (downloadHistory == null) return true;
-            if (!LocalFileExists(downloadHistory, downloadDirectory, datasetFromFeed)) return true;
+            Console.WriteLine(datasetFromFeed.DatasetUrl);
+            if (downloadHistory == null)
+            {
+                Console.WriteLine("Download history is null, NewDatasetAvailable");
+                return true;
+            }
+            if (!LocalFileExists(downloadHistory, downloadDirectory, datasetFromFeed))
+            {
+                Console.WriteLine("LocalFile does not exist, NewDatasetAvailable");
+                return true;
+            }
 
-            var originalDatasetLastUpdated = DateTime.Parse(downloadHistory.LastUpdated);
-            var datasetFromFeedLastUpdated = DateTime.Parse(datasetFromFeed.LastUpdated);
+            var originalDatasetLastUpdated = DateTime.Parse(downloadHistory.LastUpdated, System.Globalization.CultureInfo.InvariantCulture);
+            var datasetFromFeedLastUpdated = DateTime.Parse(datasetFromFeed.LastUpdated, System.Globalization.CultureInfo.InvariantCulture);
+
+            Console.WriteLine($"originalDatasetLastUpdated = {originalDatasetLastUpdated} , datasetFromFeedLastUpdated = {datasetFromFeedLastUpdated}");
 
             var updatedDatasetAvailable = originalDatasetLastUpdated < datasetFromFeedLastUpdated;
+            if(updatedDatasetAvailable)
+                Console.WriteLine($"updatedDatasetAvailable = {updatedDatasetAvailable}");
+
             return updatedDatasetAvailable;
         }
 
