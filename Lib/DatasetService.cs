@@ -270,17 +270,17 @@ namespace Geonorge.MassivNedlasting
             {
                 using (var w = new StreamWriter(ApplicationService.GetDownloadLogFilePath(_configFile.LogDirectory)))
                 {
-                    w.WriteLine("SELECTED FILES: " + downloadLog.TotalDatasetsToDownload);
+                    w.WriteLine("SELECTED DATASETS: " + downloadLog.TotalDatasetsToDownload);
                     w.WriteLine("-------------------------------");
                     w.WriteLine();
 
-                    w.WriteLine("UPDATED: " + downloadLog.Updated.Count());
+                    w.WriteLine("FILES UPDATED: " + downloadLog.Updated.Count());
 
                     DownloadLog(downloadLog.Updated, w);
 
                     w.WriteLine();
 
-                    w.WriteLine("NOT UPDATED: " + downloadLog.NotUpdated.Count());
+                    w.WriteLine("FILES NOT UPDATED: " + downloadLog.NotUpdated.Count());
                     DownloadLog(downloadLog.NotUpdated, w);
 
                     w.WriteLine();
