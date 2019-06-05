@@ -142,6 +142,8 @@ namespace Geonorge.Nedlaster
                             Console.WriteLine("Not necessary to download dataset.");
                             datasetFile.FilePath = downloadHistory.FilePath;
                             datasetFile.DownloadedDate = downloadHistory.Downloaded;
+                            if (downloadHistory != null && DateTime.Parse(datasetFile.LastUpdated, System.Globalization.CultureInfo.InvariantCulture) < DateTime.Parse(downloadHistory.LastUpdated, System.Globalization.CultureInfo.InvariantCulture))
+                                datasetFile.LastUpdated = downloadHistory.LastUpdated; //Todo? fix GUI does not reload new value for LastUpdated
                             updatedDatasetFileToDownload.Add(datasetFile);
                         }
                     }
