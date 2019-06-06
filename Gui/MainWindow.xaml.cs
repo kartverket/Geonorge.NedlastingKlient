@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -110,8 +110,10 @@ namespace Geonorge.MassivNedlasting.Gui
             try
             {
                 _selectedFilesForDownload = _datasetService.GetSelectedFilesToDownloadAsViewModel();
-                Dispatcher.BeginInvoke(
-                        new System.Threading.ThreadStart(() => LbSelectedFilesForDownload.ItemsSource = _selectedFilesForDownload));
+                Dispatcher.Invoke(() =>
+                {
+                    LbSelectedFilesForDownload.ItemsSource = _selectedFilesForDownload;
+                });
 
             }
             catch (Exception err)
