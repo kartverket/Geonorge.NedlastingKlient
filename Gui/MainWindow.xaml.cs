@@ -92,6 +92,32 @@ namespace Geonorge.MassivNedlasting.Gui
             cmbConfigFiles.SelectedItem = _selectedConfigFile.Name;
 
             SetDownloadUsage();
+
+            RunWatch();
+        }
+
+        public void RunWatch()
+        {
+            var watcher = new FileSystemWatcher();
+            watcher.NotifyFilter = NotifyFilters.LastWrite;
+            watcher.Path = ApplicationService.GetConfigAppDirectory().FullName;
+            watcher.Changed += OnChanged;
+            watcher.EnableRaisingEvents = true;
+        }
+
+        private void OnChanged(object source, FileSystemEventArgs e)
+        {
+            try
+            {
+                _selectedFilesForDownload = _datasetService.GetSelectedFilesToDownloadAsViewModel();
+                Dispatcher.BeginInvoke(
+                        new System.Threading.ThreadStart(() => LbSelectedFilesForDownload.ItemsSource = _selectedFilesForDownload));
+
+            }
+            catch (Exception err)
+            {
+                Console.WriteLine(err.Message);
+            }
         }
 
         private void SetDownloadUsage()
