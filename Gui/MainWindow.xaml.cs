@@ -116,7 +116,7 @@ namespace Geonorge.MassivNedlasting.Gui
             }
             catch (Exception err)
             {
-                Console.WriteLine(err.Message);
+                System.Windows.MessageBox.Show(err.Message);
             }
         }
 
