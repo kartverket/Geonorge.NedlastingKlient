@@ -48,13 +48,12 @@ namespace Geonorge.MassivNedlasting
         public List<Dataset> GetDatasets()
         {
             List<Dataset> geonorgeDatasets;
-            //List<Dataset> nguDatasets;
+            List<Dataset> nguDatasets;
 
             geonorgeDatasets = GetDatasetsFromUrl("https://nedlasting.geonorge.no/geonorge/Tjenestefeed_daglig.xml");
-            //nguDatasets = GetDatasetsFromUrl("https://nedlasting.ngu.no/api/atomfeeds");
+            nguDatasets = GetDatasetsFromUrl("https://nedlasting.ngu.no/api/atomfeeds");
 
-            //return geonorgeDatasets.Concat(nguDatasets).OrderBy(o => o.Title).ToList();
-            return geonorgeDatasets;
+            return geonorgeDatasets.Concat(nguDatasets).OrderBy(o => o.Title).ToList();
         }
 
         public List<Dataset> GetDatasetsFromUrl(string url)
