@@ -20,7 +20,7 @@ namespace Geonorge.MassivNedlasting.Test
         {
             var datasetFile = Helper.NewDatasetFile();
             DatasetFile file = new DatasetService().GetDatasetFile(datasetFile);
-            file.Title.Should().Be("GML-format,  0101, Halden");
+            file.Title.Should().Be("GML-format,  3001, Halden");
         }
 
         [Fact]
