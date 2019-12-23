@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
     <OutputType>exe</OutputType>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <RuntimeFrameworkVersion>2.2</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>2.1</RuntimeFrameworkVersion>
     <AssemblyName>Geonorge.Nedlaster</AssemblyName>
     <RootNamespace>Geonorge.Nedlaster</RootNamespace>
     <Authors>Kartverket</Authors>
