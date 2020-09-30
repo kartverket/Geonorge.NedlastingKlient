@@ -28,7 +28,7 @@ namespace Geonorge.MassivNedlasting
                     var description = childrenNode.SelectSingleNode("a:content", nsmgr);
                         if(description != null)
                         dataset.Description = description.InnerXml;
-                    var url = childrenNode.SelectSingleNode("a:link", nsmgr);
+                    var url = childrenNode.SelectSingleNode("a:id", nsmgr);
                     if (!string.IsNullOrEmpty(url.InnerXml))
                         dataset.Url = url.InnerXml;
                     else
@@ -134,25 +134,26 @@ namespace Geonorge.MassivNedlasting
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(xml);
 
-            string xpath = "//a:feed/a:entry";
+            string xpath = "//a:feed/entry";
 
             XmlNamespaceManager nsmgr = new XmlNamespaceManager(xmlDoc.NameTable);
             nsmgr.AddNamespace("a", "http://www.w3.org/2005/Atom");
             nsmgr.AddNamespace("inspire_dls", "http://inspire.ec.europa.eu/schemas/inspire_dls/1.0");
+            nsmgr.AddNamespace("georss", "http://www.georss.org/georss");
 
             var nodes = xmlDoc.SelectNodes(xpath, nsmgr);
 
             foreach (XmlNode childrenNode in nodes)
             {
                 var datasetFile = new DatasetFile();
-                datasetFile.Title = childrenNode.SelectSingleNode("a:title", nsmgr).InnerXml;
-                datasetFile.Description = childrenNode.SelectSingleNode("a:category", nsmgr).InnerXml;
-                datasetFile.Url = childrenNode.SelectSingleNode("a:link", nsmgr).Attributes[1].Value;
-                datasetFile.LastUpdated = childrenNode.SelectSingleNode("a:updated", nsmgr).InnerXml;
-                datasetFile.Organization = childrenNode.SelectSingleNode("a:author/a:name", nsmgr).InnerXml;
-                datasetFile.Projection = GetProjection(childrenNode.SelectNodes("a:category", nsmgr));
-                datasetFile.Format = GetFormat(childrenNode.SelectSingleNode("a:title", nsmgr), childrenNode.SelectNodes("a:category", nsmgr));
-                datasetFile.Restrictions = GetRestrictions(childrenNode.SelectNodes("a:category", nsmgr));
+                datasetFile.Title = childrenNode.SelectSingleNode("title", nsmgr).InnerXml;
+                datasetFile.Description = childrenNode.SelectSingleNode("title", nsmgr).InnerXml;
+                datasetFile.Url = childrenNode.SelectSingleNode("link", nsmgr).Attributes[0].Value;
+                datasetFile.LastUpdated = childrenNode.SelectSingleNode("link", nsmgr).Attributes[7].Value;
+                datasetFile.Organization = "Kartverket";
+                datasetFile.Projection = "EPSG:6173"; //GetProjection(childrenNode.SelectNodes("category", nsmgr));
+                datasetFile.Format = "SOSI"; //GetFormat(childrenNode.SelectSingleNode("a:title", nsmgr), childrenNode.SelectNodes("a:category", nsmgr));
+                datasetFile.Restrictions = ""; GetRestrictions(childrenNode.SelectNodes("a:category", nsmgr));
                 datasetFile.DatasetId = datasetTitle;
                 datasetFile.DatasetUrl = datasetUrl;
 
