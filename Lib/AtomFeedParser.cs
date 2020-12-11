@@ -40,6 +40,8 @@ namespace Geonorge.MassivNedlasting
                     dataset.Organization = childrenNode.SelectSingleNode("a:author/a:name", nsmgr).InnerXml;
                     if (string.IsNullOrEmpty(dataset.Organization) && dataset.Url.Contains("ngu.no"))
                         dataset.Organization = "Norges geologiske undersøkelse";
+                    else if (string.IsNullOrEmpty(dataset.Organization) && dataset.Url.Contains("nibio.no"))
+                        dataset.Organization = "Norsk institutt for bioøkonomi";
                     dataset.Uuid = childrenNode.SelectSingleNode("inspire_dls:spatial_dataset_identifier_code", nsmgr)?.InnerXml;
 
                     datasets.Add(dataset);
