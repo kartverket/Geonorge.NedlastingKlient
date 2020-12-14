@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Xml;
 
 namespace Geonorge.MassivNedlasting
@@ -28,8 +29,16 @@ namespace Geonorge.MassivNedlasting
                     var description = childrenNode.SelectSingleNode("a:content", nsmgr);
                         if(description != null)
                         dataset.Description = description.InnerXml;
+
+                    var uriAlternate = childrenNode.SelectSingleNode("a:link[@rel='alternate']", nsmgr).Attributes.GetNamedItem("href");
                     var url = childrenNode.SelectSingleNode("a:link", nsmgr);
-                    if (!string.IsNullOrEmpty(url.InnerXml))
+
+                    if (uriAlternate != null)
+                    {
+                        dataset.Url = uriAlternate.Value;
+                    }
+                    
+                    else if (!string.IsNullOrEmpty(url.InnerXml))
                         dataset.Url = url.InnerXml;
                     else
                     {
@@ -104,6 +113,11 @@ namespace Geonorge.MassivNedlasting
                 if (node.Attributes["scheme"].Value == "http://www.opengis.net/def/crs/" ||
                     node.Attributes["scheme"].Value == "https://register.geonorge.no/api/epsg-koder.xml")
                     {
+                    if (!string.IsNullOrEmpty(node.Attributes["label"]?.Value)) {
+                        var label = node.Attributes["label"]?.Value;
+                        if (!string.IsNullOrEmpty(label) && !label.StartsWith("EPSG/"))
+                            return node.Attributes["label"].Value;
+                    }
                     return node.Attributes["term"].Value;
                 }
             }
@@ -148,10 +162,10 @@ namespace Geonorge.MassivNedlasting
             {
                 var datasetFile = new DatasetFile();
                 datasetFile.Title = childrenNode.SelectSingleNode("a:title", nsmgr).InnerXml;
-                datasetFile.Description = childrenNode.SelectSingleNode("a:category", nsmgr).InnerXml;
-                datasetFile.Url = childrenNode.SelectSingleNode("a:link", nsmgr).Attributes[1].Value;
-                datasetFile.LastUpdated = childrenNode.SelectSingleNode("a:updated", nsmgr).InnerXml;
-                datasetFile.Organization = childrenNode.SelectSingleNode("a:author/a:name", nsmgr).InnerXml;
+                datasetFile.Description = GetDescription(childrenNode, nsmgr);
+                datasetFile.Url = GetUrl(childrenNode, nsmgr); 
+                datasetFile.LastUpdated = GetLastUpdated(childrenNode, nsmgr);
+                datasetFile.Organization = childrenNode.SelectSingleNode("a:author/a:name", nsmgr)?.InnerXml;
                 datasetFile.Projection = GetProjection(childrenNode.SelectNodes("a:category", nsmgr));
                 datasetFile.Format = GetFormat(childrenNode.SelectSingleNode("a:title", nsmgr), childrenNode.SelectNodes("a:category", nsmgr));
                 datasetFile.Restrictions = GetRestrictions(childrenNode.SelectNodes("a:category", nsmgr));
@@ -163,5 +177,59 @@ namespace Geonorge.MassivNedlasting
             return datasetFiles;
         }
 
+        private string GetUrl(XmlNode xmlNode, XmlNamespaceManager nsmgr)
+        {
+            string url = "";
+            var urlNode = xmlNode.SelectSingleNode("a:link[@rel='describedby']", nsmgr);
+            if(urlNode != null) { 
+              var hrefNode = urlNode.Attributes?.GetNamedItem("href");
+                if(hrefNode != null)
+                {
+                    url = hrefNode.Value;
+                }
+
+            }
+            if (!string.IsNullOrEmpty(urlNode?.Value))
+            {
+                url = urlNode.Value;
+            }
+
+            if (string.IsNullOrEmpty(url))
+                url = xmlNode.SelectSingleNode("a:link", nsmgr).Attributes[1]?.Value;
+
+            return url;
+
+        }
+
+        private string GetLastUpdated(XmlNode xmlNode, XmlNamespaceManager nsmgr)
+        {
+            var lastUpdated = xmlNode.SelectSingleNode("a:updated", nsmgr)?.InnerXml;
+
+            if (string.IsNullOrEmpty(lastUpdated))
+            {
+                var updated = xmlNode.SelectSingleNode("a:link[@rel='describedby']", nsmgr).Attributes.GetNamedItem("updated");
+                if (updated != null)
+                    lastUpdated = updated.InnerText;
+            }
+
+            if (lastUpdated == null)
+                lastUpdated = "";
+
+            return lastUpdated;
+        }
+
+        private string GetDescription(XmlNode xmlNode, XmlNamespaceManager nsmgr)
+        {
+            var description = xmlNode.SelectSingleNode("a:category", nsmgr)?.InnerXml;
+            if (string.IsNullOrEmpty(description))
+            {
+                description = xmlNode.SelectSingleNode("a:content", nsmgr)?.InnerText;
+            }
+
+            if (description == null)
+                description = "";
+
+            return description;
+        }
     }
 }
