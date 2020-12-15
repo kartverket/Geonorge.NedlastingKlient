@@ -49,11 +49,15 @@ namespace Geonorge.MassivNedlasting
         {
             List<Dataset> geonorgeDatasets;
             List<Dataset> nguDatasets;
+            List<Dataset> nibioDatasets;
+            List<Dataset> miljodirektoratetDatasets;
 
             geonorgeDatasets = GetDatasetsFromUrl("https://nedlasting.geonorge.no/geonorge/Tjenestefeed_daglig.xml");
             nguDatasets = GetDatasetsFromUrl("https://nedlasting.ngu.no/api/atomfeeds");
+            nibioDatasets = GetDatasetsFromUrl("https://kart8.nibio.no/api/atomfeeds");
+            miljodirektoratetDatasets = GetDatasetsFromUrl("https://nedlasting.miljodirektoratet.no/miljodata/ATOM/Atomfeed.xml");
 
-            return geonorgeDatasets.Concat(nguDatasets).OrderBy(o => o.Title).ToList();
+            return geonorgeDatasets.Concat(nguDatasets).Concat(nibioDatasets).Concat(miljodirektoratetDatasets).OrderBy(o => o.Title).ToList();
         }
 
         public List<Dataset> GetDatasetsFromUrl(string url)
@@ -105,9 +109,16 @@ namespace Geonorge.MassivNedlasting
         /// <returns></returns>
         public List<DatasetFileViewModel> GetDatasetFiles(Dataset dataset)
         {
-            var getFeedTask = HttpClient.GetStringAsync(dataset.Url);
-            List<DatasetFile> datasetFiles = new AtomFeedParser().ParseDatasetFiles(getFeedTask.Result, dataset.Title, dataset.Url).OrderBy(d => d.Title).ToList();
-            Log.Debug("Fetch dataset files from " + dataset.Url);
+            List<DatasetFile> datasetFiles = new List<DatasetFile>();
+            try
+            {
+                var getFeedTask = HttpClient.GetStringAsync(dataset.Url);
+                datasetFiles = new AtomFeedParser().ParseDatasetFiles(getFeedTask.Result, dataset.Title, dataset.Url).OrderBy(d => d.Title).ToList();
+                Log.Debug("Fetch dataset files from " + dataset.Url);
+            }
+            catch(Exception ex) {
+                Log.Error("Error parsing url: " + dataset.Url + "Error: " + ex.Message);
+            }
             return ConvertToViewModel(datasetFiles);
         }
 
