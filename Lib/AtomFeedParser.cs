@@ -81,10 +81,10 @@ namespace Geonorge.MassivNedlasting
                 if (originalDatasetFile.Title == title && originalDatasetFile.Projection == projection)
                 {
                     datasetFileFromFeed.Title = title;
-                    datasetFileFromFeed.Description = childrenNode.SelectSingleNode("a:category", nsmgr).InnerXml;
-                    datasetFileFromFeed.Url = childrenNode.SelectSingleNode("a:link", nsmgr).Attributes[1].Value;
-                    datasetFileFromFeed.LastUpdated = childrenNode.SelectSingleNode("a:updated", nsmgr).InnerXml;
-                    datasetFileFromFeed.Organization = childrenNode.SelectSingleNode("a:author/a:name", nsmgr).InnerXml;
+                    datasetFileFromFeed.Description = GetDescription(childrenNode, nsmgr);
+                    datasetFileFromFeed.Url = GetUrl(childrenNode, nsmgr);
+                    datasetFileFromFeed.LastUpdated = GetLastUpdated(childrenNode, nsmgr);
+                    datasetFileFromFeed.Organization = childrenNode.SelectSingleNode("a:author/a:name", nsmgr)?.InnerXml;
                     datasetFileFromFeed.Projection = projection;
                     datasetFileFromFeed.Restrictions = GetRestrictions(childrenNode.SelectNodes("a:category", nsmgr));
                     datasetFileFromFeed.DatasetId = originalDatasetFile.DatasetId;
@@ -113,6 +113,12 @@ namespace Geonorge.MassivNedlasting
                 if (node.Attributes["scheme"].Value == "http://www.opengis.net/def/crs/" ||
                     node.Attributes["scheme"].Value == "https://register.geonorge.no/api/epsg-koder.xml")
                     {
+                    if (!string.IsNullOrEmpty(node.Attributes["term"]?.Value))
+                    {
+                        var term = node.Attributes["term"]?.Value;
+                        if (!string.IsNullOrEmpty(term) && term.StartsWith("EPSG:"))
+                            return node.Attributes["term"].Value;
+                    }
                     if (!string.IsNullOrEmpty(node.Attributes["label"]?.Value)) {
                         var label = node.Attributes["label"]?.Value;
                         if (!string.IsNullOrEmpty(label) && !label.StartsWith("EPSG/"))
