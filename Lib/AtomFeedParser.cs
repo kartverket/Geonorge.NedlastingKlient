@@ -18,6 +18,7 @@ namespace Geonorge.MassivNedlasting
             XmlNamespaceManager nsmgr = new XmlNamespaceManager(xmlDoc.NameTable);
             nsmgr.AddNamespace("a", "http://www.w3.org/2005/Atom");
             nsmgr.AddNamespace("inspire_dls", "http://inspire.ec.europa.eu/schemas/inspire_dls/1.0");
+            nsmgr.AddNamespace("gn", "http://geonorge.no/geonorge");
 
             var nodes = xmlDoc.SelectNodes(xpath, nsmgr);
 
@@ -25,13 +26,20 @@ namespace Geonorge.MassivNedlasting
                 foreach (XmlNode childrenNode in nodes)
                 {
                     var dataset = new Dataset();
+                    var id = childrenNode.SelectSingleNode("a:id", nsmgr);
                     dataset.Title = childrenNode.SelectSingleNode("a:title", nsmgr).InnerXml;
                     var description = childrenNode.SelectSingleNode("a:content", nsmgr);
                         if(description != null)
                         dataset.Description = description.InnerXml;
 
-                    var uriAlternate = childrenNode.SelectSingleNode("a:link[@rel='alternate']", nsmgr).Attributes.GetNamedItem("href");
-                    var url = childrenNode.SelectSingleNode("a:link", nsmgr);
+
+                    XmlNode uriAlternate = null;
+                    var alternate = childrenNode.SelectSingleNode("a:link[@rel='alternate']", nsmgr);
+                    if(alternate != null)
+                        uriAlternate = alternate.Attributes.GetNamedItem("href");
+
+
+                    XmlNode url = childrenNode.SelectSingleNode("a:link", nsmgr);
 
                     if (uriAlternate != null)
                     {
@@ -42,11 +50,17 @@ namespace Geonorge.MassivNedlasting
                         dataset.Url = url.InnerXml;
                     else
                     {
-                        var uri = childrenNode.SelectSingleNode("a:link", nsmgr).Attributes.GetNamedItem("href");
-                        dataset.Url = uri.Value;
+                        dataset.Url = id.InnerXml;
                     }
                     dataset.LastUpdated = childrenNode.SelectSingleNode("a:updated", nsmgr).InnerXml;
+
+                    var organizationGN = childrenNode.SelectSingleNode("a:author/gn:organisation", nsmgr);
+
+                    if (organizationGN != null)
+                        dataset.Organization = organizationGN.InnerXml;
+                    else
                     dataset.Organization = childrenNode.SelectSingleNode("a:author/a:name", nsmgr).InnerXml;
+
                     if (string.IsNullOrEmpty(dataset.Organization) && dataset.Url.Contains("ngu.no"))
                         dataset.Organization = "Norges geologiske undersøkelse";
                     else if (string.IsNullOrEmpty(dataset.Organization) && dataset.Url.Contains("nibio.no"))
