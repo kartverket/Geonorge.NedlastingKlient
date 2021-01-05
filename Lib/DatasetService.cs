@@ -62,9 +62,18 @@ namespace Geonorge.MassivNedlasting
 
         public List<Dataset> GetDatasetsFromUrl(string url)
         {
-            var getFeedTask = HttpClient.GetStringAsync(url);
-            Log.Debug("Fetch datasets from " + url);
-            return new AtomFeedParser().ParseDatasets(getFeedTask.Result);
+            try
+            {
+                var getFeedTask = HttpClient.GetStringAsync(url);
+                Log.Debug("Fetch datasets from " + url);
+                return new AtomFeedParser().ParseDatasets(getFeedTask.Result);
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error getting dataset from url: " + url + " . Error: " + ex);
+            }
+
+            return new List<Dataset>();
         }
 
         /// <summary>
