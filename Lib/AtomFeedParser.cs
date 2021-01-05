@@ -147,7 +147,7 @@ namespace Geonorge.MassivNedlasting
         {
             foreach (XmlNode node in xmlNodeList)
             {
-                if (node.Attributes["scheme"] != null && node.Attributes["scheme"].Value == "https://register.geonorge.no/api/metadata-kodelister/vektorformater.xml")
+                if (node.Attributes["scheme"] != null && node.Attributes["scheme"].Value.StartsWith("https://register.geonorge.no/api/metadata-kodelister/vektorformater"))
                 {
                     return node.Attributes["term"].Value;
                 }
