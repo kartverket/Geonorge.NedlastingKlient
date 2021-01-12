@@ -227,7 +227,7 @@ namespace Geonorge.MassivNedlasting
 
             if (string.IsNullOrEmpty(lastUpdated))
             {
-                var updated = xmlNode.SelectSingleNode("a:link[@rel='describedby']", nsmgr).Attributes.GetNamedItem("updated");
+                var updated = xmlNode.SelectSingleNode("a:link[@rel='alternate']", nsmgr).Attributes.GetNamedItem("updated");
                 if (updated != null)
                     lastUpdated = updated.InnerText;
             }
