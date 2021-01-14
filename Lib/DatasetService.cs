@@ -55,7 +55,7 @@ namespace Geonorge.MassivNedlasting
             geonorgeDatasets = GetDatasetsFromUrl("https://nedlasting.geonorge.no/geonorge/Tjenestefeed_daglig.xml");
             nguDatasets = GetDatasetsFromUrl("https://nedlasting.ngu.no/api/atomfeeds");
             nibioDatasets = GetDatasetsFromUrl("https://kart8.nibio.no/api/atomfeeds");
-            miljodirektoratetDatasets = GetDatasetsFromUrl("https://nedlasting.miljodirektoratet.no/miljodata/ATOM/Atomfeed.xml");
+            miljodirektoratetDatasets = GetDatasetsFromUrl("https://nedlasting.miljodirektoratet.no/miljodata/ATOM/Atom_TjenesteFeed.xml");
 
             return geonorgeDatasets.Concat(nguDatasets).Concat(nibioDatasets).Concat(miljodirektoratetDatasets).OrderBy(o => o.Title).ToList();
         }
