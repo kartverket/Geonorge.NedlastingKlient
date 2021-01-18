@@ -4,7 +4,6 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <OutputType>exe</OutputType>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <RuntimeFrameworkVersion>3.1</RuntimeFrameworkVersion>
     <AssemblyName>Geonorge.Nedlaster</AssemblyName>
     <RootNamespace>Geonorge.Nedlaster</RootNamespace>
     <Authors>Kartverket</Authors>

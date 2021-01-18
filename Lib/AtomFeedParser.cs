@@ -214,8 +214,9 @@ namespace Geonorge.MassivNedlasting
                 url = urlNode.Value;
             }
 
-            if (string.IsNullOrEmpty(url))
-                url = xmlNode.SelectSingleNode("a:link", nsmgr).Attributes[1]?.Value;
+            var link = xmlNode.SelectSingleNode("a:link[@rel='alternate']", nsmgr).Attributes.GetNamedItem("href");
+            if (link != null)
+                url = link.InnerText;
 
             return url;
 
