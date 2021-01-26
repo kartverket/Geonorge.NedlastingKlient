@@ -144,9 +144,111 @@ namespace Geonorge.MassivNedlasting.Gui
         {
             if (string.IsNullOrEmpty(SearchDatasetFiles.Text))
                 return true;
-            return (item as DatasetFileViewModel).Title.IndexOf(SearchDatasetFiles.Text,
+
+            var file = item as DatasetFileViewModel;
+
+            if(SearchDatasetFiles.Text.Trim().IndexOf(" ") >= 0) 
+            {
+                var searchWords = SearchDatasetFiles.Text.Trim().Split(' ').ToList();
+
+                bool titleFoundA = false;
+                bool categoryFoundB = false;
+                bool areaCodeFoundC = false;
+                bool areaLabelFoundD = false;
+                bool formatFoundE = false;
+
+                foreach (var searchWord in searchWords) 
+                {
+                    if (!titleFoundA)
+                        titleFoundA = file.Title.IndexOf(searchWord, StringComparison.OrdinalIgnoreCase) >= 0;
+
+                    if (!categoryFoundB)
+                        categoryFoundB = file.Category.IndexOf(searchWord, StringComparison.OrdinalIgnoreCase) >= 0;
+
+                    if (!areaCodeFoundC)
+                        areaCodeFoundC = file.AreaCode.IndexOf(searchWord, StringComparison.OrdinalIgnoreCase) >= 0;
+
+                    if (!areaLabelFoundD)
+                        areaLabelFoundD = file.AreaLabel.IndexOf(searchWord, StringComparison.OrdinalIgnoreCase) >= 0;
+
+                    if (!formatFoundE)
+                        formatFoundE = file.Format.IndexOf(searchWord, StringComparison.OrdinalIgnoreCase) >= 0;
+                }
+
+                //https://math.stackexchange.com/questions/161565/what-is-the-total-number-of-combinations-of-5-items-together-when-there-are-no-d
+                //5 categories
+                if (titleFoundA && categoryFoundB && areaCodeFoundC && areaLabelFoundD && formatFoundE)
+                    return true;
+                //4 categories
+                else if (titleFoundA && categoryFoundB && areaCodeFoundC && areaLabelFoundD)
+                    return true;
+                else if (titleFoundA && categoryFoundB && areaCodeFoundC && formatFoundE)
+                    return true;
+                else if (titleFoundA && categoryFoundB && areaLabelFoundD && formatFoundE)
+                    return true;
+                else if (titleFoundA && areaCodeFoundC && areaLabelFoundD && formatFoundE)
+                    return true;
+                else if (categoryFoundB && areaCodeFoundC && areaLabelFoundD && formatFoundE)
+                    return true;
+                // 3 categories
+                else if (titleFoundA && categoryFoundB && areaCodeFoundC)
+                    return true;
+                else if (titleFoundA && categoryFoundB && areaLabelFoundD)
+                    return true;
+                else if (titleFoundA && categoryFoundB && formatFoundE)
+                    return true;
+                else if (titleFoundA && areaCodeFoundC && areaLabelFoundD)
+                    return true;
+                else if (titleFoundA && areaCodeFoundC && formatFoundE)
+                    return true;
+                else if (titleFoundA && areaLabelFoundD && formatFoundE)
+                    return true;
+                else if (categoryFoundB && areaCodeFoundC && areaLabelFoundD)
+                    return true;
+                else if (categoryFoundB && areaCodeFoundC && formatFoundE)
+                    return true;
+                else if (categoryFoundB && areaLabelFoundD && formatFoundE)
+                    return true;
+                else if (areaCodeFoundC && areaLabelFoundD && formatFoundE)
+                    return true;
+                //2 categories
+                else if (titleFoundA && categoryFoundB)
+                    return true;
+                else if (titleFoundA && areaCodeFoundC)
+                    return true;
+                else if (titleFoundA && areaLabelFoundD)
+                    return true;
+                else if (titleFoundA && formatFoundE)
+                    return true;
+                else if (categoryFoundB && areaCodeFoundC)
+                    return true;
+                else if (categoryFoundB && areaLabelFoundD)
+                    return true;
+                else if (categoryFoundB && formatFoundE)
+                    return true;
+                else if (areaCodeFoundC && areaLabelFoundD)
+                    return true;
+                else if (areaCodeFoundC && formatFoundE)
+                    return true;
+                else if (areaLabelFoundD && formatFoundE)
+                    return true;
+                else
+                    return false;
+
+            }
+
+            var searchText = SearchDatasetFiles.Text.Trim();
+
+
+            return file.Title.IndexOf(searchText,
                        StringComparison.OrdinalIgnoreCase) >= 0 ||
-                   (item as DatasetFileViewModel).Category.IndexOf(SearchDatasetFiles.Text,
+                   file.Category.IndexOf(searchText,
+                       StringComparison.OrdinalIgnoreCase) >= 0 ||
+                   file.AreaCode.IndexOf(searchText,
+                       StringComparison.OrdinalIgnoreCase) >= 0 ||
+                   file.AreaLabel.IndexOf(searchText,
+                       StringComparison.OrdinalIgnoreCase) >= 0 ||
+                   file.Format.IndexOf(searchText,
                        StringComparison.OrdinalIgnoreCase) >= 0;
         }
 

@@ -51,13 +51,16 @@ namespace Geonorge.MassivNedlasting
             List<Dataset> nguDatasets;
             List<Dataset> nibioDatasets;
             List<Dataset> miljodirektoratetDatasets;
+            List<Dataset> hoydedataDatasets;
 
             geonorgeDatasets = GetDatasetsFromUrl("https://nedlasting.geonorge.no/geonorge/Tjenestefeed_daglig.xml");
             nguDatasets = GetDatasetsFromUrl("https://nedlasting.ngu.no/api/atomfeeds");
             nibioDatasets = GetDatasetsFromUrl("https://kart8.nibio.no/api/atomfeeds");
             miljodirektoratetDatasets = GetDatasetsFromUrl("https://nedlasting.miljodirektoratet.no/miljodata/ATOM/Atom_TjenesteFeed.xml");
+            // Todo get prod URL for hoydedataDatasets
+            hoydedataDatasets = GetDatasetsFromUrl("https://testnedlasting.geonorge.no/geonorge/ATOM/hoydedata/Hoydedata_ServiceFeed.atom"); 
 
-            return geonorgeDatasets.Concat(nguDatasets).Concat(nibioDatasets).Concat(miljodirektoratetDatasets).OrderBy(o => o.Title).ToList();
+            return geonorgeDatasets.Concat(nguDatasets).Concat(nibioDatasets).Concat(miljodirektoratetDatasets).Concat(hoydedataDatasets).OrderBy(o => o.Title).ToList();
         }
 
         public List<Dataset> GetDatasetsFromUrl(string url)
