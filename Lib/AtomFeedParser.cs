@@ -162,7 +162,7 @@ namespace Geonorge.MassivNedlasting
         {
             foreach (XmlNode node in xmlNodeList)
             {
-                if (node.Attributes["scheme"] != null && node.Attributes["scheme"].Value.StartsWith("https://register.geonorge.no/api/metadata-kodelister/vektorformater"))
+                if (node.Attributes["scheme"] != null && (node.Attributes["scheme"].Value.Contains("vektorformater") || node.Attributes["scheme"].Value.Contains("rasterformater")))
                 {
                     return node.Attributes["term"].Value;
                 }
@@ -184,7 +184,7 @@ namespace Geonorge.MassivNedlasting
                     return format.Split(',')[0];
             }
 
-            return null;
+            return "";
         }
 
         public List<DatasetFile> ParseDatasetFiles(string xml, string datasetTitle, string datasetUrl)
