@@ -225,28 +225,31 @@ namespace Geonorge.MassivNedlasting
 
         private string GetAreaCode(XmlNodeList xmlNodeList)
         {
+            string areaCode = "";
             foreach (XmlNode node in xmlNodeList)
             {
                 if (node.Attributes["scheme"] != null && node.Attributes["scheme"].Value.Contains("geografisk-distribusjonsinndeling"))
                 {
-                    return node.Attributes["term"].Value;
+                    areaCode = areaCode + node.Attributes["term"].Value + " ";
                 }
             }
 
-            return "";
+            return areaCode.Trim();
         }
 
         private string GetAreaLabel(XmlNodeList xmlNodeList)
         {
+            string areaLabel = "";
+
             foreach (XmlNode node in xmlNodeList)
             {
                 if (node.Attributes["scheme"] != null && node.Attributes["scheme"].Value.Contains("geografisk-distribusjonsinndeling"))
                 {
-                    return node.Attributes["label"].Value;
+                    areaLabel = areaLabel + node.Attributes["label"].Value +  " ";
                 }
             }
 
-            return "";
+            return areaLabel.Trim();
         }
 
         private string GetUrl(XmlNode xmlNode, XmlNamespaceManager nsmgr)
