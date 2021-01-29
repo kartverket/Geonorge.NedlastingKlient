@@ -151,89 +151,31 @@ namespace Geonorge.MassivNedlasting.Gui
             {
                 var searchWords = SearchDatasetFiles.Text.Trim().Split(' ').ToList();
 
-                bool titleFoundA = false;
-                bool categoryFoundB = false;
-                bool areaCodeFoundC = false;
-                bool areaLabelFoundD = false;
-                bool formatFoundE = false;
+                bool titleFound = false;
+                bool categoryFound = false;
+                bool areaCodeFound = false;
+                bool areaLabelFound = false;
+                bool formatFound = false;
 
                 foreach (var searchWord in searchWords) 
                 {
-                    if (!titleFoundA)
-                        titleFoundA = file.Title.IndexOf(searchWord, StringComparison.OrdinalIgnoreCase) >= 0;
+                    if (!titleFound)
+                        titleFound = file.Title.IndexOf(searchWord, StringComparison.OrdinalIgnoreCase) >= 0;
 
-                    if (!categoryFoundB)
-                        categoryFoundB = file.Category.IndexOf(searchWord, StringComparison.OrdinalIgnoreCase) >= 0;
+                    if (!categoryFound)
+                        categoryFound = file.Category.IndexOf(searchWord, StringComparison.OrdinalIgnoreCase) >= 0;
 
-                    if (!areaCodeFoundC)
-                        areaCodeFoundC = file.AreaCode.IndexOf(searchWord, StringComparison.OrdinalIgnoreCase) >= 0;
+                    if (!areaCodeFound)
+                        areaCodeFound = file.AreaCode.IndexOf(searchWord, StringComparison.OrdinalIgnoreCase) >= 0;
 
-                    if (!areaLabelFoundD)
-                        areaLabelFoundD = file.AreaLabel.IndexOf(searchWord, StringComparison.OrdinalIgnoreCase) >= 0;
+                    if (!areaLabelFound)
+                        areaLabelFound = file.AreaLabel.IndexOf(searchWord, StringComparison.OrdinalIgnoreCase) >= 0;
 
-                    if (!formatFoundE)
-                        formatFoundE = file.Format.IndexOf(searchWord, StringComparison.OrdinalIgnoreCase) >= 0;
+                    if (!formatFound)
+                        formatFound = file.Format.IndexOf(searchWord, StringComparison.OrdinalIgnoreCase) >= 0;
                 }
 
-                //https://math.stackexchange.com/questions/161565/what-is-the-total-number-of-combinations-of-5-items-together-when-there-are-no-d
-                //5 categories
-                if (titleFoundA && categoryFoundB && areaCodeFoundC && areaLabelFoundD && formatFoundE)
-                    return true;
-                //4 categories
-                else if (titleFoundA && categoryFoundB && areaCodeFoundC && areaLabelFoundD)
-                    return true;
-                else if (titleFoundA && categoryFoundB && areaCodeFoundC && formatFoundE)
-                    return true;
-                else if (titleFoundA && categoryFoundB && areaLabelFoundD && formatFoundE)
-                    return true;
-                else if (titleFoundA && areaCodeFoundC && areaLabelFoundD && formatFoundE)
-                    return true;
-                else if (categoryFoundB && areaCodeFoundC && areaLabelFoundD && formatFoundE)
-                    return true;
-                // 3 categories
-                else if (titleFoundA && categoryFoundB && areaCodeFoundC)
-                    return true;
-                else if (titleFoundA && categoryFoundB && areaLabelFoundD)
-                    return true;
-                else if (titleFoundA && categoryFoundB && formatFoundE)
-                    return true;
-                else if (titleFoundA && areaCodeFoundC && areaLabelFoundD)
-                    return true;
-                else if (titleFoundA && areaCodeFoundC && formatFoundE)
-                    return true;
-                else if (titleFoundA && areaLabelFoundD && formatFoundE)
-                    return true;
-                else if (categoryFoundB && areaCodeFoundC && areaLabelFoundD)
-                    return true;
-                else if (categoryFoundB && areaCodeFoundC && formatFoundE)
-                    return true;
-                else if (categoryFoundB && areaLabelFoundD && formatFoundE)
-                    return true;
-                else if (areaCodeFoundC && areaLabelFoundD && formatFoundE)
-                    return true;
-                //2 categories
-                else if (titleFoundA && categoryFoundB)
-                    return true;
-                else if (titleFoundA && areaCodeFoundC)
-                    return true;
-                else if (titleFoundA && areaLabelFoundD)
-                    return true;
-                else if (titleFoundA && formatFoundE)
-                    return true;
-                else if (categoryFoundB && areaCodeFoundC)
-                    return true;
-                else if (categoryFoundB && areaLabelFoundD)
-                    return true;
-                else if (categoryFoundB && formatFoundE)
-                    return true;
-                else if (areaCodeFoundC && areaLabelFoundD)
-                    return true;
-                else if (areaCodeFoundC && formatFoundE)
-                    return true;
-                else if (areaLabelFoundD && formatFoundE)
-                    return true;
-                else
-                    return false;
+                return titleFound || categoryFound || areaCodeFound || areaLabelFound || formatFound;
 
             }
 
