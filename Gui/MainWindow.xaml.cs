@@ -144,9 +144,53 @@ namespace Geonorge.MassivNedlasting.Gui
         {
             if (string.IsNullOrEmpty(SearchDatasetFiles.Text))
                 return true;
-            return (item as DatasetFileViewModel).Title.IndexOf(SearchDatasetFiles.Text,
+
+            var file = item as DatasetFileViewModel;
+
+            if(SearchDatasetFiles.Text.Trim().IndexOf(" ") >= 0) 
+            {
+                var searchWords = SearchDatasetFiles.Text.Trim().Split(' ').ToList();
+
+                bool titleFound = false;
+                bool categoryFound = false;
+                bool areaCodeFound = false;
+                bool areaLabelFound = false;
+                bool formatFound = false;
+
+                foreach (var searchWord in searchWords) 
+                {
+                    if (!titleFound)
+                        titleFound = file.Title.IndexOf(searchWord, StringComparison.OrdinalIgnoreCase) >= 0;
+
+                    if (!categoryFound)
+                        categoryFound = file.Category.IndexOf(searchWord, StringComparison.OrdinalIgnoreCase) >= 0;
+
+                    if (!areaCodeFound)
+                        areaCodeFound = file.AreaCode.IndexOf(searchWord, StringComparison.OrdinalIgnoreCase) >= 0;
+
+                    if (!areaLabelFound)
+                        areaLabelFound = file.AreaLabel.IndexOf(searchWord, StringComparison.OrdinalIgnoreCase) >= 0;
+
+                    if (!formatFound)
+                        formatFound = file.Format.IndexOf(searchWord, StringComparison.OrdinalIgnoreCase) >= 0;
+                }
+
+                return titleFound || categoryFound || areaCodeFound || areaLabelFound || formatFound;
+
+            }
+
+            var searchText = SearchDatasetFiles.Text.Trim();
+
+
+            return file.Title.IndexOf(searchText,
                        StringComparison.OrdinalIgnoreCase) >= 0 ||
-                   (item as DatasetFileViewModel).Category.IndexOf(SearchDatasetFiles.Text,
+                   file.Category.IndexOf(searchText,
+                       StringComparison.OrdinalIgnoreCase) >= 0 ||
+                   file.AreaCode.IndexOf(searchText,
+                       StringComparison.OrdinalIgnoreCase) >= 0 ||
+                   file.AreaLabel.IndexOf(searchText,
+                       StringComparison.OrdinalIgnoreCase) >= 0 ||
+                   file.Format.IndexOf(searchText,
                        StringComparison.OrdinalIgnoreCase) >= 0;
         }
 

@@ -58,8 +58,10 @@ namespace Geonorge.MassivNedlasting
 
                     if (organizationGN != null)
                         dataset.Organization = organizationGN.InnerXml;
+                    else if (childrenNode.SelectSingleNode("a:author/a:name", nsmgr) != null)
+                        dataset.Organization = childrenNode.SelectSingleNode("a:author/a:name", nsmgr).InnerXml;
                     else
-                    dataset.Organization = childrenNode.SelectSingleNode("a:author/a:name", nsmgr).InnerXml;
+                        dataset.Organization = "Kartverket";
 
                     if (string.IsNullOrEmpty(dataset.Organization) && dataset.Url.Contains("ngu.no"))
                         dataset.Organization = "Norges geologiske undersøkelse";
@@ -124,8 +126,21 @@ namespace Geonorge.MassivNedlasting
         {
             foreach (XmlNode node in xmlNodeList)
             {
-                if (node.Attributes["scheme"].Value == "http://www.opengis.net/def/crs/" ||
-                    node.Attributes["scheme"].Value == "https://register.geonorge.no/api/epsg-koder.xml")
+                var scheme = node.Attributes["scheme"]?.Value;
+                bool hasProjection = false;
+                if(scheme != null) {
+                    if (scheme.StartsWith("http://www.opengis.net/def/crs/")) 
+                    {
+                        hasProjection = true;
+                    }
+                    else if (scheme.StartsWith("https://register.geonorge.no/api/epsg-koder"))
+                    {
+                        hasProjection = true;
+                    }
+                }
+
+
+                if (hasProjection)
                     {
                     if (!string.IsNullOrEmpty(node.Attributes["term"]?.Value))
                     {
@@ -147,20 +162,29 @@ namespace Geonorge.MassivNedlasting
         {
             foreach (XmlNode node in xmlNodeList)
             {
-                if (node.Attributes["scheme"] != null && node.Attributes["scheme"].Value.StartsWith("https://register.geonorge.no/api/metadata-kodelister/vektorformater"))
+                if (node.Attributes["scheme"] != null && (node.Attributes["scheme"].Value.Contains("vektorformater") || node.Attributes["scheme"].Value.Contains("rasterformater")))
                 {
                     return node.Attributes["term"].Value;
                 }
             }
 
-            if(xmlNode != null)
+            foreach (XmlNode node in xmlNodeList)
+            {
+                if (node.Attributes["term"] != null && node.Attributes["term"].Value.Contains("vektorformater")
+                    || node.Attributes["term"].Value.Contains("rasterformater"))
+                {
+                    return node.Attributes["label"].Value;
+                }
+            }
+
+            if (xmlNode != null)
             { 
                 var format = xmlNode.InnerText;
                 if (format.Contains(","))
                     return format.Split(',')[0];
             }
 
-            return null;
+            return "";
         }
 
         public List<DatasetFile> ParseDatasetFiles(string xml, string datasetTitle, string datasetUrl)
@@ -191,10 +215,41 @@ namespace Geonorge.MassivNedlasting
                 datasetFile.Restrictions = GetRestrictions(childrenNode.SelectNodes("a:category", nsmgr));
                 datasetFile.DatasetId = datasetTitle;
                 datasetFile.DatasetUrl = datasetUrl;
+                datasetFile.AreaCode = GetAreaCode(childrenNode.SelectNodes("a:category", nsmgr));
+                datasetFile.AreaLabel = GetAreaLabel(childrenNode.SelectNodes("a:category", nsmgr));
 
                 datasetFiles.Add(datasetFile);
             }
             return datasetFiles;
+        }
+
+        private string GetAreaCode(XmlNodeList xmlNodeList)
+        {
+            string areaCode = "";
+            foreach (XmlNode node in xmlNodeList)
+            {
+                if (node.Attributes["scheme"] != null && node.Attributes["scheme"].Value.Contains("geografisk-distribusjonsinndeling"))
+                {
+                    areaCode = areaCode + node.Attributes["term"].Value + " ";
+                }
+            }
+
+            return areaCode.Trim();
+        }
+
+        private string GetAreaLabel(XmlNodeList xmlNodeList)
+        {
+            string areaLabel = "";
+
+            foreach (XmlNode node in xmlNodeList)
+            {
+                if (node.Attributes["scheme"] != null && node.Attributes["scheme"].Value.Contains("geografisk-distribusjonsinndeling"))
+                {
+                    areaLabel = areaLabel + node.Attributes["label"].Value +  " ";
+                }
+            }
+
+            return areaLabel.Trim();
         }
 
         private string GetUrl(XmlNode xmlNode, XmlNamespaceManager nsmgr)
@@ -214,9 +269,14 @@ namespace Geonorge.MassivNedlasting
                 url = urlNode.Value;
             }
 
-            var link = xmlNode.SelectSingleNode("a:link[@rel='alternate']", nsmgr).Attributes.GetNamedItem("href");
+            var link = xmlNode.SelectSingleNode("a:link[@rel='alternate']", nsmgr)?.Attributes?.GetNamedItem("href");
             if (link != null)
                 url = link.InnerText;
+            else {
+                link = xmlNode.SelectSingleNode("a:link[@rel='section']", nsmgr)?.Attributes?.GetNamedItem("href");
+                if (link != null)
+                    url = link.InnerText;
+            }
 
             return url;
 

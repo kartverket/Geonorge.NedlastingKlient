@@ -46,6 +46,16 @@ namespace Geonorge.MassivNedlasting
         public string Format { get; set; }
 
         /// <summary>
+        /// Area code/term
+        /// </summary>
+        public string AreaCode { get; set; }
+
+        /// <summary>
+        /// Area name/label
+        /// </summary>
+        public string AreaLabel { get; set; }
+
+        /// <summary>
         /// DatasetId (Dataset title) to the dataset where file belongs
         /// </summary>
         public string DatasetId { get; set; }
@@ -121,6 +131,8 @@ namespace Geonorge.MassivNedlasting
         public string Category { get; set; }
         public string EpsgName { get; set; }
         public string Format { get; set; }
+        public string AreaCode { get; set; }
+        public string AreaLabel { get; set; }
         public string DatasetId { get; set; }
         public string DatasetUrl { get; set; }
         public bool SelectedForDownload { get; set; }
@@ -141,6 +153,8 @@ namespace Geonorge.MassivNedlasting
             Organization = datasetFile.Organization;
             Category = datasetFile.Projection;
             Format = datasetFile.Format;
+            AreaCode = datasetFile.AreaCode;
+            AreaLabel = datasetFile.AreaLabel;
             DatasetId = datasetFile.DatasetId;
             DatasetUrl = FixDatasetUrl(datasetFile.DatasetUrl);
             Id = GetId();
