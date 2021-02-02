@@ -93,7 +93,7 @@
                     <materialDesign:PackIcon Kind="File" Margin="0 0 0 0" VerticalAlignment="Center" />
                     <TextBlock FontWeight="Bold" FontSize="16" ToolTip="Nedlastbare filer for valgt datasett" Padding="10" Margin="0 0 10 0" VerticalAlignment="Center">Filer</TextBlock>
                     <materialDesign:PackIcon Kind="Filter" Foreground="{Binding ElementName=SearchDatasetFiles, Path=BorderBrush}" VerticalAlignment="Center" />
-                    <TextBox Name="SearchDatasetFiles" materialDesign:HintAssist.Hint="Søk" ToolTip="Søk på filnavn eller proporsjon" MinWidth="100" VerticalAlignment="Center" Margin="0 0 0 0" TextChanged="SearchDatasetFiles_OnTextChanged" />
+                    <TextBox Name="SearchDatasetFiles" materialDesign:HintAssist.Hint="Søk" ToolTip="Søk på filnavn, projeksjon, format eller kommune " MinWidth="100" VerticalAlignment="Center" Margin="0 0 0 0" TextChanged="SearchDatasetFiles_OnTextChanged" />
                 </StackPanel>
             </Grid>
 
