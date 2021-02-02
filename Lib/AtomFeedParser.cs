@@ -18,7 +18,7 @@ namespace Geonorge.MassivNedlasting
             XmlNamespaceManager nsmgr = new XmlNamespaceManager(xmlDoc.NameTable);
             nsmgr.AddNamespace("a", "http://www.w3.org/2005/Atom");
             nsmgr.AddNamespace("inspire_dls", "http://inspire.ec.europa.eu/schemas/inspire_dls/1.0");
-            nsmgr.AddNamespace("gn", "http://geonorge.no/geonorge");
+            nsmgr.AddNamespace("gn", "http://geonorge.no/Atom");
 
             var nodes = xmlDoc.SelectNodes(xpath, nsmgr);
 
@@ -54,24 +54,45 @@ namespace Geonorge.MassivNedlasting
                     }
                     dataset.LastUpdated = childrenNode.SelectSingleNode("a:updated", nsmgr).InnerXml;
 
-                    var organizationGN = childrenNode.SelectSingleNode("a:author/gn:organisation", nsmgr);
-
-                    if (organizationGN != null)
-                        dataset.Organization = organizationGN.InnerXml;
-                    else if (childrenNode.SelectSingleNode("a:author/a:name", nsmgr) != null)
-                        dataset.Organization = childrenNode.SelectSingleNode("a:author/a:name", nsmgr).InnerXml;
-                    else
-                        dataset.Organization = "Kartverket";
-
-                    if (string.IsNullOrEmpty(dataset.Organization) && dataset.Url.Contains("ngu.no"))
-                        dataset.Organization = "Norges geologiske undersøkelse";
-                    else if (string.IsNullOrEmpty(dataset.Organization) && dataset.Url.Contains("nibio.no"))
-                        dataset.Organization = "Norsk institutt for bioøkonomi";
                     dataset.Uuid = childrenNode.SelectSingleNode("inspire_dls:spatial_dataset_identifier_code", nsmgr)?.InnerXml;
+
+                    dataset.Organization = GetOrganization(childrenNode, nsmgr, dataset);
 
                     datasets.Add(dataset);
                 }
             return datasets;
+        }
+
+        private string GetOrganization(XmlNode childrenNode, XmlNamespaceManager nsmgr, Dataset dataset, DatasetFile datasetFile = null)
+        {
+            string organization = "";
+
+            if ((dataset != null && dataset.Url.Contains("miljodirektoratet")) 
+                || (datasetFile != null && datasetFile.Url.Contains("miljodirektoratet"))) {
+                nsmgr.RemoveNamespace("gn", "http://geonorge.no/Atom");
+                nsmgr.AddNamespace("gn", "http://geonorge.no/geonorge");
+            }
+
+            var organizationGN = childrenNode.SelectSingleNode("a:author/gn:organisation", nsmgr);
+
+            if (organizationGN != null)
+                organization = organizationGN.InnerXml;
+            else if (childrenNode.SelectSingleNode("a:author/a:name", nsmgr) != null)
+                organization = childrenNode.SelectSingleNode("a:author/a:name", nsmgr).InnerXml;
+            else
+                organization =  "Kartverket";
+
+            if (dataset != null && string.IsNullOrEmpty(dataset.Organization) && dataset.Url.Contains("ngu.no"))
+                organization = "Norges geologiske undersøkelse";
+            else if (dataset != null && string.IsNullOrEmpty(dataset.Organization) && dataset.Url.Contains("nibio.no"))
+                organization = "Norsk institutt for bioøkonomi";
+
+            if (datasetFile != null && string.IsNullOrEmpty(datasetFile.Organization) && datasetFile.Url.Contains("ngu.no"))
+                organization = "Norges geologiske undersøkelse";
+            else if (datasetFile != null && string.IsNullOrEmpty(datasetFile.Organization) && datasetFile.Url.Contains("nibio.no"))
+                organization = "Norsk institutt for bioøkonomi";
+
+            return organization;
         }
 
         internal DatasetFile ParseDatasetFile(string xml, DatasetFile originalDatasetFile)
@@ -86,6 +107,7 @@ namespace Geonorge.MassivNedlasting
             XmlNamespaceManager nsmgr = new XmlNamespaceManager(xmlDoc.NameTable);
             nsmgr.AddNamespace("a", "http://www.w3.org/2005/Atom");
             nsmgr.AddNamespace("inspire_dls", "http://inspire.ec.europa.eu/schemas/inspire_dls/1.0");
+            nsmgr.AddNamespace("gn", "http://geonorge.no/Atom");
 
             var nodes = xmlDoc.SelectNodes(xpath, nsmgr);
 
@@ -100,11 +122,11 @@ namespace Geonorge.MassivNedlasting
                     datasetFileFromFeed.Description = GetDescription(childrenNode, nsmgr);
                     datasetFileFromFeed.Url = GetUrl(childrenNode, nsmgr);
                     datasetFileFromFeed.LastUpdated = GetLastUpdated(childrenNode, nsmgr);
-                    datasetFileFromFeed.Organization = childrenNode.SelectSingleNode("a:author/a:name", nsmgr)?.InnerXml;
                     datasetFileFromFeed.Projection = projection;
                     datasetFileFromFeed.Restrictions = GetRestrictions(childrenNode.SelectNodes("a:category", nsmgr));
                     datasetFileFromFeed.DatasetId = originalDatasetFile.DatasetId;
                     datasetFileFromFeed.DatasetUrl = originalDatasetFile.DatasetUrl;
+                    datasetFileFromFeed.Organization = GetOrganization(childrenNode, nsmgr, null, datasetFileFromFeed);
                 }
             }
             return datasetFileFromFeed;
@@ -199,6 +221,7 @@ namespace Geonorge.MassivNedlasting
             XmlNamespaceManager nsmgr = new XmlNamespaceManager(xmlDoc.NameTable);
             nsmgr.AddNamespace("a", "http://www.w3.org/2005/Atom");
             nsmgr.AddNamespace("inspire_dls", "http://inspire.ec.europa.eu/schemas/inspire_dls/1.0");
+            nsmgr.AddNamespace("gn", "http://geonorge.no/Atom");
 
             var nodes = xmlDoc.SelectNodes(xpath, nsmgr);
 
@@ -209,7 +232,6 @@ namespace Geonorge.MassivNedlasting
                 datasetFile.Description = GetDescription(childrenNode, nsmgr);
                 datasetFile.Url = GetUrl(childrenNode, nsmgr); 
                 datasetFile.LastUpdated = GetLastUpdated(childrenNode, nsmgr);
-                datasetFile.Organization = childrenNode.SelectSingleNode("a:author/a:name", nsmgr)?.InnerXml;
                 datasetFile.Projection = GetProjection(childrenNode.SelectNodes("a:category", nsmgr));
                 datasetFile.Format = GetFormat(childrenNode.SelectSingleNode("a:title", nsmgr), childrenNode.SelectNodes("a:category", nsmgr));
                 datasetFile.Restrictions = GetRestrictions(childrenNode.SelectNodes("a:category", nsmgr));
@@ -217,6 +239,7 @@ namespace Geonorge.MassivNedlasting
                 datasetFile.DatasetUrl = datasetUrl;
                 datasetFile.AreaCode = GetAreaCode(childrenNode.SelectNodes("a:category", nsmgr));
                 datasetFile.AreaLabel = GetAreaLabel(childrenNode.SelectNodes("a:category", nsmgr));
+                datasetFile.Organization = GetOrganization(childrenNode, nsmgr, null, datasetFile);
 
                 datasetFiles.Add(datasetFile);
             }
