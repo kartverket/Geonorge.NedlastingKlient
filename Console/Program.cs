@@ -111,7 +111,7 @@ namespace Geonorge.Nedlaster
 
                         DirectoryInfo downloadDirectory = GetDownloadDirectory(config, datasetFile);
                         DatasetFile datasetFromFeed = datasetService.GetDatasetFile(datasetFile);
-                        if (datasetFile.Url != datasetFromFeed.Url)
+                        if (!string.IsNullOrEmpty(datasetFromFeed.Url) && datasetFile.Url != datasetFromFeed.Url)
                             datasetFile.Url = datasetFromFeed.Url;
                         DownloadHistory downloadHistory = datasetService.GetFileDownloaHistory(datasetFile.Url);
                         bool newDatasetAvailable = NewDatasetAvailable(downloadHistory, datasetFromFeed, downloadDirectory);
@@ -278,6 +278,10 @@ namespace Geonorge.Nedlaster
         private static bool NewDatasetAvailable(DownloadHistory downloadHistory, DatasetFile datasetFromFeed, DirectoryInfo downloadDirectory)
         {
             Console.WriteLine(datasetFromFeed.DatasetUrl);
+            if (string.IsNullOrEmpty(datasetFromFeed.LastUpdated))
+                return true;
+
+
             if (downloadHistory == null)
             {
                 Console.WriteLine("Download history is null, NewDatasetAvailable");
