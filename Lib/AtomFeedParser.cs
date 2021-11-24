@@ -186,7 +186,12 @@ namespace Geonorge.MassivNedlasting
             {
                 if (node.Attributes["scheme"] != null && (node.Attributes["scheme"].Value.Contains("vektorformater") || node.Attributes["scheme"].Value.Contains("rasterformater")))
                 {
-                    return node.Attributes["term"].Value;
+                    var format = node.Attributes["term"].Value;
+
+                    format = format.Replace("Format:","");
+                    format = format.Replace("-format", "");
+
+                    return format;
                 }
             }
 
@@ -195,15 +200,27 @@ namespace Geonorge.MassivNedlasting
                 if (node.Attributes["term"] != null && node.Attributes["term"].Value.Contains("vektorformater")
                     || node.Attributes["term"].Value.Contains("rasterformater"))
                 {
-                    return node.Attributes["label"].Value;
+                    var format = node.Attributes["label"].Value;
+
+                    format = format.Replace("Format:", "");
+                    format = format.Replace("-format", "");
+
+                    return format;
                 }
             }
 
             if (xmlNode != null)
             { 
                 var format = xmlNode.InnerText;
-                if (format.Contains(","))
-                    return format.Split(',')[0];
+                if (format.Contains(",")) {
+
+                    var formatValue = format.Split(',')[0];
+
+                    formatValue = formatValue.Replace("Format:", "");
+                    formatValue = formatValue.Replace("-format", "");
+
+                    return formatValue;
+                }
             }
 
             return "";
