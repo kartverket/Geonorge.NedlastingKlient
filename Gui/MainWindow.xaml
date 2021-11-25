@@ -79,7 +79,7 @@
             <!-- Overskrifter -->
             <Grid Background="#dfdcda">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
@@ -90,6 +90,7 @@
                 </StackPanel>
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Border Background="Black"  Width="1" Margin="0 0 3 0"></Border>
                     <materialDesign:PackIcon Kind="File" Margin="0 0 0 0" VerticalAlignment="Center" />
                     <TextBlock FontWeight="Bold" FontSize="16" ToolTip="Nedlastbare filer for valgt datasett" Padding="10" Margin="0 0 10 0" VerticalAlignment="Center">Filer</TextBlock>
                     <materialDesign:PackIcon Kind="Filter" Foreground="{Binding ElementName=SearchDatasetFiles, Path=BorderBrush}" VerticalAlignment="Center" />
@@ -105,11 +106,12 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Column="0" Orientation="Horizontal" >
-                    <TextBlock ToolTip="Navn på datasett" Margin="48 0 0 0" Width="350" VerticalAlignment="Center" Text="Navn"></TextBlock>
-                    <TextBlock ToolTip="Eier av datasettet" Margin="0 0 26 0" Width="200" VerticalAlignment="Center" Text="Eier"></TextBlock>
+                    <TextBlock ToolTip="Navn på datasett" Margin="48 0 0 0" Width="450" VerticalAlignment="Center" Text="Navn"></TextBlock>
+                    <TextBlock ToolTip="Eier av datasettet" Margin="0 0 26 0" Width="236" VerticalAlignment="Center" Text="Eier"></TextBlock>
                 </StackPanel>
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Border Background="Black"  Width="1" Margin="0 -1 3 0"></Border>
                     <TextBlock ToolTip="Filnavn" Margin="8 0 0 0" Width="420" VerticalAlignment="Center" Text="Navn"></TextBlock>
                     <TextBlock ToolTip="Projeksjon" Width="150" VerticalAlignment="Center" Text="Projeksjon"></TextBlock>
                     <TextBlock ToolTip="Format" Width="80" VerticalAlignment="Center" Text="Format"></TextBlock>
