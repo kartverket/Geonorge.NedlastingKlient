@@ -23,6 +23,7 @@ The graphical client is only available on Windows. But the console application c
 The default download location is **My Documents\Geonorge-Nedlasting** (windows) or **/home/{username}/Geonorge-Nedlasting** (linux/mac). 
 
 To change this location go into the application settings directory, se previous paragraph, and edit the settings.json file. Here you can change the DownloadDirectory setting. Save the file and it will be used next time you run the download application. 
+When you move the settings to a new machine/user account, the encrypted password will no longer be readable and you will have to set it again. If you have an old version of the client, you must first set Password blank in settings.json before you can set it in the user interface.
 
 ## How to setup development environment
 
