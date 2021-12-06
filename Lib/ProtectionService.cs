@@ -1,10 +1,15 @@
 ﻿using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using Serilog;
+using System.Reflection;
 
 namespace Geonorge.MassivNedlasting
 {
     public class ProtectionService
     {
+        private static readonly ILogger Log = Serilog.Log.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+
         private static readonly IDataProtector Protector = AddDataProtectionService();
 
         public static string CreateProtectedPassword(string unprotectedPassword)
@@ -23,7 +28,14 @@ namespace Geonorge.MassivNedlasting
 
         public static string GetUnprotectedPassword(string protectedPassword)
         {
-            return string.IsNullOrEmpty(protectedPassword) ? null : Protector.Unprotect(protectedPassword);
+            try { 
+                return string.IsNullOrEmpty(protectedPassword) ? null : Protector.Unprotect(protectedPassword);
+            }
+            catch(Exception ex) 
+            {
+                Log.Error("Problem getting password", ex);
+                return null;
+            }
         }
     }
 }
