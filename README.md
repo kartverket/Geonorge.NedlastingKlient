@@ -27,7 +27,7 @@ To change this location go into the application settings directory, se previous 
 ## How to setup development environment
 
 Project depends on:
-* .net core 2.1 SDK
+* .net core 3.1 SDK
 * .net framework 4.7.1 Developer pack
 
 Packages can be downloaded from here:
