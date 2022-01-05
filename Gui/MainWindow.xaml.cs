@@ -181,6 +181,12 @@ namespace Geonorge.MassivNedlasting.Gui
 
             var searchText = SearchDatasetFiles.Text.Trim();
 
+            if(searchText.Length == 2 && int.TryParse(searchText, out _)) 
+            {
+                return file.County.Equals(searchText,
+                       StringComparison.OrdinalIgnoreCase);
+            }
+
 
             return file.Title.IndexOf(searchText,
                        StringComparison.OrdinalIgnoreCase) >= 0 ||

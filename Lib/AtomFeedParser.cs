@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml;
+using System.Linq;
 
 namespace Geonorge.MassivNedlasting
 {
@@ -257,10 +258,81 @@ namespace Geonorge.MassivNedlasting
                 datasetFile.AreaCode = GetAreaCode(childrenNode.SelectNodes("a:category", nsmgr));
                 datasetFile.AreaLabel = GetAreaLabel(childrenNode.SelectNodes("a:category", nsmgr));
                 datasetFile.Organization = GetOrganization(childrenNode, nsmgr, null, datasetFile);
+                datasetFile.County = GetCounty(childrenNode, nsmgr, datasetFile);
 
                 datasetFiles.Add(datasetFile);
             }
             return datasetFiles;
+        }
+
+        private string GetCounty(XmlNode node, XmlNamespaceManager nsmgr, DatasetFile datasetFile)
+        {
+            if(int.TryParse(datasetFile.AreaCode, out _) && (datasetFile.AreaCode.Length == 2  || datasetFile.AreaCode.Length == 4)) 
+            {
+                if (datasetFile.AreaCode.Length == 2)
+                    return datasetFile.AreaCode;
+                else
+                    return datasetFile.AreaCode.Substring(0, 2);
+            }
+            else if(datasetFile.Organization == "Norges geologiske undersøkelse" || datasetFile.Organization == "Norsk institutt for bioøkonomi") 
+            {
+                var summary = node.SelectSingleNode("a:summary", nsmgr)?.InnerXml;
+                if(!string.IsNullOrEmpty(summary) && summary.EndsWith(".zip")) 
+                {
+                    if(datasetFile.Organization == "Norges geologiske undersøkelse") 
+                    {
+                        var data = summary.Split('_');
+                        if(data.Length > 1)
+                        {
+                            var county = data[1];
+                            if (int.TryParse(county, out _) && (county.Length == 2 || county.Length == 4))
+                            {
+                                if (county.Length == 2)
+                                    return county;
+                                else
+                                    return county.Substring(0, 2);
+                            }
+                        }
+                    }
+                    else if (datasetFile.Organization == "Norsk institutt for bioøkonomi")
+                    {
+                        var data = summary.Split('_');
+                        if (data.Length > 1)
+                        {
+                            var countyData = data[0];
+                            if (countyData.Contains("-")) 
+                            {
+                                var county = countyData.Split('-')[1];
+                                if (int.TryParse(county, out _) && (county.Length == 2 || county.Length == 4))
+                                {
+                                    if (county.Length == 2)
+                                        return county;
+                                    else
+                                        return county.Substring(0, 2);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                string filename = datasetFile.Url.Split('/').Last();
+                var data = filename.Split('_');
+                if (data.Length > 1)
+                {
+                    var county = data[1];
+                    if (int.TryParse(county, out _) && (county.Length == 2 || county.Length == 4))
+                    {
+                        if (county.Length == 2)
+                            return county;
+                        else
+                            return county.Substring(0, 2);
+                    }
+                }
+            }
+
+            return "";
         }
 
         private string GetAreaCode(XmlNodeList xmlNodeList)
@@ -268,7 +340,10 @@ namespace Geonorge.MassivNedlasting
             string areaCode = "";
             foreach (XmlNode node in xmlNodeList)
             {
-                if (node.Attributes["scheme"] != null && node.Attributes["scheme"].Value.Contains("geografisk-distribusjonsinndeling"))
+                if (node.Attributes["scheme"] != null &&
+                    (node.Attributes["scheme"].Value.Contains("geografisk-distribusjonsinndeling") 
+                    || node.Attributes["scheme"].Value.Contains("sosi-kodelister/fylkesnummer")
+                    || node.Attributes["scheme"].Value.Contains("sosi-kodelister/kommunenummer")))
                 {
                     areaCode = areaCode + node.Attributes["term"].Value + " ";
                 }
@@ -283,7 +358,10 @@ namespace Geonorge.MassivNedlasting
 
             foreach (XmlNode node in xmlNodeList)
             {
-                if (node.Attributes["scheme"] != null && node.Attributes["scheme"].Value.Contains("geografisk-distribusjonsinndeling"))
+                if (node.Attributes["scheme"] != null &&
+                    (node.Attributes["scheme"].Value.Contains("geografisk-distribusjonsinndeling")
+                    || node.Attributes["scheme"].Value.Contains("sosi-kodelister/fylkesnummer")
+                    || node.Attributes["scheme"].Value.Contains("sosi-kodelister/kommunenummer")))
                 {
                     areaLabel = areaLabel + node.Attributes["label"].Value +  " ";
                 }
