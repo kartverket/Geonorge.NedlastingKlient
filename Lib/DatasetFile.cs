@@ -79,7 +79,10 @@ namespace Geonorge.MassivNedlasting
         /// When was the file downloaded
         /// </summary>
         public string DownloadedDate { get; set; }
-
+        /// <summary>
+        /// County for download file
+        /// </summary>
+        public string County { get; internal set; }
 
         public DatasetFile(DatasetFileViewModel datasetFileViewModel)
         {
@@ -133,6 +136,7 @@ namespace Geonorge.MassivNedlasting
         public string Format { get; set; }
         public string AreaCode { get; set; }
         public string AreaLabel { get; set; }
+        public string County { get; set; }
         public string DatasetId { get; set; }
         public string DatasetUrl { get; set; }
         public bool SelectedForDownload { get; set; }
@@ -155,6 +159,7 @@ namespace Geonorge.MassivNedlasting
             Format = datasetFile.Format;
             AreaCode = datasetFile.AreaCode;
             AreaLabel = datasetFile.AreaLabel;
+            County = datasetFile.County;
             DatasetId = datasetFile.DatasetId;
             DatasetUrl = FixDatasetUrl(datasetFile.DatasetUrl);
             Id = GetId();

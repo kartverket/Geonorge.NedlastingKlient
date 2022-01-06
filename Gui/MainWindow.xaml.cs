@@ -73,6 +73,7 @@ namespace Geonorge.MassivNedlasting.Gui
             try
             {
                 LbDatasets.ItemsSource = _datasetService.GetDatasets();
+                fylker.ItemsSource = _datasetService.GetCounties();
             }
             catch (Exception)
             {
@@ -142,7 +143,15 @@ namespace Geonorge.MassivNedlasting.Gui
 
         private bool UserDatasetFileFilter(object item)
         {
-            if (string.IsNullOrEmpty(SearchDatasetFiles.Text))
+            CodeValue fylkeItem = fylker.SelectedItem as CodeValue;
+            string fylke = "";
+
+            if(fylkeItem!= null && !string.IsNullOrEmpty(fylkeItem.value)) 
+            {
+                fylke = fylkeItem.value;
+            }
+
+            if (string.IsNullOrEmpty(SearchDatasetFiles.Text) && String.IsNullOrEmpty(fylke))
                 return true;
 
             var file = item as DatasetFileViewModel;
@@ -156,6 +165,7 @@ namespace Geonorge.MassivNedlasting.Gui
                 bool areaCodeFound = false;
                 bool areaLabelFound = false;
                 bool formatFound = false;
+                bool fylkeFound = false;
 
                 foreach (var searchWord in searchWords) 
                 {
@@ -173,15 +183,41 @@ namespace Geonorge.MassivNedlasting.Gui
 
                     if (!formatFound)
                         formatFound = file.Format.IndexOf(searchWord, StringComparison.OrdinalIgnoreCase) >= 0;
+
+                    if (!string.IsNullOrEmpty(fylke) && !fylkeFound)
+                        fylkeFound = file.County.Equals(fylke, StringComparison.OrdinalIgnoreCase);
                 }
 
-                return titleFound || categoryFound || areaCodeFound || areaLabelFound || formatFound;
+                if (!string.IsNullOrEmpty(fylke))
+                    return fylkeFound && (titleFound || categoryFound || areaCodeFound || areaLabelFound || formatFound);
+                else
+                    return titleFound || categoryFound || areaCodeFound || areaLabelFound || formatFound;
 
             }
 
             var searchText = SearchDatasetFiles.Text.Trim();
 
+            //if(searchText.Length == 2 && int.TryParse(searchText, out _)) 
+            //{
+            //    return file.County.Equals(searchText,
+            //           StringComparison.OrdinalIgnoreCase);
+            //}
 
+            if (!string.IsNullOrEmpty(fylke))
+            {
+                return file.County.Equals(fylke, StringComparison.OrdinalIgnoreCase) && ( file.Title.IndexOf(searchText,
+                    StringComparison.OrdinalIgnoreCase) >= 0 ||
+                file.Category.IndexOf(searchText,
+                    StringComparison.OrdinalIgnoreCase) >= 0 ||
+                file.AreaCode.IndexOf(searchText,
+                    StringComparison.OrdinalIgnoreCase) >= 0 ||
+                file.AreaLabel.IndexOf(searchText,
+                    StringComparison.OrdinalIgnoreCase) >= 0 ||
+                file.Format.IndexOf(searchText,
+                    StringComparison.OrdinalIgnoreCase) >= 0);
+            }
+            else 
+            { 
             return file.Title.IndexOf(searchText,
                        StringComparison.OrdinalIgnoreCase) >= 0 ||
                    file.Category.IndexOf(searchText,
@@ -192,6 +228,7 @@ namespace Geonorge.MassivNedlasting.Gui
                        StringComparison.OrdinalIgnoreCase) >= 0 ||
                    file.Format.IndexOf(searchText,
                        StringComparison.OrdinalIgnoreCase) >= 0;
+            }
         }
 
 
@@ -714,6 +751,12 @@ namespace Geonorge.MassivNedlasting.Gui
                     break;
                 }
             }
+        }
+
+        private void fylker_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (LbSelectedDatasetFiles != null && LbSelectedDatasetFiles.ItemsSource != null)
+                CollectionViewSource.GetDefaultView(LbSelectedDatasetFiles.ItemsSource).Refresh();
         }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -61,6 +62,37 @@ namespace Geonorge.MassivNedlasting
             hoydedataDatasets = GetDatasetsFromUrl("https://nedlasting.geonorge.no/geonorge/ATOM/hoydedata/Hoydedata_ServiceFeed.atom");
 
             return geonorgeDatasets.Concat(nguDatasets).Concat(nibioDatasets).Concat(miljodirektoratetDatasets).Concat(hoydedataDatasets).OrderBy(o => o.Title).ToList();
+        }
+
+        public List<CodeValue> GetCounties()
+        {
+            List<CodeValue> counties = new List<CodeValue>();
+
+            var url = "https://register.geonorge.no/api/sosi-kodelister/fylkesnummer.json";
+            var c = new System.Net.WebClient { Encoding = Encoding.UTF8 };
+
+            var json = c.DownloadString(url);
+            Log.Debug("Fetch download usage group from https://register.geonorge.no/api/sosi-kodelister/fylkesnummer.json");
+
+            dynamic data = JObject.Parse(json);
+            if (data != null)
+            {
+                var result = data["containeditems"];
+                
+                foreach (var item in result)
+                {
+                    counties.Add(new CodeValue { value = item.codevalue.ToString(), label = item.label.ToString() });
+                }
+            }
+            else
+            {
+                Log.Debug("Counties is empty");
+            }
+
+            counties = counties.OrderBy(o => o.label).ToList();
+            counties.Insert(0, new CodeValue { value = "", label = "Alle fylker" });
+
+            return counties;
         }
 
         public List<Dataset> GetDatasetsFromUrl(string url)
