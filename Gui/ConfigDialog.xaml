@@ -60,7 +60,7 @@
 
             <!--Brukergruppe og formål-->
             <StackPanel Grid.Row="3" Grid.ColumnSpan="2" Orientation="Horizontal">
-                <TextBlock Style="{StaticResource MaterialDesignSubheadingTextBlock}" Margin="0 20 0 0">Nedlasting brukergruppe og formål</TextBlock>
+                <TextBlock Margin="0 20 0 0">Nedlasting brukergruppe og formål</TextBlock>
                 <Button  FlowDirection="RightToLeft" Style="{StaticResource MaterialDesignFlatButton}" Click="BtnEditDownloadUsage_OnClick"  VerticalAlignment="Bottom" Margin="20 12 0 0">Edit</Button>
             </StackPanel>
 

@@ -79,7 +79,7 @@
             <!-- Overskrifter -->
             <Grid Background="#dfdcda">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
@@ -90,10 +90,15 @@
                 </StackPanel>
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Border Background="Black"  Width="1" Margin="0 0 3 0"></Border>
                     <materialDesign:PackIcon Kind="File" Margin="0 0 0 0" VerticalAlignment="Center" />
                     <TextBlock FontWeight="Bold" FontSize="16" ToolTip="Nedlastbare filer for valgt datasett" Padding="10" Margin="0 0 10 0" VerticalAlignment="Center">Filer</TextBlock>
                     <materialDesign:PackIcon Kind="Filter" Foreground="{Binding ElementName=SearchDatasetFiles, Path=BorderBrush}" VerticalAlignment="Center" />
-                    <TextBox Name="SearchDatasetFiles" materialDesign:HintAssist.Hint="Søk" ToolTip="Søk på filnavn eller proporsjon" MinWidth="100" VerticalAlignment="Center" Margin="0 0 0 0" TextChanged="SearchDatasetFiles_OnTextChanged" />
+                    <TextBox Name="SearchDatasetFiles" materialDesign:HintAssist.Hint="Søk" ToolTip="Søk på filnavn, projeksjon, format eller kommune " MinWidth="150" VerticalAlignment="Center" Margin="0 0 20 0" TextChanged="SearchDatasetFiles_OnTextChanged" />
+                    <ComboBox  materialDesign:HintAssist.Hint="Filtrer på fylke" Name="fylker" Margin="0 10 0 13"
+                        ItemsSource="{Binding CodeValue}"
+                        SelectedValuePath="value" 
+                    DisplayMemberPath="label" SelectionChanged="fylker_SelectionChanged" />
                 </StackPanel>
             </Grid>
 
@@ -105,13 +110,15 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Column="0" Orientation="Horizontal" >
-                    <TextBlock ToolTip="Navn på datasett" Margin="48 0 0 0" Width="350" VerticalAlignment="Center" Text="Navn"></TextBlock>
-                    <TextBlock ToolTip="Eier av datasettet" Margin="0 0 26 0" Width="200" VerticalAlignment="Center" Text="Eier"></TextBlock>
+                    <TextBlock ToolTip="Navn på datasett" Margin="48 0 0 0" Width="450" VerticalAlignment="Center" Text="Navn"></TextBlock>
+                    <TextBlock ToolTip="Eier av datasettet" Margin="0 0 26 0" Width="236" VerticalAlignment="Center" Text="Eier"></TextBlock>
                 </StackPanel>
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
-                    <TextBlock ToolTip="Filnavn" Margin="8 0 0 0" Width="350" VerticalAlignment="Center" Text="Navn"></TextBlock>
+                    <Border Background="Black"  Width="1" Margin="0 -1 3 0"></Border>
+                    <TextBlock ToolTip="Filnavn" Margin="8 0 0 0" Width="420" VerticalAlignment="Center" Text="Navn"></TextBlock>
                     <TextBlock ToolTip="Projeksjon" Width="150" VerticalAlignment="Center" Text="Projeksjon"></TextBlock>
+                    <TextBlock ToolTip="Format" Width="80" VerticalAlignment="Center" Text="Format"></TextBlock>
                     <ToggleButton x:Name="BtnSelectAll" Width="20" Height="20" Margin="0 10 10 10"  Click="BtnSelectAll_OnClick"
                                   Style="{StaticResource MaterialDesignActionToggleButton}"
                                   ToolTip="Velg/fjern alle">
@@ -276,15 +283,17 @@
                             <DataTemplate>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="350" SharedSizeGroup="Column1"/>
+                                        <ColumnDefinition Width="420" SharedSizeGroup="Column1"/>
                                         <ColumnDefinition Width="150" SharedSizeGroup="Column2"/>
-                                        <ColumnDefinition Width="Auto" SharedSizeGroup="Column3"/>
+                                        <ColumnDefinition Width="80" SharedSizeGroup="Column3"/>
+                                        <ColumnDefinition Width="Auto"  SharedSizeGroup="Column4"/>
                                     </Grid.ColumnDefinitions>
                                     <TextBlock VerticalAlignment="Center" Grid.Column="0" ToolTip="{Binding Title}"  Text="{Binding Title}">
                                         <materialDesign:PackIcon Margin="10 0 0 -2" ToolTip="{Binding Restrictions}" Grid.Column="2" Kind="Lock" Visibility="{Binding IsRestricted, Converter={StaticResource BoolToVisConverter}}"></materialDesign:PackIcon>
                                     </TextBlock>
                                     <TextBlock VerticalAlignment="Center" Grid.Column="1" ToolTip="{Binding EpsgName}" Text="{Binding Category}"/>
-                                    <ToggleButton x:Name="BtnAddOrRemove" Grid.Column="2" Width="20" Height="20" BindingGroup="{Binding LbSelectedDatasetFiles}" IsChecked="{Binding SelectedForDownload}" Click="AddRemove_OnChecked"
+                                    <TextBlock VerticalAlignment="Center" Grid.Column="2" ToolTip="{Binding Format}" Text="{Binding Format}"/>
+                                    <ToggleButton x:Name="BtnAddOrRemove" Grid.Column="3" Width="20" Height="20" BindingGroup="{Binding LbSelectedDatasetFiles}" IsChecked="{Binding SelectedForDownload}" Click="AddRemove_OnChecked"
                                         Style="{StaticResource MaterialDesignActionToggleButton}"
                                         ToolTip="Legg til/Fjern">
                                         <ToggleButton.Content>
@@ -322,8 +331,9 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Column="0" Orientation="Horizontal" >
-                    <TextBlock Margin="70 0 0 0" ToolTip="Filnavn" Width="250" VerticalAlignment="Center" Text="Filnavn"></TextBlock>
+                    <TextBlock Margin="70 0 0 0" ToolTip="Filnavn" Width="450" VerticalAlignment="Center" Text="Filnavn"></TextBlock>
                     <TextBlock ToolTip="Projeksjon" Width="150" VerticalAlignment="Center" Text="Projeksjon"></TextBlock>
+                    <TextBlock ToolTip="Format" Width="150" VerticalAlignment="Center" Text="Format"></TextBlock>
                     <TextBlock ToolTip="Sist oppdatert" Width="150" VerticalAlignment="Center" Text="Sist oppdatert"></TextBlock>
                     <Button x:Name="BtnRemoveAll" Margin="10 0" BindingGroup="{Binding LbSelectedFiles}" Click="BtnRemoveAll_OnClick"
                                   
@@ -354,9 +364,10 @@
                     <DataTemplate DataType="{x:Type local:DatasetFileViewModel}">
                         <Grid Margin="15 5 0 5">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="250"/>
+                                <ColumnDefinition Width="450"/>
                                 <ColumnDefinition Width="150"/>
                                 <ColumnDefinition Width="150"/>
+                                <ColumnDefinition Width="80"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <TextBlock  IsEnabled="False" VerticalAlignment="Center" Grid.Column="0" ToolTip="{Binding Title}"  Text="{Binding Title}">
@@ -364,7 +375,8 @@
                             </TextBlock>
 
                             <TextBlock VerticalAlignment="Center" Grid.Column="1" ToolTip="{Binding EpsgName}" Text="{Binding Category}"/>
-                            <TextBlock VerticalAlignment="Center" Grid.Column="2" Text="{Binding LastUpdated}"/>
+                            <TextBlock VerticalAlignment="Center" Grid.Column="2" ToolTip="{Binding Format}" Text="{Binding Format}"/>
+                            <TextBlock VerticalAlignment="Center" Grid.Column="3" Text="{Binding LastUpdated}"/>
                             <Button x:Name="BtnAddOrRemove" Margin="10 0" Grid.Column="4" BindingGroup="{Binding LbSelectedFiles}" Click="RemoveFromDownloadList_Click"
                                     Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
                                     ToolTip="Fjern"

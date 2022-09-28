@@ -73,6 +73,7 @@ namespace Geonorge.MassivNedlasting.Gui
             try
             {
                 LbDatasets.ItemsSource = _datasetService.GetDatasets();
+                fylker.ItemsSource = _datasetService.GetCounties();
             }
             catch (Exception)
             {
@@ -142,12 +143,92 @@ namespace Geonorge.MassivNedlasting.Gui
 
         private bool UserDatasetFileFilter(object item)
         {
-            if (string.IsNullOrEmpty(SearchDatasetFiles.Text))
+            CodeValue fylkeItem = fylker.SelectedItem as CodeValue;
+            string fylke = "";
+
+            if(fylkeItem!= null && !string.IsNullOrEmpty(fylkeItem.value)) 
+            {
+                fylke = fylkeItem.value;
+            }
+
+            if (string.IsNullOrEmpty(SearchDatasetFiles.Text) && String.IsNullOrEmpty(fylke))
                 return true;
-            return (item as DatasetFileViewModel).Title.IndexOf(SearchDatasetFiles.Text,
+
+            var file = item as DatasetFileViewModel;
+
+            if(SearchDatasetFiles.Text.Trim().IndexOf(" ") >= 0) 
+            {
+                var searchWords = SearchDatasetFiles.Text.Trim().Split(' ').ToList();
+
+                bool titleFound = false;
+                bool categoryFound = false;
+                bool areaCodeFound = false;
+                bool areaLabelFound = false;
+                bool formatFound = false;
+                bool fylkeFound = false;
+
+                foreach (var searchWord in searchWords) 
+                {
+                    if (!titleFound)
+                        titleFound = file.Title.IndexOf(searchWord, StringComparison.OrdinalIgnoreCase) >= 0;
+
+                    if (!categoryFound)
+                        categoryFound = file.Category.IndexOf(searchWord, StringComparison.OrdinalIgnoreCase) >= 0;
+
+                    if (!areaCodeFound)
+                        areaCodeFound = file.AreaCode.IndexOf(searchWord, StringComparison.OrdinalIgnoreCase) >= 0;
+
+                    if (!areaLabelFound)
+                        areaLabelFound = file.AreaLabel.IndexOf(searchWord, StringComparison.OrdinalIgnoreCase) >= 0;
+
+                    if (!formatFound)
+                        formatFound = file.Format.IndexOf(searchWord, StringComparison.OrdinalIgnoreCase) >= 0;
+
+                    if (!string.IsNullOrEmpty(fylke) && !fylkeFound)
+                        fylkeFound = file.County.Equals(fylke, StringComparison.OrdinalIgnoreCase);
+                }
+
+                if (!string.IsNullOrEmpty(fylke))
+                    return fylkeFound && (titleFound || categoryFound || areaCodeFound || areaLabelFound || formatFound);
+                else
+                    return titleFound || categoryFound || areaCodeFound || areaLabelFound || formatFound;
+
+            }
+
+            var searchText = SearchDatasetFiles.Text.Trim();
+
+            //if(searchText.Length == 2 && int.TryParse(searchText, out _)) 
+            //{
+            //    return file.County.Equals(searchText,
+            //           StringComparison.OrdinalIgnoreCase);
+            //}
+
+            if (!string.IsNullOrEmpty(fylke))
+            {
+                return file.County.Equals(fylke, StringComparison.OrdinalIgnoreCase) && ( file.Title.IndexOf(searchText,
+                    StringComparison.OrdinalIgnoreCase) >= 0 ||
+                file.Category.IndexOf(searchText,
+                    StringComparison.OrdinalIgnoreCase) >= 0 ||
+                file.AreaCode.IndexOf(searchText,
+                    StringComparison.OrdinalIgnoreCase) >= 0 ||
+                file.AreaLabel.IndexOf(searchText,
+                    StringComparison.OrdinalIgnoreCase) >= 0 ||
+                file.Format.IndexOf(searchText,
+                    StringComparison.OrdinalIgnoreCase) >= 0);
+            }
+            else 
+            { 
+            return file.Title.IndexOf(searchText,
                        StringComparison.OrdinalIgnoreCase) >= 0 ||
-                   (item as DatasetFileViewModel).Category.IndexOf(SearchDatasetFiles.Text,
+                   file.Category.IndexOf(searchText,
+                       StringComparison.OrdinalIgnoreCase) >= 0 ||
+                   file.AreaCode.IndexOf(searchText,
+                       StringComparison.OrdinalIgnoreCase) >= 0 ||
+                   file.AreaLabel.IndexOf(searchText,
+                       StringComparison.OrdinalIgnoreCase) >= 0 ||
+                   file.Format.IndexOf(searchText,
                        StringComparison.OrdinalIgnoreCase) >= 0;
+            }
         }
 
 
@@ -670,6 +751,12 @@ namespace Geonorge.MassivNedlasting.Gui
                     break;
                 }
             }
+        }
+
+        private void fylker_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (LbSelectedDatasetFiles != null && LbSelectedDatasetFiles.ItemsSource != null)
+                CollectionViewSource.GetDefaultView(LbSelectedDatasetFiles.ItemsSource).Refresh();
         }
     }
 }
