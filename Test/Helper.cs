@@ -16,7 +16,7 @@ namespace Geonorge.MassivNedlasting.Test
             dataset.Description = "Dataset description";
             dataset.LastUpdated = "2018-01-10T13:47:55";
             dataset.Organization = "Kartverket";
-            dataset.Url = "http://nedlasting.geonorge.no/fmedatastreaming/ATOM-feeds/AdministrativeEnheterFylker_AtomFeedGEOJSON.fmw";
+            dataset.Url = "http://nedlasting2.geonorge.no/geonorge/ATOM-feeds/AdministrativeEnheterFylker_AtomFeedGEOJSON.xml";
             dataset.Uuid = "6093c8a8-fa80-11e6-bc64-92361f002671";
 
             return dataset;
