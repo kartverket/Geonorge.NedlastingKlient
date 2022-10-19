@@ -29,10 +29,13 @@ namespace Geonorge.MassivNedlasting.Gui
         private Visibility _versionStatusMessage;
         private string _currentVersion;
         public bool LoggedIn;
+        private ConfigFile _configFile;
 
 
         public MainWindow()
         {
+            _configFile = ConfigFile.GetDefaultConfigFile();
+
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Information()
                 .WriteTo.File("log-.txt",
@@ -94,7 +97,49 @@ namespace Geonorge.MassivNedlasting.Gui
 
             SetDownloadUsage();
 
+            GetFailedDownloads();
+
             RunWatch();
+        }
+
+
+        private void GetFailedDownloads()
+        {
+
+            try
+            {
+
+                var directory = new DirectoryInfo(_configFile.LogDirectory);
+                var lastFile = (from f in directory.GetFiles()
+                              orderby f.LastWriteTime descending
+                              select f).FirstOrDefault();
+
+                if(lastFile != null) 
+                { 
+                    using (var r = new StreamReader(lastFile.FullName))
+                    {
+                        var data = r.ReadToEnd();
+
+                        if (data.Contains("Error while downloading dataset")) 
+                        {
+                            var length = data.Length;
+                            var startPos = data.IndexOf("FAILED:");
+                            var errorMessage = data.Substring(startPos, length - startPos);
+
+                            errorMessage = "Feil ved siste nedlasting:\r\n\r\n" + errorMessage + "\r\nSjekk loggfil: " + lastFile.FullName + "\r\n\r\nKanskje har noen filer blitt fjernet fra server og har fått ny url. Prøv eventuelt å fjern og legg til på nytt.";
+                            MessageBox.Show(errorMessage);
+                        }
+
+                        Log.Debug("Read last log file");
+                        r.Close();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "Read from last log file failed");
+            }
+
         }
 
         public void RunWatch()
