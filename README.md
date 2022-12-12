@@ -1,6 +1,6 @@
 # Geonorge.NedlastingKlient
 
-This project provides a client software for downloading dataset's published through Geonorge's Atom Feed. The general idea is to provided a tool to synchronize dataset on a regular basis. 
+This project provides a client software for downloading dataset's published through Geonorge's Atom Feed. It also includes feeds from NGU, NIBIO, Norwegian Environment Agency and elevation data. The general idea is to provided a tool to synchronize dataset on a regular basis. 
 
 It includes a desktop application for browsing and selecting files you want to download. A console application is provided to perform downloads. This console application can be scheduled to run through Scheduled tasks on windows, or cron on *nix platforms.
 
@@ -28,7 +28,7 @@ When you move the settings to a new machine/user account, the encrypted password
 ## How to setup development environment
 
 Project depends on:
-* .net core 3.1 SDK
+* .net core 6.0 SDK
 * .net framework 4.7.1 Developer pack
 
 Packages can be downloaded from here:
