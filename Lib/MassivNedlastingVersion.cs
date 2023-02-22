@@ -21,7 +21,7 @@ namespace Geonorge.MassivNedlasting
 
         public static Version GetCurrent()
         {
-            return Assembly.GetExecutingAssembly().GetName().Version;
+            return Assembly.GetEntryAssembly().GetName().Version;
         }
 
         public Version GetLatest()

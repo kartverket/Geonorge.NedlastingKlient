@@ -11,7 +11,7 @@ namespace Geonorge.MassivNedlasting
         public string Group { get; set; }
         public List<string> Purpose { get; set; }
         public string SoftwareClient => "Geonorge.MassivNedlasting";
-        public string SoftwareClientVersion => Assembly.GetExecutingAssembly().GetName().Version.ToString();
+        public string SoftwareClientVersion => Assembly.GetEntryAssembly().GetName().Version.ToString();
         public List<DownloadUsageEntries> Entries { get; set; }
 
         public DownloadUsage()
