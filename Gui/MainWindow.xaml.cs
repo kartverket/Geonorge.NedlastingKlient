@@ -412,7 +412,7 @@ namespace Geonorge.MassivNedlasting.Gui
                 {
                     dataset.Files.RemoveAll(f => f.Id == selectedFile.Id);
                 }
-                var dataSet = _selectedFilesForDownload.Where(d => d.DatasetTitle == selectedFile.DatasetId).FirstOrDefault();
+                var dataSet = _selectedFilesForDownload.Where(d => d.DatasetId == selectedFile.DatasetId || (d.DatasetTitle == selectedFile.DatasetId)).FirstOrDefault();
                 if (!dataSet.Files.Any())
                     _selectedFilesForDownload.Remove(dataSet);
 
@@ -449,7 +449,7 @@ namespace Geonorge.MassivNedlasting.Gui
 
             foreach (var download in _selectedFilesForDownload)
             {
-                if (download.DatasetTitle == selectedDatasetFile.DatasetId)
+                if (download.DatasetTitle == selectedDatasetFile.DatasetId || download.DatasetId == selectedDatasetFile.DatasetId)
                 {
                     download.Files.Remove(selectedDatasetFile);
                     if (!download.Files.Any())

@@ -60,7 +60,7 @@ namespace Geonorge.MassivNedlasting
             nibioDatasets = GetDatasetsFromUrl("https://kartkatalog.nibio.no/api/atomfeeds");
             miljodirektoratetDatasets = GetDatasetsFromUrl("https://nedlasting.miljodirektoratet.no/miljodata/ATOM/Atom_TjenesteFeed.xml");
             hoydedataDatasets = GetDatasetsFromUrl("https://nedlasting.geonorge.no/geonorge/ATOM/hoydedata/Hoydedata_ServiceFeed.atom");
-
+            
             return geonorgeDatasets.Concat(nguDatasets).Concat(nibioDatasets).Concat(miljodirektoratetDatasets).Concat(hoydedataDatasets).OrderBy(o => o.Title).ToList();
         }
 
@@ -157,7 +157,7 @@ namespace Geonorge.MassivNedlasting
             try
             {
                 var getFeedTask = HttpClient.GetStringAsync(dataset.Url);
-                datasetFiles = new AtomFeedParser().ParseDatasetFiles(getFeedTask.Result, dataset.Title, dataset.Url).OrderBy(d => d.Title).ToList();
+                datasetFiles = new AtomFeedParser().ParseDatasetFiles(getFeedTask.Result, dataset.Title, dataset.Url, dataset.Uuid).OrderBy(d => d.Title).ToList();
                 Log.Debug("Fetch dataset files from " + dataset.Url);
             }
             catch(Exception ex) {

@@ -55,13 +55,55 @@ namespace Geonorge.MassivNedlasting
                     }
                     dataset.LastUpdated = childrenNode.SelectSingleNode("a:updated", nsmgr).InnerXml;
 
-                    dataset.Uuid = childrenNode.SelectSingleNode("inspire_dls:spatial_dataset_identifier_code", nsmgr)?.InnerXml;
+                    dataset.Uuid = GetUuid(childrenNode, nsmgr);
 
                     dataset.Organization = GetOrganization(childrenNode, nsmgr, dataset);
 
                     datasets.Add(dataset);
                 }
             return datasets;
+        }
+
+        private string GetUuid(XmlNode xmlNode, XmlNamespaceManager nsmgr)
+        {
+            string uuid = "";
+            var urlNode = xmlNode.SelectSingleNode("a:link[@rel='describedby']", nsmgr);
+            if (urlNode != null)
+            {
+                var hrefNode = urlNode.Attributes?.GetNamedItem("href");
+                if (hrefNode != null)
+                {
+                    var url = hrefNode.Value;
+                    if (url != null)
+                    {
+                        var uuidData = url.Split(new string[] { "?uuid=" }, StringSplitOptions.None);
+                        if (uuidData.Length > 1) 
+                        {
+                            uuid = uuidData[1];
+                        }
+                    }
+                }
+
+            }
+            if (string.IsNullOrEmpty(uuid)) 
+            {
+                urlNode = xmlNode.SelectSingleNode("a:link[@rel='alternate']", nsmgr);
+                if (urlNode != null)
+                {
+                    var hrefNode = urlNode.Attributes?.GetNamedItem("href");
+                    if (hrefNode != null)
+                    {
+                        var url = hrefNode.Value;
+                        if (url != null)
+                        {
+                            uuid = url.Split('/').Last();
+                        }
+                    }
+
+                }
+            }
+
+            return uuid;
         }
 
         private string GetOrganization(XmlNode childrenNode, XmlNamespaceManager nsmgr, Dataset dataset, DatasetFile datasetFile = null)
@@ -227,7 +269,7 @@ namespace Geonorge.MassivNedlasting
             return "";
         }
 
-        public List<DatasetFile> ParseDatasetFiles(string xml, string datasetTitle, string datasetUrl)
+        public List<DatasetFile> ParseDatasetFiles(string xml, string datasetTitle, string datasetUrl, string metadataUuid = null)
         {
             var datasetFiles = new List<DatasetFile>();
 
@@ -253,7 +295,7 @@ namespace Geonorge.MassivNedlasting
                 datasetFile.Projection = GetProjection(childrenNode.SelectNodes("a:category", nsmgr));
                 datasetFile.Format = GetFormat(childrenNode.SelectSingleNode("a:title", nsmgr), childrenNode.SelectNodes("a:category", nsmgr));
                 datasetFile.Restrictions = GetRestrictions(childrenNode.SelectNodes("a:category", nsmgr));
-                datasetFile.DatasetId = datasetTitle;
+                datasetFile.DatasetId = !string.IsNullOrEmpty(metadataUuid) ? metadataUuid : datasetTitle;
                 datasetFile.DatasetUrl = datasetUrl;
                 datasetFile.AreaCode = GetAreaCode(childrenNode.SelectNodes("a:category", nsmgr));
                 datasetFile.AreaLabel = GetAreaLabel(childrenNode.SelectNodes("a:category", nsmgr));
