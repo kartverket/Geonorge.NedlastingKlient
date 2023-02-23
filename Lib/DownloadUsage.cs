@@ -37,15 +37,28 @@ namespace Geonorge.MassivNedlasting
             if (title.Length == 3)
             {
                 AreaCode = title[1].Trim();
-                AreaName = title[2];
-                Format = title[0];
+                AreaName = title[2].Trim();
+                Format = title[0].Replace("-format", "").Trim();
             }
             else if (title.Length == 2)
             {
-                AreaName = title[1];
-                Format = title[0];
+                AreaName = title[1].Trim();
+                Format = title[0].Replace("-format", "").Trim();
             }
-            Projection = datasetFile.Projection;
+
+            if(!string.IsNullOrEmpty(datasetFile.AreaCode))
+                AreaCode = datasetFile.AreaCode;
+
+            if (!string.IsNullOrEmpty(datasetFile.AreaLabel))
+                AreaName = datasetFile.AreaLabel;
+
+            if(!string.IsNullOrEmpty(datasetFile.Format))
+                Format = datasetFile.Format.Replace("-format", "").Trim();
+
+            if (string.IsNullOrEmpty(AreaCode) && !string.IsNullOrEmpty(datasetFile.County))
+                AreaCode = datasetFile.County;
+
+            Projection = datasetFile.Projection.Replace("EPSG:", "").Trim();
         }
     }
 
