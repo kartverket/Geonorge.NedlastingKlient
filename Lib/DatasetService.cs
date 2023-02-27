@@ -726,7 +726,6 @@ namespace Geonorge.MassivNedlasting
         {
             foreach (var file in datasetFilesSelectedForDownload)
             {
-                // TODO gamle dewnload filer har ikke dataset uuid.. 
                 if ((file.DatasetId == dataset.DatasetTitle) || (file.DatasetId == dataset.DatasetId))
                 {
                     dataset.Files.Add(file);

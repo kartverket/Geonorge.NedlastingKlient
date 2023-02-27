@@ -96,6 +96,9 @@ namespace Geonorge.MassivNedlasting
             DatasetId = datasetFileViewModel.DatasetId;
             DatasetUrl = datasetFileViewModel.DatasetUrl;
             Restrictions = datasetFileViewModel.Restrictions;
+            AreaCode = datasetFileViewModel.AreaCode;
+            AreaLabel = datasetFileViewModel.AreaLabel;
+            County = datasetFileViewModel.County;
         }
 
         public DatasetFile()

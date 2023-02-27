@@ -301,6 +301,10 @@ namespace Geonorge.MassivNedlasting
                 datasetFile.AreaLabel = GetAreaLabel(childrenNode.SelectNodes("a:category", nsmgr));
                 datasetFile.Organization = GetOrganization(childrenNode, nsmgr, null, datasetFile);
                 datasetFile.County = GetCounty(childrenNode, nsmgr, datasetFile);
+                if (!string.IsNullOrEmpty(datasetFile.County) && datasetFile.AreaCode == "Fylke" ) 
+                {
+                    datasetFile.AreaCode = datasetFile.County;
+                }
 
                 datasetFiles.Add(datasetFile);
             }

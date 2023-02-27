@@ -55,9 +55,6 @@ namespace Geonorge.MassivNedlasting
             if(!string.IsNullOrEmpty(datasetFile.Format))
                 Format = datasetFile.Format.Replace("-format", "").Trim();
 
-            if (string.IsNullOrEmpty(AreaCode) && !string.IsNullOrEmpty(datasetFile.County))
-                AreaCode = datasetFile.County;
-
             Projection = datasetFile.Projection.Replace("EPSG:", "").Trim();
         }
     }
