@@ -327,6 +327,8 @@ namespace Geonorge.MassivNedlasting
                         if(data.Length > 1)
                         {
                             var county = data[1];
+                            if(datasetFile.AreaCode == "Fylke" && county.Length == 1)
+                                county = "0" + county;
                             if (int.TryParse(county, out _) && (county.Length == 2 || county.Length == 4))
                             {
                                 if (county.Length == 2)
