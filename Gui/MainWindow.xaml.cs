@@ -30,6 +30,8 @@ namespace Geonorge.MassivNedlasting.Gui
         private string _currentVersion;
         public bool LoggedIn;
         private ConfigFile _configFile;
+        private List<CodeValue> _counties;
+        private List<CodeValue> _municipalities;
 
 
         public MainWindow()
@@ -76,7 +78,10 @@ namespace Geonorge.MassivNedlasting.Gui
             try
             {
                 LbDatasets.ItemsSource = _datasetService.GetDatasets();
-                fylker.ItemsSource = _datasetService.GetCounties();
+                var counties = _datasetService.GetCounties();
+                fylker.ItemsSource = counties;
+                _counties = counties;
+                _municipalities = _datasetService.GetMunicipalities();
             }
             catch (Exception)
             {
@@ -289,7 +294,7 @@ namespace Geonorge.MassivNedlasting.Gui
                         _selectedDataset = selectedDataset;
                         progressBar.IsIndeterminate = true;
 
-                        List<DatasetFileViewModel> datasetFiles = await Task.Run(() => GetFilesAsync(selectedDataset));
+                        List<DatasetFileViewModel> datasetFiles = await Task.Run(() => GetFilesAsync(selectedDataset, _counties, _municipalities));
                         LbSelectedDatasetFiles.ItemsSource = datasetFiles;
                         selectedDataset.Projections = _datasetService.GetAvailableProjections(selectedDataset, datasetFiles);
                         selectedDataset.Formats = _datasetService.GetAvailableFormats(selectedDataset, datasetFiles);
@@ -336,9 +341,9 @@ namespace Geonorge.MassivNedlasting.Gui
             MenuSubscribe.Visibility = subscribe ? Visibility.Visible : Visibility.Hidden;
         }
 
-        private List<DatasetFileViewModel> GetFilesAsync(Dataset selctedDataset)
+        private List<DatasetFileViewModel> GetFilesAsync(Dataset selctedDataset, List<CodeValue> counties, List<CodeValue> municipalities)
         {
-            var selectedDatasetFiles = _datasetService.GetDatasetFiles(selctedDataset);
+            var selectedDatasetFiles = _datasetService.GetDatasetFiles(selctedDataset, counties, municipalities);
 
             foreach (var dataset in _selectedFilesForDownload)
             {

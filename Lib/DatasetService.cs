@@ -95,6 +95,36 @@ namespace Geonorge.MassivNedlasting
             return counties;
         }
 
+        public List<CodeValue> GetMunicipalities()
+        {
+            List<CodeValue> municipalities = new List<CodeValue>();
+
+            var url = "https://register.geonorge.no/api/sosi-kodelister/kommunenummer.json";
+            var c = new System.Net.WebClient { Encoding = Encoding.UTF8 };
+
+            var json = c.DownloadString(url);
+            Log.Debug("Fetch download usage group from https://register.geonorge.no/api/sosi-kodelister/kommunenummer.json");
+
+            dynamic data = JObject.Parse(json);
+            if (data != null)
+            {
+                var result = data["containeditems"];
+
+                foreach (var item in result)
+                {
+                    municipalities.Add(new CodeValue { value = item.codevalue.ToString(), label = item.label.ToString() });
+                }
+            }
+            else
+            {
+                Log.Debug("Municipalities is empty");
+            }
+
+            municipalities = municipalities.OrderBy(o => o.label).ToList();
+
+            return municipalities;
+        }
+
         public List<Dataset> GetDatasetsFromUrl(string url)
         {
             try
@@ -151,13 +181,13 @@ namespace Geonorge.MassivNedlasting
         /// <param name="dataset"></param>
         /// <param name="propotions"></param>
         /// <returns></returns>
-        public List<DatasetFileViewModel> GetDatasetFiles(Dataset dataset)
+        public List<DatasetFileViewModel> GetDatasetFiles(Dataset dataset, List<CodeValue> counties = null, List<CodeValue> municipalities = null)
         {
             List<DatasetFile> datasetFiles = new List<DatasetFile>();
             try
             {
                 var getFeedTask = HttpClient.GetStringAsync(dataset.Url);
-                datasetFiles = new AtomFeedParser().ParseDatasetFiles(getFeedTask.Result, dataset.Title, dataset.Url, dataset.Uuid).OrderBy(d => d.Title).ToList();
+                datasetFiles = new AtomFeedParser().ParseDatasetFiles(getFeedTask.Result, dataset.Title, dataset.Url, dataset.Uuid, counties, municipalities).OrderBy(d => d.Title).ToList();
                 Log.Debug("Fetch dataset files from " + dataset.Url);
             }
             catch(Exception ex) {
@@ -285,7 +315,6 @@ namespace Geonorge.MassivNedlasting
                 return new List<string>();
             }
         }
-
 
         /// <summary>
         /// Returns a list of projections. 

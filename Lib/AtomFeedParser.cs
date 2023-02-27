@@ -269,7 +269,7 @@ namespace Geonorge.MassivNedlasting
             return "";
         }
 
-        public List<DatasetFile> ParseDatasetFiles(string xml, string datasetTitle, string datasetUrl, string metadataUuid = null)
+        public List<DatasetFile> ParseDatasetFiles(string xml, string datasetTitle, string datasetUrl, string metadataUuid = null, List<CodeValue> counties = null, List<CodeValue> municipalities = null)
         {
             var datasetFiles = new List<DatasetFile>();
 
@@ -297,8 +297,13 @@ namespace Geonorge.MassivNedlasting
                 datasetFile.Restrictions = GetRestrictions(childrenNode.SelectNodes("a:category", nsmgr));
                 datasetFile.DatasetId = !string.IsNullOrEmpty(metadataUuid) ? metadataUuid : datasetTitle;
                 datasetFile.DatasetUrl = datasetUrl;
-                datasetFile.AreaCode = GetAreaCode(childrenNode.SelectNodes("a:category", nsmgr));
-                datasetFile.AreaLabel = GetAreaLabel(childrenNode.SelectNodes("a:category", nsmgr));
+                Area area = GetArea(childrenNode.SelectNodes("a:category", nsmgr), counties, municipalities);
+                datasetFile.AreaCode = area.Code;
+                datasetFile.AreaLabel = area.Label;
+                if (string.IsNullOrEmpty(datasetFile.AreaCode))
+                    datasetFile.AreaCode = GetAreaCode(childrenNode.SelectNodes("a:category", nsmgr));
+                if(string.IsNullOrEmpty(datasetFile.AreaLabel))
+                    datasetFile.AreaLabel = GetAreaLabel(childrenNode.SelectNodes("a:category", nsmgr));
                 datasetFile.Organization = GetOrganization(childrenNode, nsmgr, null, datasetFile);
                 datasetFile.County = GetCounty(childrenNode, nsmgr, datasetFile);
                 if (!string.IsNullOrEmpty(datasetFile.County) && datasetFile.AreaCode == "Fylke" ) 
@@ -309,6 +314,65 @@ namespace Geonorge.MassivNedlasting
                 datasetFiles.Add(datasetFile);
             }
             return datasetFiles;
+        }
+
+        private Area GetArea(XmlNodeList xmlNodeList, List<CodeValue> counties, List<CodeValue> municipalities)
+        {
+            foreach (XmlNode node in xmlNodeList)
+            {
+                var term = node.Attributes["term"]?.Value;
+                var label = node.Attributes["label"]?.Value;
+
+                if (node.Attributes["scheme"] == null || (node.Attributes["scheme"] != null &&
+                    node.Attributes["scheme"].Value.Contains("geografisk-distribusjonsinndeling")
+                    || node.Attributes["scheme"].Value.Contains("sosi-kodelister/fylkesnummer")
+                    || node.Attributes["scheme"].Value.Contains("sosi-kodelister/kommunenummer")))
+                {
+                    if (term == "Kommune")
+                    {
+                        var municipality = municipalities.Where(m => m.label == label).FirstOrDefault();
+                        if (municipality != null)
+                        {
+                            return new Area { Code = municipality.value, Label = municipality.label };
+                        }
+                    }
+                    else if (term == "Fylke")
+                    {
+                        var county = counties.Where(m => m.label == label).FirstOrDefault();
+                        if (county != null)
+                        {
+                            return new Area { Code = county.value, Label = county.label };
+                        }
+                    }
+                    else if (term == "Celle")
+                    {
+                        return new Area { Code = label, Label = label };
+                    }
+                    else
+                    {
+                        var county = counties.Where(m => m.value == term && m.label == label).FirstOrDefault();
+                        var municipality = municipalities.Where(m => m.value == term && m.label == label).FirstOrDefault();
+
+                        if(county != null) 
+                        {
+                            return new Area { Code = county.value, Label = county.label };
+                        }
+                        else if (municipality != null)
+                        {
+                            return new Area { Code = municipality.value, Label = municipality.label };
+                        }
+                        else if(node.Attributes["scheme"] != null &&(
+                            node.Attributes["scheme"].Value.Contains("geografisk-distribusjonsinndeling")
+                            || node.Attributes["scheme"].Value.Contains("sosi-kodelister/fylkesnummer")
+                            || node.Attributes["scheme"].Value.Contains("sosi-kodelister/kommunenummer"))) 
+                        {
+                            return new Area { Code = term, Label = label };
+                        }
+                    }
+                }
+            }
+
+            return new Area();
         }
 
         private string GetCounty(XmlNode node, XmlNamespaceManager nsmgr, DatasetFile datasetFile)
@@ -478,5 +542,11 @@ namespace Geonorge.MassivNedlasting
 
             return description;
         }
+    }
+
+    internal class Area
+    {
+        public string Code { get; set; }
+        public string Label { get; set; }
     }
 }
