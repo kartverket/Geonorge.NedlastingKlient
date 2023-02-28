@@ -328,7 +328,7 @@ namespace Geonorge.MassivNedlasting
                     || node.Attributes["scheme"].Value.Contains("sosi-kodelister/fylkesnummer")
                     || node.Attributes["scheme"].Value.Contains("sosi-kodelister/kommunenummer")))
                 {
-                    if (term == "Kommune")
+                    if (term == "Kommune" && municipalities != null)
                     {
                         var municipality = municipalities.Where(m => m.label.Contains(label)).FirstOrDefault();
                         if (municipality != null)
@@ -336,7 +336,7 @@ namespace Geonorge.MassivNedlasting
                             return new Area { Code = municipality.value, Label = municipality.label };
                         }
                     }
-                    else if (term == "Fylke")
+                    else if (term == "Fylke" && counties != null)
                     {
                         var county = counties.Where(m => m.label.Contains(label)).FirstOrDefault();
                         if(county == null && organization == "Norges geologiske undersøkelse")
@@ -353,8 +353,8 @@ namespace Geonorge.MassivNedlasting
                     }
                     else
                     {
-                        var county = counties.Where(m => m.value == term && m.label.Contains(label)).FirstOrDefault();
-                        var municipality = municipalities.Where(m => m.value == term && m.label.Contains(label)).FirstOrDefault();
+                        var county = counties?.Where(m => m.value == term && m.label.Contains(label)).FirstOrDefault();
+                        var municipality = municipalities?.Where(m => m.value == term && m.label.Contains(label)).FirstOrDefault();
 
                         if(county != null) 
                         {
