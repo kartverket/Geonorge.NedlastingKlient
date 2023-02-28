@@ -89,6 +89,13 @@ namespace Geonorge.MassivNedlasting
                 Log.Debug("Counties is empty");
             }
 
+            var areas = GetAreas();
+            foreach (var area in areas)
+            {
+                if (area.value.Length == 2)
+                    counties.Add(new CodeValue { value = area.value, label = area.label });
+            }
+
             counties = counties.OrderBy(o => o.label).ToList();
             counties.Insert(0, new CodeValue { value = "", label = "Alle fylker" });
 
@@ -120,9 +127,46 @@ namespace Geonorge.MassivNedlasting
                 Log.Debug("Municipalities is empty");
             }
 
+            var areas = GetAreas();
+            foreach (var area in areas)
+            {
+                if(area.value.Length == 4)
+                    municipalities.Add(new CodeValue { value = area.value, label = area.label });
+            }
+
             municipalities = municipalities.OrderBy(o => o.label).ToList();
 
             return municipalities;
+        }
+
+        public List<CodeValue> GetAreas()
+        {
+            List<CodeValue> areas = new List<CodeValue>();
+
+            var url = "https://register.geonorge.no/api/sosi-kodelister/omradenummer.json";
+            var c = new System.Net.WebClient { Encoding = Encoding.UTF8 };
+
+            var json = c.DownloadString(url);
+            Log.Debug("Fetch download usage group from https://register.geonorge.no/api/sosi-kodelister/omradenummer.json");
+
+            dynamic data = JObject.Parse(json);
+            if (data != null)
+            {
+                var result = data["containeditems"];
+
+                foreach (var item in result)
+                {
+                    areas.Add(new CodeValue { value = item.codevalue.ToString(), label = item.description.ToString() });
+                }
+            }
+            else
+            {
+                Log.Debug("Counties is empty");
+            }
+
+            areas = areas.OrderBy(o => o.label).ToList();
+
+            return areas;
         }
 
         public List<Dataset> GetDatasetsFromUrl(string url)
