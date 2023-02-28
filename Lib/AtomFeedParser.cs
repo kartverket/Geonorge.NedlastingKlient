@@ -297,14 +297,14 @@ namespace Geonorge.MassivNedlasting
                 datasetFile.Restrictions = GetRestrictions(childrenNode.SelectNodes("a:category", nsmgr));
                 datasetFile.DatasetId = !string.IsNullOrEmpty(metadataUuid) ? metadataUuid : datasetTitle;
                 datasetFile.DatasetUrl = datasetUrl;
-                Area area = GetArea(childrenNode.SelectNodes("a:category", nsmgr), counties, municipalities);
+                datasetFile.Organization = GetOrganization(childrenNode, nsmgr, null, datasetFile);
+                Area area = GetArea(childrenNode.SelectNodes("a:category", nsmgr), counties, municipalities, datasetFile.Organization);
                 datasetFile.AreaCode = area.Code;
                 datasetFile.AreaLabel = area.Label;
                 if (string.IsNullOrEmpty(datasetFile.AreaCode))
                     datasetFile.AreaCode = GetAreaCode(childrenNode.SelectNodes("a:category", nsmgr));
                 if(string.IsNullOrEmpty(datasetFile.AreaLabel))
                     datasetFile.AreaLabel = GetAreaLabel(childrenNode.SelectNodes("a:category", nsmgr));
-                datasetFile.Organization = GetOrganization(childrenNode, nsmgr, null, datasetFile);
                 datasetFile.County = GetCounty(childrenNode, nsmgr, datasetFile);
                 if (!string.IsNullOrEmpty(datasetFile.County) && datasetFile.AreaCode == "Fylke" ) 
                 {
@@ -316,7 +316,7 @@ namespace Geonorge.MassivNedlasting
             return datasetFiles;
         }
 
-        private Area GetArea(XmlNodeList xmlNodeList, List<CodeValue> counties, List<CodeValue> municipalities)
+        private Area GetArea(XmlNodeList xmlNodeList, List<CodeValue> counties, List<CodeValue> municipalities, string organization)
         {
             foreach (XmlNode node in xmlNodeList)
             {
@@ -330,7 +330,7 @@ namespace Geonorge.MassivNedlasting
                 {
                     if (term == "Kommune")
                     {
-                        var municipality = municipalities.Where(m => m.label == label).FirstOrDefault();
+                        var municipality = municipalities.Where(m => m.label.Contains(label)).FirstOrDefault();
                         if (municipality != null)
                         {
                             return new Area { Code = municipality.value, Label = municipality.label };
@@ -338,7 +338,10 @@ namespace Geonorge.MassivNedlasting
                     }
                     else if (term == "Fylke")
                     {
-                        var county = counties.Where(m => m.label == label).FirstOrDefault();
+                        var county = counties.Where(m => m.label.Contains(label)).FirstOrDefault();
+                        if(county == null && organization == "Norges geologiske undersøkelse")
+                            county = counties.Where(m => m.label.Contains(label.Replace("-", " "))).FirstOrDefault();
+
                         if (county != null)
                         {
                             return new Area { Code = county.value, Label = county.label };
@@ -350,8 +353,8 @@ namespace Geonorge.MassivNedlasting
                     }
                     else
                     {
-                        var county = counties.Where(m => m.value == term && m.label == label).FirstOrDefault();
-                        var municipality = municipalities.Where(m => m.value == term && m.label == label).FirstOrDefault();
+                        var county = counties.Where(m => m.value == term && m.label.Contains(label)).FirstOrDefault();
+                        var municipality = municipalities.Where(m => m.value == term && m.label.Contains(label)).FirstOrDefault();
 
                         if(county != null) 
                         {
@@ -366,6 +369,9 @@ namespace Geonorge.MassivNedlasting
                             || node.Attributes["scheme"].Value.Contains("sosi-kodelister/fylkesnummer")
                             || node.Attributes["scheme"].Value.Contains("sosi-kodelister/kommunenummer"))) 
                         {
+                            if (term.Contains("Hele landet") || term.Contains("Landsdekkende") || term.Contains("Norge"))
+                                term = "0000";
+
                             return new Area { Code = term, Label = label };
                         }
                     }
