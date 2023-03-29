@@ -113,6 +113,10 @@ namespace Geonorge.Nedlaster
                         DatasetFile datasetFromFeed = datasetService.GetDatasetFile(datasetFile);
                         if (!string.IsNullOrEmpty(datasetFromFeed.Url) && datasetFile.Url != datasetFromFeed.Url)
                             datasetFile.Url = datasetFromFeed.Url;
+                        if (!string.IsNullOrEmpty(datasetFromFeed.DatasetId) && datasetFile.DatasetId != datasetFromFeed.DatasetId) { 
+                            datasetFile.DatasetId = datasetFromFeed.DatasetId;
+                            localDataset.DatasetId = datasetFromFeed.DatasetId;
+                        }
                         DownloadHistory downloadHistory = datasetService.GetFileDownloaHistory(datasetFile.Url);
                         bool newDatasetAvailable = NewDatasetAvailable(downloadHistory, datasetFromFeed, downloadDirectory);
 

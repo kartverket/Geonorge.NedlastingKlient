@@ -167,8 +167,8 @@ namespace Geonorge.MassivNedlasting
                     datasetFileFromFeed.LastUpdated = GetLastUpdated(childrenNode, nsmgr);
                     datasetFileFromFeed.Projection = projection;
                     datasetFileFromFeed.Restrictions = GetRestrictions(childrenNode.SelectNodes("a:category", nsmgr));
-                    datasetFileFromFeed.DatasetId = originalDatasetFile.DatasetId;
-                    datasetFileFromFeed.DatasetUrl = originalDatasetFile.DatasetUrl;
+                    datasetFileFromFeed.DatasetId = GetUuid(childrenNode, nsmgr);
+                    datasetFileFromFeed.DatasetUrl = GetUrl(childrenNode, nsmgr);
                     datasetFileFromFeed.Organization = GetOrganization(childrenNode, nsmgr, null, datasetFileFromFeed);
                 }
             }
