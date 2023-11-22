@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Geonorge.MassivNedlasting;
 using Serilog;
@@ -263,8 +264,12 @@ namespace Geonorge.Nedlaster
         {
             try
             {
+                string folderName = dataset.Title;
+                string regSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
+                Regex rg = new Regex(string.Format("[{0}]", Regex.Escape(regSearch)));
+                folderName = rg.Replace(folderName, "");
 
-                var downloadDirectory = new DirectoryInfo(Path.Combine(configFile.DownloadDirectory, dataset.DatasetId));
+                var downloadDirectory = new DirectoryInfo(Path.Combine(configFile.DownloadDirectory, folderName));
                 if (!downloadDirectory.Exists)
                 {
                     Console.WriteLine($"Creating directory: {downloadDirectory}");
