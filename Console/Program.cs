@@ -110,7 +110,7 @@ namespace Geonorge.Nedlaster
                     {
                         Console.WriteLine(datasetFile.DatasetId + " - " + datasetFile.Title);
 
-                        DirectoryInfo downloadDirectory = GetDownloadDirectory(config, datasetFile);
+                        DirectoryInfo downloadDirectory = GetDownloadDirectory(config, datasetFile, localDataset);
                         DatasetFile datasetFromFeed = datasetService.GetDatasetFile(datasetFile);
                         if (!string.IsNullOrEmpty(datasetFromFeed.Url) && datasetFile.Url != datasetFromFeed.Url)
                             datasetFile.Url = datasetFromFeed.Url;
@@ -260,11 +260,11 @@ namespace Geonorge.Nedlaster
         }
 
 
-        private static DirectoryInfo GetDownloadDirectory(ConfigFile configFile, DatasetFile dataset)
+        private static DirectoryInfo GetDownloadDirectory(ConfigFile configFile, DatasetFile datasetFile, Download dataset = null)
         {
             try
             {
-                string folderName = dataset.Title;
+                string folderName = dataset != null ? dataset.DatasetTitle : datasetFile.Title;
                 string regSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
                 Regex rg = new Regex(string.Format("[{0}]", Regex.Escape(regSearch)));
                 folderName = rg.Replace(folderName, "");
