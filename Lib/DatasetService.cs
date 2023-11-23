@@ -501,9 +501,9 @@ namespace Geonorge.MassivNedlasting
         private void DownloadLog(List<DatasetFileLog> datasetFileLogs, TextWriter w)
         {
             w.WriteLine("-------------------------------");
-            foreach (var item in datasetFileLogs.OrderBy(d => d.DatasetId))
+            foreach (var item in datasetFileLogs.OrderBy(d => d.DatasetName))
             {
-                w.Write(item.DatasetId + ";");
+                w.Write((!string.IsNullOrEmpty(item.DatasetName) ? item.DatasetName : item.DatasetId) + ";");
                 w.Write(item.Name.Replace(",", ";") + ";" + item.Projection);
                 w.WriteLine();
                 if (item.Message != null) w.WriteLine(" Message: " + item.Message);

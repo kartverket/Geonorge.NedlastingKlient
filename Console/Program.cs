@@ -103,7 +103,7 @@ namespace Geonorge.Nedlaster
 
                 foreach (var datasetFile in localDataset.Files)
                 {
-                    var fileLog = new DatasetFileLog(datasetFile);
+                    var fileLog = new DatasetFileLog(datasetFile, localDataset);
                     DownloadRequest downloadRequest = null;
 
                     try

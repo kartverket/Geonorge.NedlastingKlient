@@ -10,6 +10,7 @@ namespace Geonorge.Nedlaster
         private DatasetFile localDataset;
 
         public string DatasetId { get; set; }
+        public string DatasetName { get; set; }
         public string Name { get; set; }
         public string Projection { get; set; }
         public int NumberOfFilesUpdated { get; set; }
@@ -17,10 +18,11 @@ namespace Geonorge.Nedlaster
         public string HumanReadableSize { get; set; }
         public string Message { get; set; }
 
-        public DatasetFileLog(DatasetFile localDataset)
+        public DatasetFileLog(DatasetFile localDataset, Download dataset)
         {
             DatasetId = localDataset.DatasetId;
             Name = localDataset.Title;
+            DatasetName = dataset.DatasetTitle;
             Projection = localDataset.Projection;
         }
 
