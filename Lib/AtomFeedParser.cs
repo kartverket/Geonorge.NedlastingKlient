@@ -96,7 +96,12 @@ namespace Geonorge.MassivNedlasting
                         var url = hrefNode.Value;
                         if (url != null)
                         {
-                            uuid = url.Split('/').Last();
+                            if (url.Contains(".geonorge.no/api/download/file/")) {
+                                var paths = url.Split('/');
+                                uuid = paths[paths.Length - 2];
+                            }
+                            else
+                                uuid = url.Split('/').Last();
                         }
                     }
 
