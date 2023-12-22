@@ -25,9 +25,9 @@ namespace Geonorge.MassivNedlasting.Test
         public static DatasetFile NewDatasetFile(string title = null)
         {
             var datasetFile = new DatasetFile();
-            datasetFile.Title = title ?? "GML-format,  3001, Halden";
+            datasetFile.Title = title ?? "GML-format,  3101, Halden";
             datasetFile.Description = "Dataset description";
-            datasetFile.Url = "https://nedlasting.geonorge.no/geonorge/KystOgFiskeri/AkvakulturLokaliteter/GML/KystOgFiskeri_0101_Halden_25833_AkvakulturLokaliteter_GML.zip";
+            datasetFile.Url = "https://nedlasting.geonorge.no/geonorge/KystOgFiskeri/AkvakulturLokaliteter/GML/KystOgFiskeri_3101_Halden_25833_AkvakulturLokaliteter_GML.zip";
             datasetFile.LastUpdated = "2018-10-31T01:43:35";
             datasetFile.Organization = "Kartverket";
             datasetFile.Projection = "EPSG:25833";
