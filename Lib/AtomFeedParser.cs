@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Xml;
 using System.Linq;
@@ -172,7 +172,8 @@ namespace Geonorge.MassivNedlasting
                     datasetFileFromFeed.LastUpdated = GetLastUpdated(childrenNode, nsmgr);
                     datasetFileFromFeed.Projection = projection;
                     datasetFileFromFeed.Restrictions = GetRestrictions(childrenNode.SelectNodes("a:category", nsmgr));
-                    datasetFileFromFeed.DatasetId = GetUuid(childrenNode, nsmgr);
+                    datasetFileFromFeed.DatasetId = title;
+                    datasetFileFromFeed.MetadataUuid = GetUuid(childrenNode, nsmgr);
                     datasetFileFromFeed.DatasetUrl = GetUrl(childrenNode, nsmgr);
                     datasetFileFromFeed.Organization = GetOrganization(childrenNode, nsmgr, null, datasetFileFromFeed);
                 }
@@ -300,7 +301,8 @@ namespace Geonorge.MassivNedlasting
                 datasetFile.Projection = GetProjection(childrenNode.SelectNodes("a:category", nsmgr));
                 datasetFile.Format = GetFormat(childrenNode.SelectSingleNode("a:title", nsmgr), childrenNode.SelectNodes("a:category", nsmgr));
                 datasetFile.Restrictions = GetRestrictions(childrenNode.SelectNodes("a:category", nsmgr));
-                datasetFile.DatasetId = !string.IsNullOrEmpty(metadataUuid) ? metadataUuid : datasetTitle;
+                datasetFile.DatasetId = datasetFile.Title;
+                datasetFile.MetadataUuid = !string.IsNullOrEmpty(metadataUuid) ? metadataUuid : GetUuid(childrenNode, nsmgr);
                 datasetFile.DatasetUrl = datasetUrl;
                 datasetFile.Organization = GetOrganization(childrenNode, nsmgr, null, datasetFile);
                 Area area = GetArea(childrenNode.SelectNodes("a:category", nsmgr), counties, municipalities, datasetFile.Organization);

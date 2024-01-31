@@ -32,7 +32,7 @@ namespace Geonorge.MassivNedlasting
 
         public DownloadUsageEntries(DatasetFile datasetFile)
         {
-            MetadataUuid = datasetFile.DatasetId;
+            MetadataUuid = !string.IsNullOrEmpty(datasetFile.MetadataUuid) ? datasetFile.MetadataUuid : datasetFile.DatasetId;
             var title = datasetFile.Title.Split(',');
             if (title.Length == 3)
             {

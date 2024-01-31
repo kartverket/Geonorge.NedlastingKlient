@@ -61,6 +61,11 @@ namespace Geonorge.MassivNedlasting
         public string DatasetId { get; set; }
 
         /// <summary>
+        /// Reference to metadata uuid
+        /// </summary>
+        public string MetadataUuid { get; set; }
+
+        /// <summary>
         /// Url to the dataset where file belongs
         /// </summary>
         public string DatasetUrl { get; set; }
@@ -94,6 +99,7 @@ namespace Geonorge.MassivNedlasting
             Projection = datasetFileViewModel.Category;
             Format = datasetFileViewModel.Format;
             DatasetId = datasetFileViewModel.DatasetId;
+            MetadataUuid = datasetFileViewModel.MetadataUuid;
             DatasetUrl = datasetFileViewModel.DatasetUrl;
             Restrictions = datasetFileViewModel.Restrictions;
             AreaCode = datasetFileViewModel.AreaCode;
@@ -141,6 +147,7 @@ namespace Geonorge.MassivNedlasting
         public string AreaLabel { get; set; }
         public string County { get; set; }
         public string DatasetId { get; set; }
+        public string MetadataUuid { get; set; }
         public string DatasetUrl { get; set; }
         public bool SelectedForDownload { get; set; }
         public bool IsRestricted { get; set; }
@@ -164,6 +171,7 @@ namespace Geonorge.MassivNedlasting
             AreaLabel = datasetFile.AreaLabel;
             County = datasetFile.County;
             DatasetId = datasetFile.DatasetId;
+            MetadataUuid = datasetFile.MetadataUuid;
             DatasetUrl = FixDatasetUrl(datasetFile.DatasetUrl);
             Id = GetId();
             SelectedForDownload = selectedForDownload;
