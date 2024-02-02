@@ -172,7 +172,7 @@ namespace Geonorge.MassivNedlasting
                     datasetFileFromFeed.LastUpdated = GetLastUpdated(childrenNode, nsmgr);
                     datasetFileFromFeed.Projection = projection;
                     datasetFileFromFeed.Restrictions = GetRestrictions(childrenNode.SelectNodes("a:category", nsmgr));
-                    datasetFileFromFeed.DatasetId = title;
+                    datasetFileFromFeed.DatasetId = originalDatasetFile.DatasetId;
                     datasetFileFromFeed.MetadataUuid = GetUuid(childrenNode, nsmgr);
                     datasetFileFromFeed.DatasetUrl = GetUrl(childrenNode, nsmgr);
                     datasetFileFromFeed.Organization = GetOrganization(childrenNode, nsmgr, null, datasetFileFromFeed);
@@ -301,7 +301,7 @@ namespace Geonorge.MassivNedlasting
                 datasetFile.Projection = GetProjection(childrenNode.SelectNodes("a:category", nsmgr));
                 datasetFile.Format = GetFormat(childrenNode.SelectSingleNode("a:title", nsmgr), childrenNode.SelectNodes("a:category", nsmgr));
                 datasetFile.Restrictions = GetRestrictions(childrenNode.SelectNodes("a:category", nsmgr));
-                datasetFile.DatasetId = datasetFile.Title;
+                datasetFile.DatasetId = datasetTitle + " " + datasetFile.Title;
                 datasetFile.MetadataUuid = !string.IsNullOrEmpty(metadataUuid) ? metadataUuid : GetUuid(childrenNode, nsmgr);
                 datasetFile.DatasetUrl = datasetUrl;
                 datasetFile.Organization = GetOrganization(childrenNode, nsmgr, null, datasetFile);
