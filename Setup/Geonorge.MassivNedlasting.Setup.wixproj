@@ -62,10 +62,10 @@
   <Target Name="BeforeBuild">
     <!--<Exec Command="dotnet publish ..\Console\Geonorge.Nedlaster.csproj -c $(Configuration) -r win-x64" /> -->
     <PropertyGroup>
-      <LinkerBaseInputPaths>..\Console\bin\$(Configuration)\net6.0\win-x64\publish;..\Gui\bin\$(Configuration)</LinkerBaseInputPaths>
-      <DefineConstants>ConsolePath=..\Console\bin\$(Configuration)\net6.0\win-x64\publish;GuiPath=..\Gui\bin\$(Configuration)</DefineConstants>
+      <LinkerBaseInputPaths>..\Console\bin\$(Configuration)\net8.0\win-x64\publish;..\Gui\bin\$(Configuration)</LinkerBaseInputPaths>
+      <DefineConstants>ConsolePath=..\Console\bin\$(Configuration)\net8.0\win-x64\publish;GuiPath=..\Gui\bin\$(Configuration)</DefineConstants>
     </PropertyGroup>
-    <HeatDirectory OutputFile="ConsoleApp.wxs" DirectoryRefId="INSTALLFOLDER_CONSOLE" ComponentGroupName="ConsoleApp" SuppressCom="true" Directory="..\Console\bin\$(Configuration)\net6.0\win-x64\publish" SuppressFragments="true" SuppressRegistry="true" SuppressRootDirectory="true" AutoGenerateGuids="false" GenerateGuidsNow="true" ToolPath="$(WixToolPath)" PreprocessorVariable="var.ConsolePath" Transforms="Transforms.xslt" />
+    <HeatDirectory OutputFile="ConsoleApp.wxs" DirectoryRefId="INSTALLFOLDER_CONSOLE" ComponentGroupName="ConsoleApp" SuppressCom="true" Directory="..\Console\bin\$(Configuration)\net8.0\win-x64\publish" SuppressFragments="true" SuppressRegistry="true" SuppressRootDirectory="true" AutoGenerateGuids="false" GenerateGuidsNow="true" ToolPath="$(WixToolPath)" PreprocessorVariable="var.ConsolePath" Transforms="Transforms.xslt" />
     <HeatDirectory OutputFile="GuiApp.wxs" DirectoryRefId="INSTALLFOLDER_GUI" ComponentGroupName="GuiApp" SuppressCom="true" Directory="..\Gui\bin\$(Configuration)" SuppressFragments="true" SuppressRegistry="true" SuppressRootDirectory="true" AutoGenerateGuids="false" GenerateGuidsNow="true" ToolPath="$(WixToolPath)" PreprocessorVariable="var.GuiPath" Transforms="Transforms.xslt" />
   </Target>
 </Project>
