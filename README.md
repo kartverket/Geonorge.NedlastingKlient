@@ -28,13 +28,13 @@ When you move the settings to a new machine/user account, the encrypted password
 ## How to setup development environment
 
 Project depends on:
-* .net core 6.0 SDK
+* .net core 8.0 SDK
 * .net framework 4.7.1 Developer pack
 
 Packages can be downloaded from here:
 https://www.microsoft.com/net/download/windows
 
-Solution builds with Visual Studio 2017. 
+Solution builds with Visual Studio 2022. 
 
 Signing of application binaries can be done with signtool.exe. This tool is a part of Windows 8 SDK. On the build server you can start Visual Studio Installer, select modify on your Build Tools installation and select Windows 8 SDK. The signtool will hopefully be available at C:\Program Files (x86)\Windows Kits\8.1\bin\x86\signtool.exe.
 
