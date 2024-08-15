@@ -336,8 +336,8 @@ namespace Geonorge.MassivNedlasting
                     || node.Attributes["scheme"].Value.Contains("sosi-kodelister/kommunenummer")))
                 {
                     if (term == "Kommune" && municipalities != null)
-                    {
-                        var municipality = municipalities.Where(m => m.label.Contains(label)).FirstOrDefault();
+                    { 
+                        var municipality = municipalities.Where(m => m.label == label).FirstOrDefault();
                         if (municipality != null)
                         {
                             return new Area { Code = municipality.value, Label = municipality.label };
@@ -345,9 +345,9 @@ namespace Geonorge.MassivNedlasting
                     }
                     else if (term == "Fylke" && counties != null)
                     {
-                        var county = counties.Where(m => m.label.Contains(label)).FirstOrDefault();
+                        var county = counties.Where(m => m.label == label ).FirstOrDefault();
                         if(county == null && organization == "Norges geologiske undersøkelse")
-                            county = counties.Where(m => m.label.Contains(label.Replace("-", " "))).FirstOrDefault();
+                            county = counties.Where(m => m.label == label.Replace("-", " ")).FirstOrDefault();
 
                         if (county != null)
                         {
@@ -360,8 +360,8 @@ namespace Geonorge.MassivNedlasting
                     }
                     else
                     {
-                        var county = counties?.Where(m => m.value == term && m.label.Contains(label)).FirstOrDefault();
-                        var municipality = municipalities?.Where(m => m.value == term && m.label.Contains(label)).FirstOrDefault();
+                        var county = counties?.Where(m => m.value == term && m.label == label).FirstOrDefault();
+                        var municipality = municipalities?.Where(m => m.value == term && m.label == label).FirstOrDefault();
 
                         if(county != null) 
                         {

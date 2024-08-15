@@ -81,7 +81,8 @@ namespace Geonorge.MassivNedlasting
                 
                 foreach (var item in result)
                 {
-                    counties.Add(new CodeValue { value = item.codevalue.ToString(), label = item.label.ToString() });
+                    if(item.status.ToString() == "Gyldig")
+                        counties.Add(new CodeValue { value = item.codevalue.ToString(), label = item.label.ToString() });
                 }
             }
             else
@@ -119,7 +120,8 @@ namespace Geonorge.MassivNedlasting
 
                 foreach (var item in result)
                 {
-                    municipalities.Add(new CodeValue { value = item.codevalue.ToString(), label = item.label.ToString() });
+                    if (item.status.ToString() == "Gyldig")
+                        municipalities.Add(new CodeValue { value = item.codevalue.ToString(), label = item.label.ToString() });
                 }
             }
             else
