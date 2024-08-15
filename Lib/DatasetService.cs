@@ -68,11 +68,11 @@ namespace Geonorge.MassivNedlasting
         {
             List<CodeValue> counties = new List<CodeValue>();
 
-            var url = "https://register.geonorge.no/api/sosi-kodelister/fylkesnummer.json";
+            var url = "https://register.geonorge.no/sosi-kodelister/inndelinger/inndelingsbase/fylkesnummer.json";
             var c = new System.Net.WebClient { Encoding = Encoding.UTF8 };
 
             var json = c.DownloadString(url);
-            Log.Debug("Fetch download usage group from https://register.geonorge.no/api/sosi-kodelister/fylkesnummer.json");
+            Log.Debug("Fetch download usage group from https://register.geonorge.no/sosi-kodelister/inndelinger/inndelingsbase/fylkesnummer.json");
 
             dynamic data = JObject.Parse(json);
             if (data != null)
@@ -106,11 +106,11 @@ namespace Geonorge.MassivNedlasting
         {
             List<CodeValue> municipalities = new List<CodeValue>();
 
-            var url = "https://register.geonorge.no/api/sosi-kodelister/kommunenummer.json";
+            var url = "https://register.geonorge.no/sosi-kodelister/inndelinger/inndelingsbase/kommunenummer.json";
             var c = new System.Net.WebClient { Encoding = Encoding.UTF8 };
 
             var json = c.DownloadString(url);
-            Log.Debug("Fetch download usage group from https://register.geonorge.no/api/sosi-kodelister/kommunenummer.json");
+            Log.Debug("Fetch download usage group from https://register.geonorge.no/sosi-kodelister/inndelinger/inndelingsbase/kommunenummer.json");
 
             dynamic data = JObject.Parse(json);
             if (data != null)
