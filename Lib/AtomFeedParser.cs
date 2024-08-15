@@ -305,7 +305,7 @@ namespace Geonorge.MassivNedlasting
                 datasetFile.MetadataUuid = !string.IsNullOrEmpty(metadataUuid) ? metadataUuid : GetUuid(childrenNode, nsmgr);
                 datasetFile.DatasetUrl = datasetUrl;
                 datasetFile.Organization = GetOrganization(childrenNode, nsmgr, null, datasetFile);
-                Area area = GetArea(childrenNode.SelectNodes("a:category", nsmgr), counties, municipalities, datasetFile.Organization);
+                Area area = GetArea(childrenNode.SelectNodes("a:category", nsmgr), counties, municipalities, datasetFile.Organization, datasetFile.Title);
                 datasetFile.AreaCode = area.Code;
                 datasetFile.AreaLabel = area.Label;
                 if (string.IsNullOrEmpty(datasetFile.AreaCode))
@@ -323,7 +323,7 @@ namespace Geonorge.MassivNedlasting
             return datasetFiles;
         }
 
-        private Area GetArea(XmlNodeList xmlNodeList, List<CodeValue> counties, List<CodeValue> municipalities, string organization)
+        private Area GetArea(XmlNodeList xmlNodeList, List<CodeValue> counties, List<CodeValue> municipalities, string organization, string title = null)
         {
             foreach (XmlNode node in xmlNodeList)
             {
@@ -380,6 +380,36 @@ namespace Geonorge.MassivNedlasting
                                 term = "0000";
 
                             return new Area { Code = term, Label = label };
+                        }
+                    }
+                }
+            }
+
+            if (!string.IsNullOrEmpty(title) && title.Contains(","))
+            {
+                var data = title.Split(',');
+                if (data.Length == 3)
+                {
+                    var areaData = data[1];
+                    if (!string.IsNullOrEmpty(areaData))
+                    {
+                        areaData = areaData.Trim();
+                        if (areaData.Length == 2)
+                        {
+                            var countyData = counties?.Where(m => m.value == areaData).FirstOrDefault();
+                            if (countyData != null)
+                            {
+                                return new Area { Code = countyData.value, Label = countyData.label };
+                            }
+
+                        }
+                        else if (areaData.Length == 4)
+                        {
+                            var municipalityData = municipalities?.Where(m => m.value == areaData).FirstOrDefault();
+                            if (municipalityData != null)
+                            {
+                                return new Area { Code = municipalityData.value, Label = municipalityData.label };
+                            }
                         }
                     }
                 }
