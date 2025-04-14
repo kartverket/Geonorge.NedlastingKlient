@@ -185,7 +185,8 @@ namespace Geonorge.MassivNedlasting
         {
             foreach (XmlNode node in selectNodes)
             {
-                if (node.Attributes["scheme"]?.Value == "https://register.geonorge.no/subregister/metadata-kodelister/kartverket/tilgangsrestriksjoner/")
+                var scheme = node.Attributes["scheme"]?.Value;
+                if (scheme != null && scheme.Contains("tilgangsrestriksjoner"))
                 {
                     return node.Attributes["term"].Value;
                 }
