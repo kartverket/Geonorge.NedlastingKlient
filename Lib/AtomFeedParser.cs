@@ -82,6 +82,16 @@ namespace Geonorge.MassivNedlasting
                             uuid = uuidData[1];
                         }
                     }
+
+                    if(string.IsNullOrEmpty(uuid))
+                    {
+                        var uuidData = url.Split(new string[] { "id=" }, StringSplitOptions.None);
+                        if (uuidData.Length > 1)
+                        {
+                            uuid = uuidData[1];
+                        }
+                    }
+
                 }
 
             }
