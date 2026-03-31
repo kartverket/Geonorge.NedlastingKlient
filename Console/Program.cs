@@ -30,15 +30,64 @@ namespace Geonorge.Nedlaster
             {
                 Log.Debug("Selected config file(s): ");
 
-                foreach (var configName in args)
+                foreach (var a in args)
                 {
-                    Log.Debug(configName);
+                    Log.Debug(a);
                 }
 
-                foreach (var configName in args)
+                // If the application is launched by opening a config file, Windows may pass the
+                // full file path as multiple args when the path contains spaces. Recombine args
+                // into a single path in that case and extract the file name without extension
+                // to lookup the configured config name.
+                string[] configNamesToProcess;
+                if (args.Length > 1 && (args[0].Contains(Path.DirectorySeparatorChar) || args[0].Contains(Path.AltDirectorySeparatorChar) || args[0].EndsWith(".json", StringComparison.OrdinalIgnoreCase)))
                 {
-                    Log.Debug("Download from selected config-file: " + configName);
-                    var config = appSettings.GetConfigByName(configName);
+                    configNamesToProcess = new[] { string.Join(" ", args) };
+                }
+                else
+                {
+                    configNamesToProcess = args;
+                }
+
+                var originalArgsJoined = string.Join(" ", args);
+
+                foreach (var configNameArg in configNamesToProcess)
+                {
+                    Log.Debug("Download from selected config-file: " + configNameArg);
+
+                    var nameToLookup = configNameArg;
+                    if (nameToLookup.IndexOfAny(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }) >= 0 || nameToLookup.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
+                    {
+                        try
+                        {
+                            nameToLookup = Path.GetFileNameWithoutExtension(nameToLookup);
+                        }
+                        catch
+                        {
+                            // fallback to original arg if path parsing fails
+                        }
+                    }
+
+                    var config = appSettings.GetConfigByName(nameToLookup);
+                    // Fallback: if lookup failed and multiple args were passed, the user may have
+                    // typed a config name containing spaces without quoting. Try joining all
+                    // original args and lookup by that full name.
+                    if (config == null && args.Length > 1)
+                    {
+                        try
+                        {
+                            var joinedName = originalArgsJoined;
+                            if (joinedName.IndexOfAny(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }) >= 0 || joinedName.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
+                                joinedName = Path.GetFileNameWithoutExtension(joinedName);
+
+                            config = appSettings.GetConfigByName(joinedName);
+                        }
+                        catch
+                        {
+                            // ignore and continue
+                        }
+                    }
+
                     if (config != null)
                     {
                         DeleteOldLogs(config.LogDirectory);
@@ -46,8 +95,8 @@ namespace Geonorge.Nedlaster
                     }
                     else
                     {
-                        Log.Error("Could not find config file: " + configName);
-                        Console.WriteLine("Error: Could not find config file: " + configName);
+                        Log.Error("Could not find config file: " + configNameArg);
+                        Console.WriteLine("Error: Could not find config file: " + configNameArg);
                     }
                 }
             }
