@@ -28,7 +28,7 @@ When you move the settings to a new machine/user account, the encrypted password
 ## How to setup development environment
 
 Project depends on:
-* .net core 8.0 SDK
+* .net core 10.0 SDK
 * .net framework 4.7.1 Developer pack
 
 Packages can be downloaded from here:
