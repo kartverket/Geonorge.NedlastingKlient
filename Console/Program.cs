@@ -11,10 +11,11 @@ namespace Geonorge.Nedlaster
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async System.Threading.Tasks.Task Main(string[] args)
         {
             Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Information()
+                .MinimumLevel.Debug()  // Changed to Debug for more detailed logging
+                .WriteTo.Console()     // Added console logging for immediate feedback
                 .WriteTo.File("log-.txt",
                         rollOnFileSizeLimit: true,
                         shared: true,
@@ -24,6 +25,7 @@ namespace Geonorge.Nedlaster
             Log.Information("Start Geonorge - nedlaster");
             Console.WriteLine("Geonorge - nedlaster");
             Console.WriteLine("--------------------");
+
             var appSettings = ApplicationService.GetAppSettings();
 
             if (args.Any())
