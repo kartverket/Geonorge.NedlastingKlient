@@ -424,6 +424,42 @@ namespace Geonorge.MassivNedlasting
                         }
                     }
                 }
+                else if (data.Length == 2)
+                {
+                    var areaData = data[1];
+                    if (!string.IsNullOrEmpty(areaData))
+                    {
+                        areaData = areaData.Trim();
+                        if (areaData.Length > 4)
+                        {
+                            var areaArray = areaData.Split(' ');
+                            if (areaArray.Length > 1)
+                            {
+                                areaData = areaArray[0];
+                            }
+                        }
+
+                        areaData = areaData.Trim();
+                        if (areaData.Length == 2)
+                        {
+                            var countyData = counties?.Where(m => m.value == areaData).FirstOrDefault();
+                            if (countyData != null)
+                            {
+                                return new Area { Code = countyData.value, Label = countyData.label };
+                            }
+
+                        }
+                        else if (areaData.Length == 4)
+                        {
+                            var municipalityData = municipalities?.Where(m => m.value == areaData).FirstOrDefault();
+                            if (municipalityData != null)
+                            {
+                                return new Area { Code = municipalityData.value, Label = municipalityData.label };
+                            }
+                        }
+                    }
+                }
+
             }
 
             return new Area();
